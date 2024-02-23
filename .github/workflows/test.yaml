@@ -61,8 +61,5 @@ jobs:
       - name: Install Dependencies
         uses: threeal/yarn-install-action@v1.0.0
 
-      - name: Create Package
-        run: corepack yarn pack
-
       - name: Test Sample Problems
-        run: corepack yarn run leetsolve
+        run: corepack yarn start
