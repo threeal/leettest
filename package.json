@@ -30,6 +30,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "glob": "^10.3.10",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
