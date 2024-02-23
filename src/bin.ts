@@ -26,6 +26,9 @@ yargs(hideBin(process.argv))
         execSync(`clang++ --std=c++20 ${testFile} -o ${testExec}`, {
           stdio: "inherit",
         });
+
+        process.stdout.write(`Running ${testExec}...\n`);
+        execSync(testExec, { stdio: "inherit" });
       }
     },
   )
