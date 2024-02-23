@@ -1,0 +1,9 @@
+.*
+!.eslint*
+!.git*
+
+coverage/
+dist/
+node_modules/
+
+package.tgz
