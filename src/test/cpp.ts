@@ -25,6 +25,6 @@ export function compileCppTest(testFile: string): string {
  *
  * @param testExec - The path of the C++ test executable to run.
  */
-export function runCppTest(testExec: string) {
+export function runCppTest(testExec: string): void {
   execSync(testExec, { stdio: "inherit" });
 }

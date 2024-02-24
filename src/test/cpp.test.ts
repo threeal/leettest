@@ -9,6 +9,14 @@ jest.unstable_mockModule("node:fs", () => ({
   mkdirSync: jest.fn(),
 }));
 
+beforeEach(async () => {
+  const { execSync } = await import("node:child_process");
+  const { mkdirSync } = await import("node:fs");
+
+  jest.mocked(execSync).mockClear();
+  jest.mocked(mkdirSync).mockClear();
+});
+
 it("should compile a C++ test file", async () => {
   const { execSync } = await import("node:child_process");
   const { mkdirSync } = await import("node:fs");
@@ -28,4 +36,15 @@ it("should compile a C++ test file", async () => {
   expect(execSync).toHaveBeenCalledAfter(jest.mocked(mkdirSync));
 
   expect(testExec).toBe("build/path/to/test");
+});
+
+it("should run a C++ test executable", async () => {
+  const { execSync } = await import("node:child_process");
+  const { runCppTest } = await import("./cpp.js");
+
+  runCppTest("build/path/to/test");
+
+  expect(execSync).toHaveBeenCalledExactlyOnceWith("build/path/to/test", {
+    stdio: "inherit",
+  });
 });
