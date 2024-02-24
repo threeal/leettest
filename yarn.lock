@@ -3394,6 +3394,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "leetsolve@workspace:."
   dependencies:
+    "@jest/globals": "npm:^29.7.0"
     "@types/jest": "npm:^29.5.12"
     "@types/node": "npm:^20.11.20"
     "@types/yargs": "npm:^17.0.32"
