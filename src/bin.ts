@@ -2,9 +2,8 @@
 
 import yargs from "yargs";
 import { globSync } from "glob";
-import { execSync } from "node:child_process";
 import { hideBin } from "yargs/helpers";
-import { compileCppTest } from "./test/index.js";
+import { compileCppTest, runCppTest } from "./test/index.js";
 
 yargs(hideBin(process.argv))
   .scriptName("leetsolve")
@@ -20,7 +19,7 @@ yargs(hideBin(process.argv))
         const testExec = compileCppTest(testFile);
 
         process.stdout.write(`Running ${testExec}...\n`);
-        execSync(testExec, { stdio: "inherit" });
+        runCppTest(testExec);
       }
     },
   )
