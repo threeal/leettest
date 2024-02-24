@@ -2,10 +2,8 @@
 
 import yargs from "yargs";
 import { globSync } from "glob";
-import { execSync } from "node:child_process";
-import { mkdirSync } from "node:fs";
-import path from "node:path";
 import { hideBin } from "yargs/helpers";
+import { compileCppTest, runCppTest } from "./test/index.js";
 
 yargs(hideBin(process.argv))
   .scriptName("leetsolve")
@@ -18,17 +16,10 @@ yargs(hideBin(process.argv))
       const testFiles = globSync("**/test.cpp");
       for (const testFile of testFiles) {
         process.stdout.write(`Compiling ${testFile}...\n`);
-
-        const buildDir = path.join("build", path.dirname(testFile));
-        mkdirSync(buildDir, { recursive: true });
-
-        const testExec = path.join(buildDir, "test");
-        execSync(`clang++ --std=c++20 ${testFile} -o ${testExec}`, {
-          stdio: "inherit",
-        });
+        const testExec = compileCppTest(testFile);
 
         process.stdout.write(`Running ${testExec}...\n`);
-        execSync(testExec, { stdio: "inherit" });
+        runCppTest(testExec);
       }
     },
   )
