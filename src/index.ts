@@ -1,1 +1,1 @@
-export { fibonacciSequence } from "./sequence.js";
+export { compileCppTest, runCppTest } from "./test/index.js";
