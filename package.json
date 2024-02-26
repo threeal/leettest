@@ -1,19 +1,19 @@
 {
-  "name": "leetsolve",
+  "name": "leettest",
   "version": "0.1.0",
-  "description": "Tool for building and testing solutions to LeetCode problems",
+  "description": "Tool for compiling and testing solutions to LeetCode problems",
   "keywords": [
     "LeetCode",
     "tool",
     "build",
     "test"
   ],
-  "homepage": "https://github.com/threeal/leetspace#readme",
+  "homepage": "https://github.com/threeal/leettest#readme",
   "bugs": {
-    "url": "https://github.com/threeal/leetspace/issues",
+    "url": "https://github.com/threeal/leettest/issues",
     "email": "alfi.maulana.f@gmail.com"
   },
-  "repository": "github:threeal/leetspace",
+  "repository": "github:threeal/leettest",
   "license": "MIT",
   "author": "Alfi Maulana <alfi.maulana.f@gmail.com>",
   "type": "module",
