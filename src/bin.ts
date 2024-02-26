@@ -3,7 +3,7 @@
 import yargs from "yargs";
 import { globSync } from "glob";
 import { hideBin } from "yargs/helpers";
-import { compileCppTest, runCppTest } from "./test/index.js";
+import { compileCppTest, runCppTest } from "./test/cpp.js";
 
 yargs(hideBin(process.argv))
   .scriptName("leettest")
