@@ -6,7 +6,7 @@ import { hideBin } from "yargs/helpers";
 import { compileCppTest, runCppTest } from "./test/index.js";
 
 yargs(hideBin(process.argv))
-  .scriptName("leetsolve")
+  .scriptName("leettest")
   .version("0.1.0")
   .command(
     "$0",

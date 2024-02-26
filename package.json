@@ -1,7 +1,7 @@
 {
-  "name": "leetsolve",
+  "name": "leettest",
   "version": "0.1.0",
-  "description": "Tool for building and testing solutions to LeetCode problems",
+  "description": "Tool for compiling and testing solutions to LeetCode problems",
   "keywords": [
     "LeetCode",
     "tool",
