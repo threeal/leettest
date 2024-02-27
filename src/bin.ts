@@ -14,8 +14,11 @@ yargs(hideBin(process.argv))
     "Compile and test solutions to LeetCode's problems",
     (yargs) => yargs,
     () => {
-      const testFiles = globSync("**/test.cpp");
-      for (const testFile of testFiles) {
+      const solutionFiles = globSync("**/solution.cpp");
+      for (const solutionFile of solutionFiles) {
+        process.stdout.write(`Testing ${solutionFile}...\n`);
+        const testFile = path.join(path.dirname(solutionFile), "test.cpp");
+
         process.stdout.write(`Compiling ${testFile}...\n`);
         const testExec = path.join("build", path.dirname(testFile), "test");
         compileCppTest(testFile, testExec);
