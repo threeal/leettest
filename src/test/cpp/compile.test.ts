@@ -22,7 +22,7 @@ it("should compile a C++ test file", async () => {
   const { mkdirSync } = await import("node:fs");
   const { compileCppTest } = await import("./compile.js");
 
-  const testExec = compileCppTest("path/to/test.cpp");
+  compileCppTest("path/to/test.cpp", "build/path/to/test");
 
   expect(mkdirSync).toHaveBeenCalledExactlyOnceWith("build/path/to", {
     recursive: true,
@@ -34,6 +34,4 @@ it("should compile a C++ test file", async () => {
     },
   );
   expect(execSync).toHaveBeenCalledAfter(jest.mocked(mkdirSync));
-
-  expect(testExec).toBe("build/path/to/test");
 });
