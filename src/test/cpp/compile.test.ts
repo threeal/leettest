@@ -20,7 +20,7 @@ beforeEach(async () => {
 it("should compile a C++ test file", async () => {
   const { execSync } = await import("node:child_process");
   const { mkdirSync } = await import("node:fs");
-  const { compileCppTest } = await import("./cpp.js");
+  const { compileCppTest } = await import("./compile.js");
 
   const testExec = compileCppTest("path/to/test.cpp");
 
@@ -36,15 +36,4 @@ it("should compile a C++ test file", async () => {
   expect(execSync).toHaveBeenCalledAfter(jest.mocked(mkdirSync));
 
   expect(testExec).toBe("build/path/to/test");
-});
-
-it("should run a C++ test executable", async () => {
-  const { execSync } = await import("node:child_process");
-  const { runCppTest } = await import("./cpp.js");
-
-  runCppTest("build/path/to/test");
-
-  expect(execSync).toHaveBeenCalledExactlyOnceWith("build/path/to/test", {
-    stdio: "inherit",
-  });
 });
