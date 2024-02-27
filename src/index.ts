@@ -1,1 +1,1 @@
-export { compileCppTest, runCppTest } from "./test/cpp.js";
+export { testCppSolution } from "./test/cpp.js";
