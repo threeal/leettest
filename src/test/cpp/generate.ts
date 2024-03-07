@@ -42,7 +42,7 @@ export function generateCppTest(
 
     const lines = [
       `  {`,
-      `    .name = "${name}",`,
+      `    .name = "example ${name}",`,
       `    .inputs{`,
       inputs.join(",\n"),
       `    },`,
