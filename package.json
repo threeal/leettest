@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "glob": "^10.3.10",
-    "yaml": "^2.4.0",
+    "yaml": "^2.4.1",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
