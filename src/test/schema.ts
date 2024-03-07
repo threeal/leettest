@@ -6,7 +6,7 @@ export interface Schema {
     function: {
       name: string;
       inputs: string[];
-      output: string[];
+      output: string;
     };
   };
   examples: {
