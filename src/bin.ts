@@ -2,8 +2,9 @@
 
 import yargs from "yargs";
 import { globSync } from "glob";
+import { Listr, ListrTask } from "listr2";
 import { hideBin } from "yargs/helpers";
-import { testCppSolution } from "./test/cpp.js";
+import { createTestCppSolutionTasks } from "./test/cpp.js";
 
 yargs(hideBin(process.argv))
   .scriptName("leettest")
@@ -12,11 +13,18 @@ yargs(hideBin(process.argv))
     "$0",
     "Compile and test solutions to LeetCode problems",
     (yargs) => yargs,
-    () => {
+    async () => {
       const solutionFiles = globSync("**/solution.cpp");
-      for (const solutionFile of solutionFiles) {
-        testCppSolution(solutionFile);
-      }
+      const task = new Listr(
+        solutionFiles.map(
+          (solutionFile): ListrTask => ({
+            title: `Testing ${solutionFile}...`,
+            task: (ctx, task) =>
+              task.newListr(createTestCppSolutionTasks(solutionFile)),
+          }),
+        ),
+      );
+      await task.run();
     },
   )
   .parse();
