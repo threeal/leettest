@@ -24,7 +24,12 @@ yargs(hideBin(process.argv))
           }),
         ),
       );
-      await task.run();
+
+      try {
+        await task.run();
+      } catch (err) {
+        console.error(err);
+      }
     },
   )
   .parse();
