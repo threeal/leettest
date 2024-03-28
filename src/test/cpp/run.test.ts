@@ -11,7 +11,5 @@ it("should run a C++ test executable", async () => {
 
   runCppTest("build/path/to/test");
 
-  expect(execSync).toHaveBeenCalledExactlyOnceWith("build/path/to/test", {
-    stdio: "inherit",
-  });
+  expect(execSync).toHaveBeenCalledExactlyOnceWith("build/path/to/test");
 });
