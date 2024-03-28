@@ -6,19 +6,20 @@ import { runCppTest } from "./cpp/run.js";
 import { readYamlSchema, Schema } from "./schema.js";
 
 /**
- * Tests the C++ solution of a LeetCode problem.
+ * Creates a task for testing the C++ solution of a LeetCode problem.
  *
- * This function will compile the C++ solution files into a test executable
- * and run the executable for testing the solution.
+ * This function will create a listr2 task for compiling a C++ solution file into a test executable
+ * and then run the executable for testing the solution.
  *
- * @param solutionFile - The path of the C++ solution file to test.
+ * @param solutionFile - The path of the C++ solution file.
+ * @returns a listr2 task.
  */
-export async function testCppSolution(solutionFile: string): Promise<void> {
+export function createTestCppSolutionTask(solutionFile: string): Listr {
   const schemaFile = path.join(path.dirname(solutionFile), "test.yaml");
   const testFile = path.join("build", path.dirname(solutionFile), "test.cpp");
   const testExec = path.join(path.dirname(testFile), "test");
 
-  const tasks = new Listr<{ schema: Schema }>([
+  return new Listr<{ schema: Schema }>([
     {
       title: `Loading ${schemaFile}...`,
       task: (ctx): void => {
@@ -38,6 +39,4 @@ export async function testCppSolution(solutionFile: string): Promise<void> {
       task: () => runCppTest(testExec),
     },
   ]);
-
-  await tasks.run();
 }

@@ -3,7 +3,7 @@
 import yargs from "yargs";
 import { globSync } from "glob";
 import { hideBin } from "yargs/helpers";
-import { testCppSolution } from "./test/cpp.js";
+import { createTestCppSolutionTask } from "./test/cpp.js";
 
 yargs(hideBin(process.argv))
   .scriptName("leettest")
@@ -12,10 +12,11 @@ yargs(hideBin(process.argv))
     "$0",
     "Compile and test solutions to LeetCode problems",
     (yargs) => yargs,
-    () => {
+    async () => {
       const solutionFiles = globSync("**/solution.cpp");
       for (const solutionFile of solutionFiles) {
-        testCppSolution(solutionFile);
+        const task = createTestCppSolutionTask(solutionFile);
+        await task.run();
       }
     },
   )
