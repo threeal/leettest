@@ -1,4 +1,5 @@
 import { jest } from "@jest/globals";
+import { Listr } from "listr2";
 import { Schema } from "./schema.js";
 import "jest-extended";
 
@@ -22,7 +23,7 @@ it("should create a task for testing a C++ solution", async () => {
   const { compileCppTest } = await import("./cpp/compile.js");
   const { generateCppTest } = await import("./cpp/generate.js");
   const { runCppTest } = await import("./cpp/run.js");
-  const { createTestCppSolutionTask } = await import("./cpp.js");
+  const { createTestCppSolutionTasks } = await import("./cpp.js");
   const { readYamlSchema } = await import("./schema.js");
 
   const schema: Schema = {
@@ -53,7 +54,7 @@ it("should create a task for testing a C++ solution", async () => {
 
   jest.mocked(readYamlSchema).mockReturnValue(schema);
 
-  const task = createTestCppSolutionTask("path/to/solution.cpp");
+  const task = new Listr(createTestCppSolutionTasks("path/to/solution.cpp"));
   await task.run();
 
   expect(readYamlSchema).toHaveBeenCalledExactlyOnceWith("path/to/test.yaml");
