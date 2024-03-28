@@ -29,9 +29,6 @@ it("should compile a C++ test file", async () => {
   });
   expect(execSync).toHaveBeenCalledExactlyOnceWith(
     "clang++ --std=c++20 path/to/test.cpp -o build/path/to/test",
-    {
-      stdio: "inherit",
-    },
   );
   expect(execSync).toHaveBeenCalledAfter(jest.mocked(mkdirSync));
 });
