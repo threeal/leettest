@@ -1,0 +1,18 @@
+cpp:
+  function:
+    name: numberOfMatches
+    inputs:
+      - name: n
+        type: int
+    output: int
+
+examples:
+  1:
+    inputs:
+      n: 7
+    output: 6
+
+  2:
+    inputs:
+      n: 14
+    output: 13
