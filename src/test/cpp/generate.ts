@@ -16,7 +16,6 @@ export function generateCppTest(
 ): void {
   let lines: string[] = [
     `#include <iostream>`,
-    `#include <tuple>`,
     `#include <vector>`,
     ``,
     `#include "${path.relative(path.dirname(outFile), solutionFile)}"`,
@@ -26,7 +25,11 @@ export function generateCppTest(
   lines = lines.concat([
     `struct TestCase {`,
     `  const char* name;`,
-    `  std::tuple<${schema.cpp.function.inputs.join(", ")}> inputs;`,
+    `  struct {`,
+    ...schema.cpp.function.inputs.map(
+      (input) => `    ${input.type} ${input.name};`,
+    ),
+    `  } inputs;`,
     `  ${schema.cpp.function.output} output;`,
     `};`,
     ``,
@@ -36,8 +39,10 @@ export function generateCppTest(
 
   for (const name of Object.keys(schema.examples)) {
     const inputs: string[] = [];
-    for (const input of Object.keys(schema.examples[name].inputs)) {
-      inputs.push(`      ${schema.examples[name].inputs[input]}`);
+    for (const input of schema.cpp.function.inputs) {
+      inputs.push(
+        `      .${input.name} = ${schema.examples[name].inputs[input.name]}`,
+      );
     }
 
     const lines = [
@@ -68,8 +73,8 @@ export function generateCppTest(
   ]);
 
   const params: string[] = [];
-  for (let i = 0; i < schema.cpp.function.inputs.length; ++i) {
-    params.push(`std::get<${i}>(t.inputs)`);
+  for (const input of schema.cpp.function.inputs) {
+    params.push(`t.inputs.${input.name}`);
   }
   lines.push(
     `     auto output = s.${schema.cpp.function.name}(${params.join(", ")});`,

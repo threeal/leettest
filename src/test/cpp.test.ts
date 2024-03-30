@@ -30,7 +30,10 @@ it("should create a task for testing a C++ solution", async () => {
     cpp: {
       function: {
         name: "sum",
-        inputs: ["int", "int"],
+        inputs: [
+          { name: "num1", type: "int" },
+          { name: "num2", type: "int" },
+        ],
         output: "int",
       },
     },
