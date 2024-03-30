@@ -5,7 +5,10 @@ export interface Schema {
   cpp: {
     function: {
       name: string;
-      inputs: string[];
+      inputs: {
+        name: string;
+        type: string;
+      }[];
       output: string;
     };
   };

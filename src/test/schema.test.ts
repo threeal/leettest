@@ -13,7 +13,11 @@ it("should read a YAML schema file", async () => {
 cpp:
   function:
     name: sum
-    inputs: [int, int]
+    inputs:
+      - name: num1
+        type: int
+      - name: num2
+        type: int
     output: int
 
 examples:
@@ -40,7 +44,10 @@ examples:
     cpp: {
       function: {
         name: "sum",
-        inputs: ["int", "int"],
+        inputs: [
+          { name: "num1", type: "int" },
+          { name: "num2", type: "int" },
+        ],
         output: "int",
       },
     },
