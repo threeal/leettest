@@ -67,6 +67,7 @@ export function generateCppTest(
 
   lines = lines.concat([
     `int main() {`,
+    `  int failures{0};`,
     `  for (const auto &t : test_cases) {`,
     `    std::cout << "Testing " << t.name << "...\\n";`,
     `    Solution s{};`,
@@ -83,10 +84,10 @@ export function generateCppTest(
   lines = lines.concat([
     `     if (output != t.output) {`,
     `       std::cerr << "Wrong output: " << output << " != " << t.output << " \\n";`,
-    `       return 1;`,
+    `       ++failures;`,
     `     }`,
     `  }`,
-    `  return 0;`,
+    `  return failures;`,
     `}`,
     ``,
   ]);
