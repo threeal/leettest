@@ -20,9 +20,12 @@ yargs(hideBin(process.argv))
           (solutionFile): ListrTask => ({
             title: `Testing ${solutionFile}...`,
             task: (ctx, task) =>
-              task.newListr(createTestCppSolutionTasks(solutionFile)),
+              task.newListr(createTestCppSolutionTasks(solutionFile), {
+                exitOnError: true,
+              }),
           }),
         ),
+        { exitOnError: false },
       );
 
       try {
