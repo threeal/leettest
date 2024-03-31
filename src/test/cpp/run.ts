@@ -6,5 +6,5 @@ import { execSync } from "node:child_process";
  * @param testExec - The path of the C++ test executable to run.
  */
 export function runCppTest(testExec: string): void {
-  execSync(testExec);
+  execSync(testExec, { stdio: "pipe" });
 }
