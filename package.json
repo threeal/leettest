@@ -31,7 +31,7 @@
     "test": "NODE_OPTIONS=--experimental-vm-modules yarn jest"
   },
   "dependencies": {
-    "glob": "^10.3.10",
+    "glob": "^10.3.12",
     "listr2": "^8.0.2",
     "yaml": "^2.4.1",
     "yargs": "^17.7.2"
