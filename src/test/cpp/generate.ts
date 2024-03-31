@@ -69,7 +69,7 @@ export function generateCppTest(
     `int main() {`,
     `  int failures{0};`,
     `  for (const auto &t : test_cases) {`,
-    `    std::cout << "Testing " << t.name << "...\\n";`,
+    `    std::cout << "testing " << t.name << "...\\n";`,
     `    Solution s{};`,
   ]);
 
@@ -83,7 +83,14 @@ export function generateCppTest(
 
   lines = lines.concat([
     `     if (output != t.output) {`,
-    `       std::cerr << "Wrong output: " << output << " != " << t.output << " \\n";`,
+    `       std::cerr << "failed to test " << t.name << ":\\n";`,
+    `       std::cerr << ".  inputs:\\n";`,
+    ...schema.cpp.function.inputs.map(
+      (input) =>
+        `       std::cerr << ".    ${input.name}: " << t.inputs.${input.name} << "\\n";`,
+    ),
+    `       std::cerr << ".  output: " << output << "\\n";`,
+    `       std::cerr << ".  expected: " << t.output << "\\n\\n";`,
     `       ++failures;`,
     `     }`,
     `  }`,
