@@ -68,7 +68,7 @@ export function generateCppTest(
   lines = lines.concat([
     `int main() {`,
     `  int failures{0};`,
-    `  for (const auto &t : test_cases) {`,
+    `  for (const TestCase &t : test_cases) {`,
     `    std::cout << "testing " << t.name << "...\\n";`,
     `    Solution s{};`,
   ]);
@@ -78,7 +78,7 @@ export function generateCppTest(
     params.push(`t.inputs.${input.name}`);
   }
   lines.push(
-    `    const auto output = s.${schema.cpp.function.name}(${params.join(", ")});`,
+    `    const ${schema.cpp.function.output} output = s.${schema.cpp.function.name}(${params.join(", ")});`,
   );
 
   lines = lines.concat([
