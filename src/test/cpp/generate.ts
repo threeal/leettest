@@ -78,21 +78,21 @@ export function generateCppTest(
     params.push(`t.inputs.${input.name}`);
   }
   lines.push(
-    `     auto output = s.${schema.cpp.function.name}(${params.join(", ")});`,
+    `    auto output = s.${schema.cpp.function.name}(${params.join(", ")});`,
   );
 
   lines = lines.concat([
-    `     if (output != t.output) {`,
-    `       std::cerr << "failed to test " << t.name << ":\\n";`,
-    `       std::cerr << ".  inputs:\\n";`,
+    `    if (output != t.output) {`,
+    `      std::cerr << "failed to test " << t.name << ":\\n";`,
+    `      std::cerr << ".  inputs:\\n";`,
     ...schema.cpp.function.inputs.map(
       (input) =>
-        `       std::cerr << ".    ${input.name}: " << t.inputs.${input.name} << "\\n";`,
+        `      std::cerr << ".    ${input.name}: " << t.inputs.${input.name} << "\\n";`,
     ),
-    `       std::cerr << ".  output: " << output << "\\n";`,
-    `       std::cerr << ".  expected: " << t.output << "\\n\\n";`,
-    `       ++failures;`,
-    `     }`,
+    `      std::cerr << ".  output: " << output << "\\n";`,
+    `      std::cerr << ".  expected: " << t.output << "\\n\\n";`,
+    `      ++failures;`,
+    `    }`,
     `  }`,
     `  if (failures > 0) std::cerr << failures << " test cases have failed\\n";`,
     `  return failures;`,
