@@ -25,7 +25,10 @@ yargs(hideBin(process.argv))
               }),
           }),
         ),
-        { exitOnError: false },
+        {
+          exitOnError: false,
+          rendererOptions: { collapseErrors: false },
+        },
       );
 
       try {
