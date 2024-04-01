@@ -37,7 +37,7 @@ export function generateCppTest(
 
   const testCases: string[] = [];
 
-  for (const example of Object.values(schema.examples)) {
+  for (const example of schema.examples) {
     const inputs: string[] = [];
     for (const input of schema.cpp.function.inputs) {
       inputs.push(`      .${input.name}{${example.inputs[input.name]}}`);

@@ -21,15 +21,13 @@ cpp:
     output: int
 
 examples:
-  1:
-    name: example 1
+  - name: example 1
     inputs:
       num1: 12
       num2: 5
     output: 17
 
-  2:
-    name: example 2
+  - name: example 2
     inputs:
       num1: -10
       num2: 4
@@ -53,8 +51,8 @@ examples:
         output: "int",
       },
     },
-    examples: {
-      1: {
+    examples: [
+      {
         name: "example 1",
         inputs: {
           num1: 12,
@@ -62,7 +60,7 @@ examples:
         },
         output: 17,
       },
-      2: {
+      {
         name: "example 2",
         inputs: {
           num1: -10,
@@ -70,6 +68,6 @@ examples:
         },
         output: -6,
       },
-    },
+    ],
   });
 });
