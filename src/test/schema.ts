@@ -12,7 +12,7 @@ export interface Schema {
       output: string;
     };
   };
-  examples: {
+  cases: {
     name: string;
     inputs: { [key: string]: unknown };
     output: unknown;

@@ -20,7 +20,7 @@ cpp:
         type: int
     output: int
 
-examples:
+cases:
   - name: example 1
     inputs:
       num1: 12
@@ -51,7 +51,7 @@ examples:
         output: "int",
       },
     },
-    examples: [
+    cases: [
       {
         name: "example 1",
         inputs: {

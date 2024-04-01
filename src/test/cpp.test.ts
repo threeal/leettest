@@ -37,7 +37,7 @@ it("should create a task for testing a C++ solution", async () => {
         output: "int",
       },
     },
-    examples: [
+    cases: [
       {
         name: "example 1",
         inputs: {

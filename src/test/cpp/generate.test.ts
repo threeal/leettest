@@ -22,7 +22,7 @@ it("should generate a C++ test file", async () => {
         output: "int",
       },
     },
-    examples: [
+    cases: [
       {
         name: "example 1",
         inputs: {
