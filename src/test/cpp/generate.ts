@@ -25,12 +25,12 @@ export function generateCppTest(
   lines = lines.concat([
     `struct TestCase {`,
     `  const char* name;`,
-    `  struct {`,
+    `  const struct {`,
     ...schema.cpp.function.inputs.map(
-      (input) => `    ${input.type} ${input.name};`,
+      (input) => `    const ${input.type} ${input.name};`,
     ),
     `  } inputs;`,
-    `  ${schema.cpp.function.output} output;`,
+    `  const ${schema.cpp.function.output} output;`,
     `};`,
     ``,
   ]);
@@ -59,7 +59,7 @@ export function generateCppTest(
   }
 
   lines = lines.concat([
-    `std::vector<TestCase> test_cases{`,
+    `const std::vector<TestCase> test_cases{`,
     testCases.join(",\n"),
     `};`,
     ``,
@@ -78,7 +78,7 @@ export function generateCppTest(
     params.push(`t.inputs.${input.name}`);
   }
   lines.push(
-    `    auto output = s.${schema.cpp.function.name}(${params.join(", ")});`,
+    `    const auto output = s.${schema.cpp.function.name}(${params.join(", ")});`,
   );
 
   lines = lines.concat([
