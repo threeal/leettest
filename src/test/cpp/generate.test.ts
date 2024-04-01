@@ -102,6 +102,7 @@ it("should generate a C++ test file", async () => {
       `       ++failures;`,
       `     }`,
       `  }`,
+      `  if (failures > 0) std::cerr << failures << " test cases have failed\\n";`,
       `  return failures;`,
       `}`,
       ``,
