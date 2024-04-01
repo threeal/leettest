@@ -41,17 +41,17 @@ export function generateCppTest(
     const inputs: string[] = [];
     for (const input of schema.cpp.function.inputs) {
       inputs.push(
-        `      .${input.name} = ${schema.examples[name].inputs[input.name]}`,
+        `      .${input.name}{${schema.examples[name].inputs[input.name]}}`,
       );
     }
 
     const lines = [
       `  {`,
-      `    .name = "example ${name}",`,
+      `    .name{"example ${name}"},`,
       `    .inputs{`,
       inputs.join(",\n"),
       `    },`,
-      `    .output = ${schema.examples[name].output}`,
+      `    .output{${schema.examples[name].output}}`,
       `  }`,
     ];
 
@@ -78,7 +78,7 @@ export function generateCppTest(
     params.push(`t.inputs.${input.name}`);
   }
   lines.push(
-    `    const ${schema.cpp.function.output} output = s.${schema.cpp.function.name}(${params.join(", ")});`,
+    `    const ${schema.cpp.function.output} output{s.${schema.cpp.function.name}(${params.join(", ")})};`,
   );
 
   lines = lines.concat([
