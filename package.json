@@ -28,7 +28,7 @@
     "lint": "eslint --ignore-path .gitignore .",
     "prepack": "tsc",
     "start": "tsx src/bin.ts",
-    "test": "NODE_OPTIONS=--experimental-vm-modules yarn jest"
+    "test": "jest"
   },
   "dependencies": {
     "glob": "^10.3.12",
