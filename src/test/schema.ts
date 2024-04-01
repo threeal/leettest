@@ -12,12 +12,11 @@ export interface Schema {
       output: string;
     };
   };
-  examples: {
-    [key: string]: {
-      inputs: { [key: string]: unknown };
-      output: unknown;
-    };
-  };
+  cases: {
+    name: string;
+    inputs: { [key: string]: unknown };
+    output: unknown;
+  }[];
 }
 
 /**

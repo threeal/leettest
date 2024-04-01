@@ -22,22 +22,24 @@ it("should generate a C++ test file", async () => {
         output: "int",
       },
     },
-    examples: {
-      1: {
+    cases: [
+      {
+        name: "example 1",
         inputs: {
           num1: 12,
           num2: 5,
         },
         output: 17,
       },
-      2: {
+      {
+        name: "example 2",
         inputs: {
           num1: -10,
           num2: 4,
         },
         output: -6,
       },
-    },
+    ],
   };
 
   generateCppTest(schema, "path/to/solution.cpp", "build/path/to/test.cpp");
