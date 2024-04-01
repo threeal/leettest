@@ -25,12 +25,12 @@ export function generateCppTest(
   lines = lines.concat([
     `struct TestCase {`,
     `  const char* name;`,
-    `  struct {`,
+    `  const struct {`,
     ...schema.cpp.function.inputs.map(
-      (input) => `    ${input.type} ${input.name};`,
+      (input) => `    const ${input.type} ${input.name};`,
     ),
     `  } inputs;`,
-    `  ${schema.cpp.function.output} output;`,
+    `  const ${schema.cpp.function.output} output;`,
     `};`,
     ``,
   ]);
@@ -41,17 +41,17 @@ export function generateCppTest(
     const inputs: string[] = [];
     for (const input of schema.cpp.function.inputs) {
       inputs.push(
-        `      .${input.name} = ${schema.examples[name].inputs[input.name]}`,
+        `      .${input.name}{${schema.examples[name].inputs[input.name]}}`,
       );
     }
 
     const lines = [
       `  {`,
-      `    .name = "example ${name}",`,
+      `    .name{"example ${name}"},`,
       `    .inputs{`,
       inputs.join(",\n"),
       `    },`,
-      `    .output = ${schema.examples[name].output}`,
+      `    .output{${schema.examples[name].output}}`,
       `  }`,
     ];
 
@@ -59,7 +59,7 @@ export function generateCppTest(
   }
 
   lines = lines.concat([
-    `std::vector<TestCase> test_cases{`,
+    `const std::vector<TestCase> test_cases{`,
     testCases.join(",\n"),
     `};`,
     ``,
@@ -68,7 +68,7 @@ export function generateCppTest(
   lines = lines.concat([
     `int main() {`,
     `  int failures{0};`,
-    `  for (const auto &t : test_cases) {`,
+    `  for (const TestCase &t : test_cases) {`,
     `    std::cout << "testing " << t.name << "...\\n";`,
     `    Solution s{};`,
   ]);
@@ -78,7 +78,7 @@ export function generateCppTest(
     params.push(`t.inputs.${input.name}`);
   }
   lines.push(
-    `    auto output = s.${schema.cpp.function.name}(${params.join(", ")});`,
+    `    const ${schema.cpp.function.output} output{s.${schema.cpp.function.name}(${params.join(", ")})};`,
   );
 
   lines = lines.concat([
