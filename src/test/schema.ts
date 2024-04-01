@@ -14,6 +14,7 @@ export interface Schema {
   };
   examples: {
     [key: string]: {
+      name: string;
       inputs: { [key: string]: unknown };
       output: unknown;
     };

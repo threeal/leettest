@@ -22,12 +22,14 @@ cpp:
 
 examples:
   1:
+    name: example 1
     inputs:
       num1: 12
       num2: 5
     output: 17
 
   2:
+    name: example 2
     inputs:
       num1: -10
       num2: 4
@@ -53,6 +55,7 @@ examples:
     },
     examples: {
       1: {
+        name: "example 1",
         inputs: {
           num1: 12,
           num2: 5,
@@ -60,6 +63,7 @@ examples:
         output: 17,
       },
       2: {
+        name: "example 2",
         inputs: {
           num1: -10,
           num2: 4,

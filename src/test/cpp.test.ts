@@ -39,6 +39,7 @@ it("should create a task for testing a C++ solution", async () => {
     },
     examples: {
       1: {
+        name: "example 1",
         inputs: {
           num1: 12,
           num2: 5,
@@ -46,6 +47,7 @@ it("should create a task for testing a C++ solution", async () => {
         output: 17,
       },
       2: {
+        name: "example 2",
         inputs: {
           num1: -10,
           num2: 4,
