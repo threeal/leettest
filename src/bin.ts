@@ -26,6 +26,7 @@ yargs(hideBin(process.argv))
           }),
         ),
         {
+          concurrent: true,
           exitOnError: false,
           rendererOptions: {
             collapseErrors: false,
