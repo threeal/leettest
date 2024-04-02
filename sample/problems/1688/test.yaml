@@ -2,8 +2,8 @@ cpp:
   function:
     name: numberOfMatches
     inputs:
-      - name: n
-        type: int
+      - type: int
+        value: n
     output:
       type: int
 

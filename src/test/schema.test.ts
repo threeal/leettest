@@ -14,10 +14,10 @@ cpp:
   function:
     name: sum
     inputs:
-      - name: num1
-        type: int
-      - name: num2
-        type: int
+      - type: int
+        value: num1
+      - type: int
+        value: num2
     output:
       type: int
 
@@ -46,8 +46,8 @@ cases:
       function: {
         name: "sum",
         inputs: [
-          { name: "num1", type: "int" },
-          { name: "num2", type: "int" },
+          { type: "int", value: "num1" },
+          { type: "int", value: "num2" },
         ],
         output: { type: "int" },
       },
