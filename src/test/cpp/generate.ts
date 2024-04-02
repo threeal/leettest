@@ -82,11 +82,6 @@ export function generateCppTest(
   lines = lines.concat([
     `    if (output != t.output) {`,
     `      std::cerr << "failed to test " << t.name << ":\\n";`,
-    `      std::cerr << ".  inputs:\\n";`,
-    ...schema.cpp.function.inputs.map(
-      (input) =>
-        `      std::cerr << ".    ${input.name}: " << t.inputs.${input.name} << "\\n";`,
-    ),
     `      std::cerr << ".  output: " << output << "\\n";`,
     `      std::cerr << ".  expected: " << t.output << "\\n\\n";`,
     `      ++failures;`,
