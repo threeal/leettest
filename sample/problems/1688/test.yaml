@@ -4,7 +4,8 @@ cpp:
     inputs:
       - name: n
         type: int
-    output: int
+    output:
+      type: int
 
 cases:
   - name: example 1

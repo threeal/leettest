@@ -9,7 +9,9 @@ export interface Schema {
         name: string;
         type: string;
       }[];
-      output: string;
+      output: {
+        type: string;
+      };
     };
   };
   cases: {
