@@ -6,7 +6,8 @@ cpp:
         type: int
       - name: num2
         type: int
-    output: int
+    output:
+      type: int
 
 cases:
   - name: example 1

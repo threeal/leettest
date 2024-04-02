@@ -19,7 +19,7 @@ it("should generate a C++ test file", async () => {
           { name: "num1", type: "int" },
           { name: "num2", type: "int" },
         ],
-        output: "int",
+        output: { type: "int" },
       },
     },
     cases: [

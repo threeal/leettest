@@ -18,7 +18,8 @@ cpp:
         type: int
       - name: num2
         type: int
-    output: int
+    output:
+      type: int
 
 cases:
   - name: example 1
@@ -48,7 +49,7 @@ cases:
           { name: "num1", type: "int" },
           { name: "num2", type: "int" },
         ],
-        output: "int",
+        output: { type: "int" },
       },
     },
     cases: [

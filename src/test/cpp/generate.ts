@@ -30,7 +30,7 @@ export function generateCppTest(
       (input) => `    const ${input.type} ${input.name};`,
     ),
     `  } inputs;`,
-    `  const ${schema.cpp.function.output} output;`,
+    `  const ${schema.cpp.function.output.type} output;`,
     `};`,
     ``,
   ]);
@@ -76,7 +76,7 @@ export function generateCppTest(
     params.push(`t.inputs.${input.name}`);
   }
   lines.push(
-    `    const ${schema.cpp.function.output} output{s.${schema.cpp.function.name}(${params.join(", ")})};`,
+    `    const ${schema.cpp.function.output.type} output{s.${schema.cpp.function.name}(${params.join(", ")})};`,
   );
 
   lines = lines.concat([
