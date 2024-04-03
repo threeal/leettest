@@ -15,10 +15,10 @@ export function generateCppTest(
   outFile: string,
 ): void {
   let lines: string[] = [
+    `#include "${path.relative(path.dirname(outFile), solutionFile)}"`,
+    ``,
     `#include <iostream>`,
     `#include <vector>`,
-    ``,
-    `#include "${path.relative(path.dirname(outFile), solutionFile)}"`,
     ``,
   ];
 
