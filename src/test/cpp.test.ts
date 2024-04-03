@@ -31,8 +31,8 @@ it("should create a task for testing a C++ solution", async () => {
       function: {
         name: "sum",
         inputs: [
-          { name: "num1", type: "int" },
-          { name: "num2", type: "int" },
+          { type: "int", value: "num1" },
+          { type: "int", value: "num2" },
         ],
         output: { type: "int" },
       },

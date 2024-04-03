@@ -6,8 +6,8 @@ export interface Schema {
     function: {
       name: string;
       inputs: {
-        name: string;
         type: string;
+        value: string;
       }[];
       output: {
         type: string;

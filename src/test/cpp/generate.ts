@@ -27,7 +27,7 @@ export function generateCppTest(
     `  const char* name;`,
     `  const struct {`,
     ...schema.cpp.function.inputs.map(
-      (input) => `    const ${input.type} ${input.name};`,
+      (input, i) => `    const ${input.type} arg${i};`,
     ),
     `  } inputs;`,
     `  const ${schema.cpp.function.output.type} output;`,
@@ -38,16 +38,13 @@ export function generateCppTest(
   const testCases: string[] = [];
 
   for (const c of schema.cases) {
-    const inputs: string[] = [];
-    for (const input of schema.cpp.function.inputs) {
-      inputs.push(`      .${input.name}{${c.inputs[input.name]}}`);
-    }
-
     const lines = [
       `  {`,
       `    .name{"${c.name}"},`,
       `    .inputs{`,
-      inputs.join(",\n"),
+      schema.cpp.function.inputs
+        .map((input, i) => `      .arg${i}{${c.inputs[input.value]}}`)
+        .join(",\n"),
       `    },`,
       `    .output{${c.output}}`,
       `  }`,
@@ -71,12 +68,11 @@ export function generateCppTest(
     `    Solution s{};`,
   ]);
 
-  const params: string[] = [];
-  for (const input of schema.cpp.function.inputs) {
-    params.push(`t.inputs.${input.name}`);
-  }
+  const params = schema.cpp.function.inputs
+    .map((_, i) => `t.inputs.arg${i}`)
+    .join(", ");
   lines.push(
-    `    const ${schema.cpp.function.output.type} output{s.${schema.cpp.function.name}(${params.join(", ")})};`,
+    `    const ${schema.cpp.function.output.type} output{s.${schema.cpp.function.name}(${params})};`,
   );
 
   lines = lines.concat([
