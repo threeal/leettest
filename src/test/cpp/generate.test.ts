@@ -55,10 +55,10 @@ it("should generate a C++ test file", async () => {
   expect(writeFileSyncCall[0]).toBe("build/path/to/test.cpp");
   expect(writeFileSyncCall[1]).toBe(
     [
+      `#include "../../../path/to/solution.cpp"`,
+      ``,
       `#include <iostream>`,
       `#include <vector>`,
-      ``,
-      `#include "../../../path/to/solution.cpp"`,
       ``,
       `struct TestCase {`,
       `  const char* name;`,
