@@ -21,6 +21,7 @@ yargs(hideBin(process.argv))
             title: `Testing ${solutionFile}...`,
             task: (ctx, task) =>
               task.newListr(createTestCppSolutionTasks(solutionFile), {
+                concurrent: false,
                 exitOnError: true,
               }),
           }),
