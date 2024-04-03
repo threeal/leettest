@@ -10,13 +10,22 @@ yargs(hideBin(process.argv))
   .scriptName("leettest")
   .version("0.1.0")
   .command(
-    "$0",
+    "$0 [files..]",
     "Compile and test solutions to LeetCode problems",
-    (yargs) => yargs,
-    async () => {
-      const solutionFiles = globSync("**/solution.cpp");
+    (yargs) =>
+      yargs.positional("files", {
+        describe: "A list of pattern for solution files to process",
+        default: ["**/solution.cpp"],
+        type: "string",
+        array: true,
+      }),
+    async (argv) => {
+      const solutionFiles = argv.files
+        .map((file) => globSync(file))
+        .flat()
+        .sort();
       const task = new Listr(
-        solutionFiles.sort().map(
+        solutionFiles.map(
           (solutionFile): ListrTask => ({
             title: `Testing ${solutionFile}...`,
             task: (ctx, task) =>
