@@ -40,13 +40,13 @@ export function generateCppTest(
   for (const c of schema.cases) {
     const lines = [
       `  {`,
-      `    .name{"${c.name}"},`,
+      `    "${c.name}",`,
       `    .inputs{`,
       schema.cpp.function.inputs
-        .map((input, i) => `      .arg${i}{${c.inputs[input.value]}}`)
+        .map((input) => `      ${c.inputs[input.value]}`)
         .join(",\n"),
       `    },`,
-      `    .output{${c.output}}`,
+      `    ${c.output}`,
       `  }`,
     ];
 
