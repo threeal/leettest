@@ -16,7 +16,7 @@ yargs(hideBin(process.argv))
     async () => {
       const solutionFiles = globSync("**/solution.cpp");
       const task = new Listr(
-        solutionFiles.map(
+        solutionFiles.sort().map(
           (solutionFile): ListrTask => ({
             title: `Testing ${solutionFile}...`,
             task: (ctx, task) =>
