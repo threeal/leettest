@@ -6,5 +6,6 @@ import { execSync } from "node:child_process";
  * @param testExec - The path of the C++ test executable to run.
  */
 export function runCppTest(testExec: string): void {
-  execSync(testExec, { stdio: "pipe" });
+  const cmd = process.platform === "win32" ? `start ${testExec}` : testExec;
+  execSync(cmd, { stdio: "pipe" });
 }
