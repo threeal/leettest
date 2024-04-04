@@ -11,5 +11,7 @@ import path from "node:path";
 export function compileCppTest(testFile: string, outFile: string): void {
   mkdirSync(path.dirname(outFile), { recursive: true });
 
-  execSync(`clang++ --std=c++20 ${testFile} -o ${outFile}`, { stdio: "pipe" });
+  execSync(`clang++ --std=c++20 -O2 ${testFile} -o ${outFile}`, {
+    stdio: "pipe",
+  });
 }
