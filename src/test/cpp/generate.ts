@@ -3,6 +3,21 @@ import path from "node:path";
 import { Schema } from "../schema.js";
 
 /**
+ * Formats a value to a string in C++ format.
+ *
+ * @param value - The value to format.
+ * @param type - The target C++ type.
+ * @returns A string representation of the value in C++ format.
+ */
+export function formatCpp(value: unknown, type: string): string {
+  switch (type) {
+    case "std::string":
+      return `"${value}"`;
+  }
+  return `${value}`;
+}
+
+/**
  * Generates a C++ test file from a test schema.
  *
  * @param schema - The test schema.
@@ -42,10 +57,10 @@ export function generateCppTest(
       `    "${c.name}",`,
       `    .inputs{`,
       schema.cpp.function.inputs
-        .map((input) => `      ${c.inputs[input.value]}`)
+        .map((input) => `      ${formatCpp(c.inputs[input.value], input.type)}`)
         .join(",\n"),
       `    },`,
-      `    ${c.output}`,
+      `    ${formatCpp(c.output, schema.cpp.function.output.type)}`,
       `  }`,
     ];
 
