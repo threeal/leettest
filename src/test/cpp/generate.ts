@@ -18,7 +18,6 @@ export function generateCppTest(
     `#include "${path.relative(path.dirname(outFile), solutionFile)}"`,
     ``,
     `#include <iostream>`,
-    `#include <vector>`,
     ``,
   ];
 
@@ -54,7 +53,7 @@ export function generateCppTest(
   }
 
   lines = lines.concat([
-    `const std::vector<TestCase> test_cases{`,
+    `const TestCase test_cases[${testCases.length}]{`,
     testCases.join(",\n"),
     `};`,
     ``,
@@ -63,7 +62,8 @@ export function generateCppTest(
   lines = lines.concat([
     `int main() {`,
     `  int failures{0};`,
-    `  for (const TestCase &t : test_cases) {`,
+    `  for (int i{0}; i < ${testCases.length}; ++i) {`,
+    `    const auto& t{test_cases[i]};`,
     `    std::cout << "testing " << t.name << "...\\n";`,
     `    Solution s{};`,
   ]);
