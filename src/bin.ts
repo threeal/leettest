@@ -38,6 +38,7 @@ yargs(hideBin(process.argv))
         {
           concurrent: true,
           exitOnError: false,
+          collectErrors: "minimal",
           rendererOptions: {
             collapseErrors: false,
             removeEmptyLines: false,
@@ -45,10 +46,9 @@ yargs(hideBin(process.argv))
         },
       );
 
-      try {
-        await task.run();
-      } catch (err) {
-        console.error(err);
+      await task.run();
+      if (task.errors.length > 0) {
+        process.exit(1);
       }
     },
   )
