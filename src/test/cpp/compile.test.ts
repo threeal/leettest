@@ -28,7 +28,7 @@ it("should compile a C++ test file", async () => {
     recursive: true,
   });
   expect(execSync).toHaveBeenCalledExactlyOnceWith(
-    "clang++ --std=c++20 path/to/test.cpp -o build/path/to/test",
+    "clang++ --std=c++20 -O2 path/to/test.cpp -o build/path/to/test",
     { stdio: "pipe" },
   );
   expect(execSync).toHaveBeenCalledAfter(jest.mocked(mkdirSync));
