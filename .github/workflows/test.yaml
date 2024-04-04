@@ -52,7 +52,11 @@ jobs:
 
   test-sample:
     name: Test Sample
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows, ubuntu, macos]
     steps:
       - name: Checkout
         uses: actions/checkout@v4.1.2
