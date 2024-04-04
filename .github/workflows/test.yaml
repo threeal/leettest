@@ -57,6 +57,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4.1.2
 
+      - name: Checkout Samples
+        uses: actions/checkout@v4.1.2
+        with:
+          repository: threeal/leetspace-starter
+          path: samples
+          sparse-checkout: problems
+          sparse-checkout-cone-mode: false
+
       - name: Setup Node.js
         uses: actions/setup-node@v4.0.2
         with:
