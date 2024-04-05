@@ -16,15 +16,16 @@ export function generateCppTest(
   solutionFile: string,
   outFile: string,
 ): void {
-  const lines: string[] = [
-    `#include "${path.relative(path.dirname(outFile), solutionFile)}"`,
-    ``,
-    `#include <iostream>`,
-    ``,
-    generateCppTestCaseCode(schema),
-    generateCppMainCode(schema),
-  ];
-
   mkdirSync(path.dirname(outFile), { recursive: true });
-  writeFileSync(outFile, lines.join("\n"));
+  writeFileSync(
+    outFile,
+    [
+      `#include "${path.relative(path.dirname(outFile), solutionFile)}"`,
+      ``,
+      `#include <iostream>`,
+      ``,
+      generateCppTestCaseCode(schema),
+      generateCppMainCode(schema),
+    ].join("\n"),
+  );
 }
