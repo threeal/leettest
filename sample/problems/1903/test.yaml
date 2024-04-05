@@ -1,0 +1,24 @@
+cpp:
+  function:
+    name: largestOddNumber
+    inputs:
+      - type: std::string
+        value: num
+    output:
+      type: std::string
+
+cases:
+  - name: example 1
+    inputs:
+      num: "52"
+    output: "5"
+
+  - name: example 2
+    inputs:
+      num: "4206"
+    output: ""
+
+  - name: example 3
+    inputs:
+      num: "35427"
+    output: "35427"
