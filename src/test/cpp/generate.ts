@@ -1,7 +1,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { Schema } from "../schema.js";
-import { formatCpp } from "./generate/format.js";
+import { generateCppTestCaseCode } from "./generate/test_case.js";
 
 /**
  * Generates a C++ test file from a test schema.
@@ -22,48 +22,12 @@ export function generateCppTest(
     ``,
   ];
 
-  lines = lines.concat([
-    `struct TestCase {`,
-    `  const char* name;`,
-    `  struct {`,
-    ...schema.cpp.function.inputs.map(
-      (input, i) => `    ${input.type} arg${i};`,
-    ),
-    `  } inputs;`,
-    `  ${schema.cpp.function.output.type} output;`,
-    `};`,
-    ``,
-  ]);
-
-  const testCases: string[] = [];
-
-  for (const c of schema.cases) {
-    const lines = [
-      `  {`,
-      `    "${c.name}",`,
-      `    .inputs{`,
-      schema.cpp.function.inputs
-        .map((input) => `      ${formatCpp(c.inputs[input.value], input.type)}`)
-        .join(",\n"),
-      `    },`,
-      `    ${formatCpp(c.output, schema.cpp.function.output.type)}`,
-      `  }`,
-    ];
-
-    testCases.push(lines.join("\n"));
-  }
-
-  lines = lines.concat([
-    `TestCase test_cases[${testCases.length}]{`,
-    testCases.join(",\n"),
-    `};`,
-    ``,
-  ]);
+  lines.push(generateCppTestCaseCode(schema));
 
   lines = lines.concat([
     `int main() {`,
     `  int failures{0};`,
-    `  for (int i{0}; i < ${testCases.length}; ++i) {`,
+    `  for (int i{0}; i < ${schema.cases.length}; ++i) {`,
     `    std::cout << "testing " << test_cases[i].name << "...\\n";`,
     `    Solution s{};`,
   ]);
