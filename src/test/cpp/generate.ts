@@ -78,23 +78,22 @@ export function generateCppTest(
     `int main() {`,
     `  int failures{0};`,
     `  for (int i{0}; i < ${testCases.length}; ++i) {`,
-    `    auto& t{test_cases[i]};`,
-    `    std::cout << "testing " << t.name << "...\\n";`,
+    `    std::cout << "testing " << test_cases[i].name << "...\\n";`,
     `    Solution s{};`,
   ]);
 
   const params = schema.cpp.function.inputs
-    .map((_, i) => `t.inputs.arg${i}`)
+    .map((_, i) => `test_cases[i].inputs.arg${i}`)
     .join(", ");
   lines.push(
     `    const ${schema.cpp.function.output.type} output{s.${schema.cpp.function.name}(${params})};`,
   );
 
   lines = lines.concat([
-    `    if (output != t.output) {`,
-    `      std::cerr << "failed to test " << t.name << ":\\n";`,
+    `    if (output != test_cases[i].output) {`,
+    `      std::cerr << "failed to test " << test_cases[i].name << ":\\n";`,
     `      std::cerr << ".  output: " << output << "\\n";`,
-    `      std::cerr << ".  expected: " << t.output << "\\n\\n";`,
+    `      std::cerr << ".  expected: " << test_cases[i].output << "\\n\\n";`,
     `      ++failures;`,
     `    }`,
     `  }`,
