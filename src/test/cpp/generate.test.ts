@@ -7,18 +7,6 @@ jest.unstable_mockModule("node:fs", () => ({
   writeFileSync: jest.fn(),
 }));
 
-describe("format values in C++ format", () => {
-  it("should format an integer", async () => {
-    const { formatCpp } = await import("./generate.js");
-    expect(formatCpp(123, "int")).toBe("123");
-  });
-
-  it("should format a string", async () => {
-    const { formatCpp } = await import("./generate.js");
-    expect(formatCpp("something", "std::string")).toBe(`"something"`);
-  });
-});
-
 it("should generate a C++ test file", async () => {
   const { mkdirSync, writeFileSync } = await import("node:fs");
   const { generateCppTest } = await import("./generate.js");

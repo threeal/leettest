@@ -1,21 +1,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { Schema } from "../schema.js";
-
-/**
- * Formats a value to a string in C++ format.
- *
- * @param value - The value to format.
- * @param type - The target C++ type.
- * @returns A string representation of the value in C++ format.
- */
-export function formatCpp(value: unknown, type: string): string {
-  switch (type) {
-    case "std::string":
-      return `"${value}"`;
-  }
-  return `${value}`;
-}
+import { formatCpp } from "./generate/format.js";
 
 /**
  * Generates a C++ test file from a test schema.
