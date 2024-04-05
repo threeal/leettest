@@ -7,20 +7,18 @@ jest.unstable_mockModule("node:fs", () => ({
   writeFileSync: jest.fn(),
 }));
 
-describe("format values in C++ format", () => {
-  it("should format an integer", async () => {
-    const { formatCpp } = await import("./generate.js");
-    expect(formatCpp(123, "int")).toBe("123");
-  });
+jest.unstable_mockModule("./generate/main.js", () => ({
+  generateCppMainCode: jest.fn(),
+}));
 
-  it("should format a string", async () => {
-    const { formatCpp } = await import("./generate.js");
-    expect(formatCpp("something", "std::string")).toBe(`"something"`);
-  });
-});
+jest.unstable_mockModule("./generate/test_case.js", () => ({
+  generateCppTestCaseCode: jest.fn(),
+}));
 
 it("should generate a C++ test file", async () => {
   const { mkdirSync, writeFileSync } = await import("node:fs");
+  const { generateCppMainCode } = await import("./generate/main.js");
+  const { generateCppTestCaseCode } = await import("./generate/test_case.js");
   const { generateCppTest } = await import("./generate.js");
 
   const schema: Schema = {
@@ -54,6 +52,9 @@ it("should generate a C++ test file", async () => {
     ],
   };
 
+  jest.mocked(generateCppMainCode).mockReturnValue("// C++ main function code");
+  jest.mocked(generateCppTestCaseCode).mockReturnValue("// C++ test case code");
+
   generateCppTest(schema, "path/to/solution.cpp", "build/path/to/test.cpp");
 
   expect(mkdirSync).toHaveBeenCalledExactlyOnceWith("build/path/to", {
@@ -61,61 +62,15 @@ it("should generate a C++ test file", async () => {
   });
 
   expect(writeFileSync).toHaveBeenCalledAfter(jest.mocked(mkdirSync));
-  expect(writeFileSync).toHaveBeenCalledOnce();
-
-  const writeFileSyncCall = jest.mocked(writeFileSync).mock.calls[0];
-  expect(writeFileSyncCall[0]).toBe("build/path/to/test.cpp");
-  expect(writeFileSyncCall[1]).toBe(
+  expect(writeFileSync).toHaveBeenCalledExactlyOnceWith(
+    "build/path/to/test.cpp",
     [
       `#include "../../../path/to/solution.cpp"`,
       ``,
       `#include <iostream>`,
       ``,
-      `struct TestCase {`,
-      `  const char* name;`,
-      `  struct {`,
-      `    int arg0;`,
-      `    int arg1;`,
-      `  } inputs;`,
-      `  int output;`,
-      `};`,
-      ``,
-      `TestCase test_cases[2]{`,
-      `  {`,
-      `    "example 1",`,
-      `    .inputs{`,
-      `      12,`,
-      `      5`,
-      `    },`,
-      `    17`,
-      `  },`,
-      `  {`,
-      `    "example 2",`,
-      `    .inputs{`,
-      `      -10,`,
-      `      4`,
-      `    },`,
-      `    -6`,
-      `  }`,
-      `};`,
-      ``,
-      `int main() {`,
-      `  int failures{0};`,
-      `  for (int i{0}; i < 2; ++i) {`,
-      `    std::cout << "testing " << test_cases[i].name << "...\\n";`,
-      `    Solution s{};`,
-      `    const int output{s.sum(test_cases[i].inputs.arg0, test_cases[i].inputs.arg1)};`,
-      `    if (output != test_cases[i].output) {`,
-      `      std::cerr << "failed to test " << test_cases[i].name << ":\\n";`,
-      `      std::cerr << ".  output: " << output << "\\n";`,
-      `      std::cerr << ".  expected: " << test_cases[i].output << "\\n\\n";`,
-      `      ++failures;`,
-      `    }`,
-      `  }`,
-      `  if (failures > 0) std::cerr << failures << " test cases have failed\\n";`,
-      `  return failures;`,
-      `}`,
-      ``,
+      `// C++ test case code`,
+      `// C++ main function code`,
     ].join("\n"),
   );
 });
