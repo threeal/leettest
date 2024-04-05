@@ -25,7 +25,7 @@ export function generateCppTest(
       `#include <iostream>`,
       ``,
       generateCppTestCaseCode(schema),
-      generateCppMainCode(schema),
+      generateCppMainCode(schema).code,
     ].join("\n"),
   );
 }

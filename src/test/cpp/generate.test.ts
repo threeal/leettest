@@ -52,7 +52,11 @@ it("should generate a C++ test file", async () => {
     ],
   };
 
-  jest.mocked(generateCppMainCode).mockReturnValue("// C++ main function code");
+  jest.mocked(generateCppMainCode).mockReturnValue({
+    code: "// C++ main function code",
+    headers: new Set(["iostream"]),
+  });
+
   jest.mocked(generateCppTestCaseCode).mockReturnValue("// C++ test case code");
 
   generateCppTest(schema, "path/to/solution.cpp", "build/path/to/test.cpp");
