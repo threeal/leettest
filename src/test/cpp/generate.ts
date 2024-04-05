@@ -16,16 +16,21 @@ export function generateCppTest(
   solutionFile: string,
   outFile: string,
 ): void {
+  const main = generateCppMainCode(schema);
+
   mkdirSync(path.dirname(outFile), { recursive: true });
   writeFileSync(
     outFile,
     [
       `#include "${path.relative(path.dirname(outFile), solutionFile)}"`,
       ``,
-      `#include <iostream>`,
+      [...main.headers]
+        .sort()
+        .map((header) => `#include <${header}>`)
+        .join("\n"),
       ``,
       generateCppTestCaseCode(schema),
-      generateCppMainCode(schema).code,
+      main.code,
     ].join("\n"),
   );
 }
