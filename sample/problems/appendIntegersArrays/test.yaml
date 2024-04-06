@@ -1,0 +1,29 @@
+cpp:
+  function:
+    name: appendIntegersArrays
+    inputs:
+      - type: std::vector<int>
+        value: nums1
+      - type: std::vector<int>
+        value: nums2
+    output:
+      type: std::vector<int>
+
+cases:
+  - name: example 1
+    inputs:
+      nums1: [1, 2, 3]
+      nums2: [4, 5, 6]
+    output: [1, 2, 3, 4, 5, 6]
+
+  - name: example 2
+    inputs:
+      nums1: [1, 2, 3]
+      nums2: [2, 1]
+    output: [1, 2, 3, 2, 1]
+
+  - name: example 2
+    inputs:
+      nums1: [1, 2, 3]
+      nums2: []
+    output: [1, 2, 3]
