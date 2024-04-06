@@ -2,6 +2,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { Schema } from "../schema.js";
 import { generateCppMainCode } from "./generate/main.js";
+import { generateCppUtilityCode } from "./generate/utility.js";
 import { generateCppTestCaseCode } from "./generate/test_case.js";
 
 /**
@@ -30,6 +31,7 @@ export function generateCppTest(
         .join("\n"),
       ``,
       generateCppTestCaseCode(schema),
+      generateCppUtilityCode(schema),
       main.code,
     ].join("\n"),
   );

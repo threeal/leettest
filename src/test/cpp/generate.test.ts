@@ -15,10 +15,15 @@ jest.unstable_mockModule("./generate/test_case.js", () => ({
   generateCppTestCaseCode: jest.fn(),
 }));
 
+jest.unstable_mockModule("./generate/utility.js", () => ({
+  generateCppUtilityCode: jest.fn(),
+}));
+
 it("should generate a C++ test file", async () => {
   const { mkdirSync, writeFileSync } = await import("node:fs");
   const { generateCppMainCode } = await import("./generate/main.js");
   const { generateCppTestCaseCode } = await import("./generate/test_case.js");
+  const { generateCppUtilityCode } = await import("./generate/utility.js");
   const { generateCppTest } = await import("./generate.js");
 
   const schema: Schema = {
@@ -58,6 +63,7 @@ it("should generate a C++ test file", async () => {
   });
 
   jest.mocked(generateCppTestCaseCode).mockReturnValue("// C++ test case code");
+  jest.mocked(generateCppUtilityCode).mockReturnValue("// C++ utility code");
 
   generateCppTest(schema, "path/to/solution.cpp", "build/path/to/test.cpp");
 
@@ -75,6 +81,7 @@ it("should generate a C++ test file", async () => {
       `#include <utility>`,
       ``,
       `// C++ test case code`,
+      `// C++ utility code`,
       `// C++ main function code`,
     ].join("\n"),
   );
