@@ -1,7 +1,7 @@
 import { generateCppMainCode } from "./main.js";
 
 it("should generate a C++ main function code", () => {
-  const code = generateCppMainCode({
+  const { code, headers } = generateCppMainCode({
     cpp: {
       function: {
         name: "sum",
@@ -31,6 +31,7 @@ it("should generate a C++ main function code", () => {
       },
     ],
   });
+
   expect(code).toBe(
     [
       `int main() {`,
@@ -52,4 +53,5 @@ it("should generate a C++ main function code", () => {
       ``,
     ].join("\n"),
   );
+  expect([...headers]).toStrictEqual(["iostream"]);
 });
