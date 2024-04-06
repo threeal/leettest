@@ -9,6 +9,8 @@ export function formatCpp(value: unknown, type: string): string {
   switch (type) {
     case "std::string":
       return `"${value}"`;
+    case "std::vector<int>":
+      return `{${(value as unknown[]).map((x) => `${x}`).join(", ")}}`;
   }
   return `${value}`;
 }

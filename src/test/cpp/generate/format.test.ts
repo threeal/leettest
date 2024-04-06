@@ -8,4 +8,10 @@ describe("format values in C++ format", () => {
   it("should format a string", () => {
     expect(formatCpp("something", "std::string")).toBe(`"something"`);
   });
+
+  it("should format an array", () => {
+    expect(formatCpp([123, 234, 345], "std::vector<int>")).toBe(
+      "{123, 234, 345}",
+    );
+  });
 });
