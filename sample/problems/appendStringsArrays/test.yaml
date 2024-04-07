@@ -1,0 +1,29 @@
+cpp:
+  function:
+    name: appendStringsArrays
+    inputs:
+      - type: std::vector<std::string>
+        value: strs1
+      - type: std::vector<std::string>
+        value: strs2
+    output:
+      type: std::vector<std::string>
+
+cases:
+  - name: example 1
+    inputs:
+      strs1: [foo, bar]
+      strs2: [foo, baz]
+    output: [foo, bar, foo, baz]
+
+  - name: example 2
+    inputs:
+      strs1: [foo, bar, baz]
+      strs2: [foo, bar]
+    output: [foo, bar, baz, foo, bar]
+
+  - name: example 2
+    inputs:
+      strs1: [foo, bar]
+      strs2: []
+    output: [foo, bar]

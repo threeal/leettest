@@ -1,7 +1,8 @@
 import { Schema } from "../../schema.js";
 
-export const cppVectorOfIntOstreamOperatorCode = [
-  `std::ostream& operator<<(std::ostream& out, const std::vector<int>& arr) {`,
+export const cppVectorOstreamOperatorCode = [
+  `template <typename T>`,
+  `std::ostream& operator<<(std::ostream& out, const std::vector<T>& arr) {`,
   `  out << '{';`,
   `  if (arr.size() > 0) {`,
   `    out << arr[0];`,
@@ -21,8 +22,8 @@ export const cppVectorOfIntOstreamOperatorCode = [
  * @returns The generated C++ utility functions code.
  */
 export function generateCppUtilityCode(schema: Schema): string {
-  if (schema.cpp.function.output.type === "std::vector<int>") {
-    return cppVectorOfIntOstreamOperatorCode;
+  if (schema.cpp.function.output.type.match(/^std::vector<.*>$/)) {
+    return cppVectorOstreamOperatorCode;
   }
 
   return "";
