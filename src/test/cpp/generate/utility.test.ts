@@ -1,6 +1,6 @@
 import {
   generateCppUtilityCode,
-  cppVectorOfIntOstreamOperatorCode,
+  cppVectorOstreamOperatorCode,
 } from "./utility.js";
 
 import "jest-extended";
@@ -30,5 +30,5 @@ it("should generate ostream operator code for functions that return `std::vector
     },
     cases: [],
   });
-  expect(code).toBe(cppVectorOfIntOstreamOperatorCode);
+  expect(code).toBe(cppVectorOstreamOperatorCode);
 });
