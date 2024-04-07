@@ -1,9 +1,9 @@
 import { ListrTask } from "listr2";
 import path from "node:path";
-import { compileCppTest } from "./cpp/compile.js";
-import { generateCppTest } from "./cpp/generate.js";
-import { runCppTest } from "./cpp/run.js";
-import { readYamlSchema, Schema } from "./schema.js";
+import { readYamlSchema, Schema } from "../schema.js";
+import { generateCppTest } from "./generate/index.js";
+import { compileCppTest } from "./compile.js";
+import { runCppTest } from "./run.js";
 
 /**
  * Creates a list of tasks for testing the C++ solution of a LeetCode problem.

@@ -4,7 +4,7 @@ import yargs from "yargs";
 import { globSync } from "glob";
 import { Listr, ListrTask } from "listr2";
 import { hideBin } from "yargs/helpers";
-import { createTestCppSolutionTasks } from "./test/cpp.js";
+import { createTestCppSolutionTasks } from "./test/cpp/index.js";
 
 yargs(hideBin(process.argv))
   .scriptName("leettest")
