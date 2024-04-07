@@ -8,7 +8,7 @@ import { createTestCppSolutionTasks } from "./test/cpp/index.js";
 
 yargs(hideBin(process.argv))
   .scriptName("leettest")
-  .version("0.1.0")
+  .version("0.2.0")
   .command(
     "$0 [files..]",
     "Compile and test solutions to LeetCode problems",
