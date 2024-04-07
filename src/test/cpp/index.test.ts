@@ -1,30 +1,30 @@
 import { jest } from "@jest/globals";
 import { Listr } from "listr2";
-import { Schema } from "./schema.js";
+import { Schema } from "../schema.js";
 import "jest-extended";
 
-jest.unstable_mockModule("./cpp/compile.js", () => ({
-  compileCppTest: jest.fn(),
-}));
-
-jest.unstable_mockModule("./cpp/generate.js", () => ({
-  generateCppTest: jest.fn(),
-}));
-
-jest.unstable_mockModule("./cpp/run.js", () => ({
-  runCppTest: jest.fn(),
-}));
-
-jest.unstable_mockModule("./schema.js", () => ({
+jest.unstable_mockModule("../schema.js", () => ({
   readYamlSchema: jest.fn(),
 }));
 
+jest.unstable_mockModule("./compile.js", () => ({
+  compileCppTest: jest.fn(),
+}));
+
+jest.unstable_mockModule("./generate.js", () => ({
+  generateCppTest: jest.fn(),
+}));
+
+jest.unstable_mockModule("./run.js", () => ({
+  runCppTest: jest.fn(),
+}));
+
 it("should create a task for testing a C++ solution", async () => {
-  const { compileCppTest } = await import("./cpp/compile.js");
-  const { generateCppTest } = await import("./cpp/generate.js");
-  const { runCppTest } = await import("./cpp/run.js");
-  const { createTestCppSolutionTasks } = await import("./cpp.js");
-  const { readYamlSchema } = await import("./schema.js");
+  const { readYamlSchema } = await import("../schema.js");
+  const { generateCppTest } = await import("./generate/index.js");
+  const { compileCppTest } = await import("./compile.js");
+  const { createTestCppSolutionTasks } = await import("./index.js");
+  const { runCppTest } = await import("./run.js");
 
   const schema: Schema = {
     cpp: {

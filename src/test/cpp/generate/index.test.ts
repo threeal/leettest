@@ -1,5 +1,5 @@
 import { jest } from "@jest/globals";
-import { Schema } from "../schema.js";
+import { Schema } from "../../schema.js";
 import "jest-extended";
 
 jest.unstable_mockModule("node:fs", () => ({
@@ -7,24 +7,24 @@ jest.unstable_mockModule("node:fs", () => ({
   writeFileSync: jest.fn(),
 }));
 
-jest.unstable_mockModule("./generate/main.js", () => ({
+jest.unstable_mockModule("./main.js", () => ({
   generateCppMainCode: jest.fn(),
 }));
 
-jest.unstable_mockModule("./generate/test_case.js", () => ({
+jest.unstable_mockModule("./test_case.js", () => ({
   generateCppTestCaseCode: jest.fn(),
 }));
 
-jest.unstable_mockModule("./generate/utility.js", () => ({
+jest.unstable_mockModule("./utility.js", () => ({
   generateCppUtilityCode: jest.fn(),
 }));
 
 it("should generate a C++ test file", async () => {
   const { mkdirSync, writeFileSync } = await import("node:fs");
-  const { generateCppMainCode } = await import("./generate/main.js");
-  const { generateCppTestCaseCode } = await import("./generate/test_case.js");
-  const { generateCppUtilityCode } = await import("./generate/utility.js");
-  const { generateCppTest } = await import("./generate.js");
+  const { generateCppMainCode } = await import("./main.js");
+  const { generateCppTest } = await import("./index.js");
+  const { generateCppTestCaseCode } = await import("./test_case.js");
+  const { generateCppUtilityCode } = await import("./utility.js");
 
   const schema: Schema = {
     cpp: {
