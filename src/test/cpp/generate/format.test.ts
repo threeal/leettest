@@ -9,9 +9,15 @@ describe("format values in C++ format", () => {
     expect(formatCpp("something", "std::string")).toBe(`"something"`);
   });
 
-  it("should format an array", () => {
+  it("should format an array of integers", () => {
     expect(formatCpp([123, 234, 345], "std::vector<int>")).toBe(
       "{123, 234, 345}",
+    );
+  });
+
+  it("should format an array of strings", () => {
+    expect(formatCpp(["foo", "bar", "baz"], "std::vector<std::string>")).toBe(
+      `{"foo", "bar", "baz"}`,
     );
   });
 });
