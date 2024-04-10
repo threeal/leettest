@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { getErrorMessage } from "catched-error-message";
 import yargs from "yargs";
 import { globSync } from "glob";
 import { hideBin } from "yargs/helpers";
@@ -37,7 +38,7 @@ yargs(hideBin(process.argv))
         } catch (err) {
           ++failures;
           process.stdout.write(`✖ Failed to test ${test.file}\n`);
-          process.stdout.write(`${err instanceof Error ? err.message : err}\n`);
+          process.stdout.write(`${getErrorMessage(err)}\n`);
         }
       }
 
