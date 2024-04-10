@@ -2,9 +2,8 @@
 
 import yargs from "yargs";
 import { globSync } from "glob";
-import { Listr, ListrTask } from "listr2";
 import { hideBin } from "yargs/helpers";
-import { createTestCppSolutionTasks } from "./test/cpp/index.js";
+import { testCppSolution } from "./test/cpp/index.js";
 
 yargs(hideBin(process.argv))
   .scriptName("leettest")
@@ -24,33 +23,25 @@ yargs(hideBin(process.argv))
         .map((file) => globSync(file))
         .flat()
         .sort();
-      const task = new Listr(
-        solutionFiles.map(
-          (solutionFile): ListrTask => ({
-            title: `Testing ${solutionFile}...`,
-            task: (_, task) =>
-              task.newListr(createTestCppSolutionTasks(solutionFile), {
-                ctx: {},
-                concurrent: false,
-                exitOnError: true,
-              }),
-          }),
-        ),
-        {
-          concurrent: true,
-          exitOnError: false,
-          collectErrors: "minimal",
-          rendererOptions: {
-            collapseErrors: false,
-            removeEmptyLines: false,
-          },
-        },
-      );
 
-      await task.run();
-      if (task.errors.length > 0) {
-        process.exit(1);
+      const tests = solutionFiles.map((file) => ({
+        file: file,
+        prom: (async () => testCppSolution(file))(),
+      }));
+
+      let failures = 0;
+      for (const test of tests) {
+        try {
+          await test.prom;
+          process.stdout.write(`✔ Tested ${test.file}\n`);
+        } catch (err) {
+          ++failures;
+          process.stdout.write(`✖ Failed to test ${test.file}\n`);
+          process.stdout.write(`${err instanceof Error ? err.message : err}\n`);
+        }
       }
+
+      process.exit(failures);
     },
   )
   .parse();
