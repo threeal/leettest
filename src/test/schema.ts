@@ -1,33 +1,13 @@
 import { readFileSync } from "node:fs";
 import YAML from "yaml";
 
-export interface Schema {
-  cpp: {
-    function: {
-      name: string;
-      inputs: {
-        type: string;
-        value: string;
-      }[];
-      output: {
-        type: string;
-      };
-    };
-  };
-  cases: {
-    name: string;
-    inputs: { [key: string]: unknown };
-    output: unknown;
-  }[];
-}
-
 /**
  * Reads a test schema from a YAML file.
  *
  * @param schemaFile - The path of the YAML schema file.
- * @returns The parsed test schema.
+ * @returns The parsed test schema of unknown type.
  */
-export function readYamlSchema(schemaFile: string): Schema {
+export function readYamlSchema(schemaFile: string): unknown {
   const data = readFileSync(schemaFile, "utf-8");
   return YAML.parse(data);
 }

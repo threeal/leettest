@@ -1,2 +1,2 @@
 export { testCppSolution } from "./test/cpp/index.js";
-export { readYamlSchema, Schema } from "./test/schema.js";
+export { readYamlSchema } from "./test/schema.js";

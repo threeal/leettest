@@ -1,5 +1,4 @@
 import { jest } from "@jest/globals";
-import { Schema } from "../../schema.js";
 import "jest-extended";
 
 jest.unstable_mockModule("node:fs", () => ({
@@ -26,7 +25,7 @@ it("should generate a C++ test file", async () => {
   const { generateCppTestCaseCode } = await import("./test_case.js");
   const { generateCppUtilityCode } = await import("./utility.js");
 
-  const schema: Schema = {
+  const schema = {
     cpp: {
       function: {
         name: "sum",
