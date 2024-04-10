@@ -31,8 +31,8 @@
     "test": "jest"
   },
   "dependencies": {
+    "catched-error-message": "^0.0.1",
     "glob": "^10.3.12",
-    "listr2": "^8.2.1",
     "yaml": "^2.4.1",
     "yargs": "^17.7.2"
   },

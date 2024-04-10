@@ -1,5 +1,4 @@
 import { jest } from "@jest/globals";
-import { Listr } from "listr2";
 import { Schema } from "../schema.js";
 import "jest-extended";
 
@@ -19,11 +18,11 @@ jest.unstable_mockModule("./run.js", () => ({
   runCppTest: jest.fn(),
 }));
 
-it("should create a task for testing a C++ solution", async () => {
+it("should test a C++ solution", async () => {
   const { readYamlSchema } = await import("../schema.js");
   const { generateCppTest } = await import("./generate/index.js");
   const { compileCppTest } = await import("./compile.js");
-  const { createTestCppSolutionTasks } = await import("./index.js");
+  const { testCppSolution } = await import("./index.js");
   const { runCppTest } = await import("./run.js");
 
   const schema: Schema = {
@@ -59,8 +58,7 @@ it("should create a task for testing a C++ solution", async () => {
 
   jest.mocked(readYamlSchema).mockReturnValue(schema);
 
-  const task = new Listr(createTestCppSolutionTasks("path/to/solution.cpp"));
-  await task.run();
+  expect(() => testCppSolution("path/to/solution.cpp")).not.toThrow();
 
   expect(readYamlSchema).toHaveBeenCalledExactlyOnceWith("path/to/test.yaml");
 
