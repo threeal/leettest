@@ -38,7 +38,9 @@ yargs(hideBin(process.argv))
         } catch (err) {
           ++failures;
           process.stdout.write(`✖ Failed to test ${test.file}\n`);
-          process.stdout.write(`${getErrorMessage(err)}\n`);
+          process.stdout.write(
+            `  ${getErrorMessage(err).replaceAll("\n", "\n  ").trimEnd()}\n\n`,
+          );
         }
       }
 
