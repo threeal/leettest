@@ -1,13 +1,32 @@
-import { Schema } from "../../schema.js";
 import { formatCpp } from "./format.js";
 
+export interface CppTestCaseSchema {
+  cpp: {
+    function: {
+      name: string;
+      inputs: {
+        type: string;
+        value: string;
+      }[];
+      output: {
+        type: string;
+      };
+    };
+  };
+  cases: {
+    name: string;
+    inputs: { [key: string]: unknown };
+    output: unknown;
+  }[];
+}
+
 /**
- * Generates C++ test case code from a test schema.
+ * Generates C++ test case code from a C++ test case schema.
  *
- * @param schema - The test schema.
+ * @param schema - The C++ test case schema.
  * @returns The generated C++ test case code.
  */
-export function generateCppTestCaseCode(schema: Schema): string {
+export function generateCppTestCaseCode(schema: CppTestCaseSchema): string {
   return [
     `struct TestCase {`,
     `  const char* name;`,

@@ -1,9 +1,8 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
-import { Schema } from "../../schema.js";
 import { generateCppMainCode } from "./main.js";
 import { generateCppUtilityCode } from "./utility.js";
-import { generateCppTestCaseCode } from "./test_case.js";
+import { CppTestCaseSchema, generateCppTestCaseCode } from "./test_case.js";
 
 /**
  * Generates a C++ test file from a test schema.
@@ -13,11 +12,13 @@ import { generateCppTestCaseCode } from "./test_case.js";
  * @param outFile - The path of the C++ test file output.
  */
 export function generateCppTest(
-  schema: Schema,
+  schema: unknown,
   solutionFile: string,
   outFile: string,
 ): void {
-  const main = generateCppMainCode(schema);
+  const cppTestSchema = schema as CppTestCaseSchema;
+
+  const main = generateCppMainCode(cppTestSchema);
 
   mkdirSync(path.dirname(outFile), { recursive: true });
   writeFileSync(
@@ -30,8 +31,8 @@ export function generateCppTest(
         .map((header) => `#include <${header}>`)
         .join("\n"),
       ``,
-      generateCppTestCaseCode(schema),
-      generateCppUtilityCode(schema),
+      generateCppTestCaseCode(cppTestSchema),
+      generateCppUtilityCode(cppTestSchema),
       main.code,
     ].join("\n"),
   );

@@ -1,12 +1,12 @@
-import { Schema } from "../../schema.js";
+import type { CppTestCaseSchema } from "./test_case.js";
 
 /**
- * Generates C++ main function code from a test schema.
+ * Generates C++ main function code from a C++ test case schema.
  *
- * @param schema - The test schema.
+ * @param schema - The C++ test case schema.
  * @returns An object containing the generated C++ code and a set of required headers.
  */
-export function generateCppMainCode(schema: Schema): {
+export function generateCppMainCode(schema: CppTestCaseSchema): {
   code: string;
   headers: Set<string>;
 } {
