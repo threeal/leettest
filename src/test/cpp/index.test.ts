@@ -58,7 +58,9 @@ it("should test a C++ solution", async () => {
 
   jest.mocked(readYamlSchema).mockReturnValue(schema);
 
-  expect(() => testCppSolution("path/to/solution.cpp")).not.toThrow();
+  await expect(
+    testCppSolution("path/to/solution.cpp"),
+  ).resolves.toBeUndefined();
 
   expect(readYamlSchema).toHaveBeenCalledExactlyOnceWith("path/to/test.yaml");
 
