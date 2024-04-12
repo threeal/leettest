@@ -25,7 +25,7 @@
   ],
   "scripts": {
     "format": "prettier --write --cache .",
-    "lint": "eslint --ignore-path .gitignore .",
+    "lint": "eslint .",
     "prepack": "tsc",
     "start": "tsx src/bin.ts",
     "test": "jest"
@@ -37,6 +37,7 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
+    "@eslint/js": "^9.0.0",
     "@jest/globals": "^29.7.0",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.12.4",
