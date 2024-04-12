@@ -11,16 +11,17 @@ import { runCppTest } from "./run.js";
  * and then runs the executable for testing the solution.
  *
  * @param solutionFile - The path of the C++ solution file.
+ * @returns A promise that resolves to nothing.
  */
-export function testCppSolution(solutionFile: string): void {
+export async function testCppSolution(solutionFile: string): Promise<void> {
   const schemaFile = path.join(path.dirname(solutionFile), "test.yaml");
-  const schema = readYamlSchema(schemaFile);
+  const schema = await readYamlSchema(schemaFile);
 
   const testFile = path.join("build", path.dirname(solutionFile), "test.cpp");
-  generateCppTest(schema, solutionFile, testFile);
+  await generateCppTest(schema, solutionFile, testFile);
 
   const testExec = path.join(path.dirname(testFile), "test");
-  compileCppTest(testFile, testExec);
+  await compileCppTest(testFile, testExec);
 
-  runCppTest(testExec);
+  await runCppTest(testExec);
 }

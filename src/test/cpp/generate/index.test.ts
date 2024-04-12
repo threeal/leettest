@@ -2,9 +2,9 @@ import { jest } from "@jest/globals";
 import { Schema } from "../../schema.js";
 import "jest-extended";
 
-jest.unstable_mockModule("node:fs", () => ({
-  mkdirSync: jest.fn(),
-  writeFileSync: jest.fn(),
+jest.unstable_mockModule("node:fs/promises", () => ({
+  mkdir: jest.fn(),
+  writeFile: jest.fn(),
 }));
 
 jest.unstable_mockModule("./main.js", () => ({
@@ -20,7 +20,7 @@ jest.unstable_mockModule("./utility.js", () => ({
 }));
 
 it("should generate a C++ test file", async () => {
-  const { mkdirSync, writeFileSync } = await import("node:fs");
+  const { mkdir, writeFile } = await import("node:fs/promises");
   const { generateCppMainCode } = await import("./main.js");
   const { generateCppTest } = await import("./index.js");
   const { generateCppTestCaseCode } = await import("./test_case.js");
@@ -65,14 +65,16 @@ it("should generate a C++ test file", async () => {
   jest.mocked(generateCppTestCaseCode).mockReturnValue("// C++ test case code");
   jest.mocked(generateCppUtilityCode).mockReturnValue("// C++ utility code");
 
-  generateCppTest(schema, "path/to/solution.cpp", "build/path/to/test.cpp");
+  await expect(
+    generateCppTest(schema, "path/to/solution.cpp", "build/path/to/test.cpp"),
+  ).resolves.toBeUndefined();
 
-  expect(mkdirSync).toHaveBeenCalledExactlyOnceWith("build/path/to", {
+  expect(mkdir).toHaveBeenCalledExactlyOnceWith("build/path/to", {
     recursive: true,
   });
 
-  expect(writeFileSync).toHaveBeenCalledAfter(jest.mocked(mkdirSync));
-  expect(writeFileSync).toHaveBeenCalledExactlyOnceWith(
+  expect(writeFile).toHaveBeenCalledAfter(jest.mocked(mkdir));
+  expect(writeFile).toHaveBeenCalledExactlyOnceWith(
     "build/path/to/test.cpp",
     [
       `#include "../../../path/to/solution.cpp"`,

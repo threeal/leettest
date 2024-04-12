@@ -1,11 +1,16 @@
-import { execSync } from "node:child_process";
+import { exec } from "node:child_process";
+import { promisify } from "node:util";
+
+const execPromise = promisify(exec);
 
 /**
  * Runs a C++ test executable.
  *
  * @param testExec - The path of the C++ test executable to run.
+ * @returns A promise that resolves to nothing.
  */
-export function runCppTest(testExec: string): void {
-  const cmd = process.platform === "win32" ? `start ${testExec}` : testExec;
-  execSync(cmd, { stdio: "pipe" });
+export async function runCppTest(testExec: string): Promise<void> {
+  await execPromise(
+    process.platform === "win32" ? `start ${testExec}` : testExec,
+  );
 }

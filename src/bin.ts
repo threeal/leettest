@@ -27,7 +27,7 @@ yargs(hideBin(process.argv))
 
       const tests = solutionFiles.map((file) => ({
         file: file,
-        prom: (async () => testCppSolution(file))(),
+        prom: testCppSolution(file),
       }));
 
       let failures = 0;

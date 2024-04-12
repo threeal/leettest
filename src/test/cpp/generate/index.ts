@@ -1,4 +1,4 @@
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { Schema } from "../../schema.js";
 import { generateCppMainCode } from "./main.js";
@@ -11,16 +11,17 @@ import { generateCppTestCaseCode } from "./test_case.js";
  * @param schema - The test schema.
  * @param solutionFile - The path of the C++ solution file.
  * @param outFile - The path of the C++ test file output.
+ * @returns A promise that resolves to nothing.
  */
-export function generateCppTest(
+export async function generateCppTest(
   schema: Schema,
   solutionFile: string,
   outFile: string,
-): void {
+): Promise<void> {
   const main = generateCppMainCode(schema);
 
-  mkdirSync(path.dirname(outFile), { recursive: true });
-  writeFileSync(
+  await mkdir(path.dirname(outFile), { recursive: true });
+  await writeFile(
     outFile,
     [
       `#include "${path.relative(path.dirname(outFile), solutionFile)}"`,
