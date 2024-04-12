@@ -1,5 +1,5 @@
 import { execSync } from "node:child_process";
-import { mkdirSync } from "node:fs";
+import { mkdir } from "node:fs/promises";
 import path from "node:path";
 
 /**
@@ -13,7 +13,7 @@ export async function compileCppTest(
   testFile: string,
   outFile: string,
 ): Promise<void> {
-  mkdirSync(path.dirname(outFile), { recursive: true });
+  await mkdir(path.dirname(outFile), { recursive: true });
 
   execSync(`clang++ --std=c++20 -O2 ${testFile} -o ${outFile}`, {
     stdio: "pipe",
