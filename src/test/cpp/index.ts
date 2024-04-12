@@ -21,7 +21,7 @@ export async function testCppSolution(solutionFile: string): Promise<void> {
   generateCppTest(schema, solutionFile, testFile);
 
   const testExec = path.join(path.dirname(testFile), "test");
-  compileCppTest(testFile, testExec);
+  await compileCppTest(testFile, testExec);
 
   runCppTest(testExec);
 }

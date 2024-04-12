@@ -22,7 +22,9 @@ it("should compile a C++ test file", async () => {
   const { mkdirSync } = await import("node:fs");
   const { compileCppTest } = await import("./compile.js");
 
-  compileCppTest("path/to/test.cpp", "build/path/to/test");
+  await expect(
+    compileCppTest("path/to/test.cpp", "build/path/to/test"),
+  ).resolves.toBeUndefined();
 
   expect(mkdirSync).toHaveBeenCalledExactlyOnceWith("build/path/to", {
     recursive: true,
