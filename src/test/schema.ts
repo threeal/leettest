@@ -16,7 +16,7 @@ export interface Schema {
   };
   cases: {
     name: string;
-    inputs: { [key: string]: unknown };
+    inputs: Record<string, unknown>;
     output: unknown;
   }[];
 }
