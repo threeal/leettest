@@ -1,6 +1,9 @@
-import { execSync } from "node:child_process";
+import { exec } from "node:child_process";
 import { mkdir } from "node:fs/promises";
+import { promisify } from "node:util";
 import path from "node:path";
+
+const execPromise = promisify(exec);
 
 /**
  * Compiles a C++ test file using Clang.
@@ -14,8 +17,5 @@ export async function compileCppTest(
   outFile: string,
 ): Promise<void> {
   await mkdir(path.dirname(outFile), { recursive: true });
-
-  execSync(`clang++ --std=c++20 -O2 ${testFile} -o ${outFile}`, {
-    stdio: "pipe",
-  });
+  await execPromise(`clang++ --std=c++20 -O2 ${testFile} -o ${outFile}`);
 }
