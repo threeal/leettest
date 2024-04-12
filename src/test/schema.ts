@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readFile } from "node:fs/promises";
 import YAML from "yaml";
 
 export interface Schema {
@@ -28,6 +28,6 @@ export interface Schema {
  * @returns A promise that resolves to the parsed test schema.
  */
 export async function readYamlSchema(schemaFile: string): Promise<Schema> {
-  const data = readFileSync(schemaFile, "utf-8");
+  const data = await readFile(schemaFile, "utf-8");
   return YAML.parse(data);
 }

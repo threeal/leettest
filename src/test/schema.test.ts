@@ -1,15 +1,15 @@
 import { jest } from "@jest/globals";
 import "jest-extended";
 
-jest.unstable_mockModule("node:fs", () => ({
-  readFileSync: jest.fn(),
+jest.unstable_mockModule("node:fs/promises", () => ({
+  readFile: jest.fn(),
 }));
 
 it("should read a YAML schema file", async () => {
-  const { readFileSync } = await import("node:fs");
+  const { readFile } = await import("node:fs/promises");
   const { readYamlSchema } = await import("./schema.js");
 
-  jest.mocked(readFileSync).mockReturnValue(`
+  jest.mocked(readFile).mockResolvedValue(`
 cpp:
   function:
     name: sum
@@ -66,7 +66,7 @@ cases:
     ],
   });
 
-  expect(readFileSync).toHaveBeenCalledExactlyOnceWith(
+  expect(readFile).toHaveBeenCalledExactlyOnceWith(
     "path/to/test.yaml",
     "utf-8",
   );
