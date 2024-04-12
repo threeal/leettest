@@ -35,13 +35,7 @@ cases:
     output: -6
   `);
 
-  const schema = readYamlSchema("path/to/test.yaml");
-
-  expect(readFileSync).toHaveBeenCalledExactlyOnceWith(
-    "path/to/test.yaml",
-    "utf-8",
-  );
-  expect(schema).toStrictEqual({
+  await expect(readYamlSchema("path/to/test.yaml")).resolves.toStrictEqual({
     cpp: {
       function: {
         name: "sum",
@@ -71,4 +65,9 @@ cases:
       },
     ],
   });
+
+  expect(readFileSync).toHaveBeenCalledExactlyOnceWith(
+    "path/to/test.yaml",
+    "utf-8",
+  );
 });

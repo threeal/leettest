@@ -15,7 +15,7 @@ import { runCppTest } from "./run.js";
  */
 export async function testCppSolution(solutionFile: string): Promise<void> {
   const schemaFile = path.join(path.dirname(solutionFile), "test.yaml");
-  const schema = readYamlSchema(schemaFile);
+  const schema = await readYamlSchema(schemaFile);
 
   const testFile = path.join("build", path.dirname(solutionFile), "test.cpp");
   await generateCppTest(schema, solutionFile, testFile);

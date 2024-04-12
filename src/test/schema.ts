@@ -25,9 +25,9 @@ export interface Schema {
  * Reads a test schema from a YAML file.
  *
  * @param schemaFile - The path of the YAML schema file.
- * @returns The parsed test schema.
+ * @returns A promise that resolves to the parsed test schema.
  */
-export function readYamlSchema(schemaFile: string): Schema {
+export async function readYamlSchema(schemaFile: string): Promise<Schema> {
   const data = readFileSync(schemaFile, "utf-8");
   return YAML.parse(data);
 }
