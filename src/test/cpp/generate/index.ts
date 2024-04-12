@@ -11,12 +11,13 @@ import { generateCppTestCaseCode } from "./test_case.js";
  * @param schema - The test schema.
  * @param solutionFile - The path of the C++ solution file.
  * @param outFile - The path of the C++ test file output.
+ * @returns A promise that resolves to nothing.
  */
-export function generateCppTest(
+export async function generateCppTest(
   schema: Schema,
   solutionFile: string,
   outFile: string,
-): void {
+): Promise<void> {
   const main = generateCppMainCode(schema);
 
   mkdirSync(path.dirname(outFile), { recursive: true });

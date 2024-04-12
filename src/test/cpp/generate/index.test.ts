@@ -65,7 +65,9 @@ it("should generate a C++ test file", async () => {
   jest.mocked(generateCppTestCaseCode).mockReturnValue("// C++ test case code");
   jest.mocked(generateCppUtilityCode).mockReturnValue("// C++ utility code");
 
-  generateCppTest(schema, "path/to/solution.cpp", "build/path/to/test.cpp");
+  await expect(
+    generateCppTest(schema, "path/to/solution.cpp", "build/path/to/test.cpp"),
+  ).resolves.toBeUndefined();
 
   expect(mkdirSync).toHaveBeenCalledExactlyOnceWith("build/path/to", {
     recursive: true,

@@ -18,7 +18,7 @@ export async function testCppSolution(solutionFile: string): Promise<void> {
   const schema = readYamlSchema(schemaFile);
 
   const testFile = path.join("build", path.dirname(solutionFile), "test.cpp");
-  generateCppTest(schema, solutionFile, testFile);
+  await generateCppTest(schema, solutionFile, testFile);
 
   const testExec = path.join(path.dirname(testFile), "test");
   await compileCppTest(testFile, testExec);
