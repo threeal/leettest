@@ -23,5 +23,5 @@ export async function testCppSolution(solutionFile: string): Promise<void> {
   const testExec = path.join(path.dirname(testFile), "test");
   await compileCppTest(testFile, testExec);
 
-  runCppTest(testExec);
+  await runCppTest(testExec);
 }

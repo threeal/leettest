@@ -11,7 +11,7 @@ it("should run a C++ test executable", async () => {
 
   jest.mocked(execSync).mockClear();
 
-  runCppTest("build/path/to/test");
+  await expect(runCppTest("build/path/to/test")).resolves.toBeUndefined();
 
   expect(execSync).toHaveBeenCalledExactlyOnceWith("build/path/to/test", {
     stdio: "pipe",
@@ -25,7 +25,7 @@ it("should run a C++ test executable on Windows", async () => {
   jest.mocked(execSync).mockClear();
   Object.defineProperty(process, "platform", { value: "win32" });
 
-  runCppTest("build/path/to/test");
+  await expect(runCppTest("build/path/to/test")).resolves.toBeUndefined();
 
   expect(execSync).toHaveBeenCalledExactlyOnceWith("start build/path/to/test", {
     stdio: "pipe",
