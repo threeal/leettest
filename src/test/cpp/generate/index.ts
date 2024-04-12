@@ -1,4 +1,5 @@
-import { mkdirSync, writeFileSync } from "node:fs";
+import { writeFileSync } from "node:fs";
+import { mkdir } from "node:fs/promises";
 import path from "node:path";
 import { Schema } from "../../schema.js";
 import { generateCppMainCode } from "./main.js";
@@ -20,7 +21,7 @@ export async function generateCppTest(
 ): Promise<void> {
   const main = generateCppMainCode(schema);
 
-  mkdirSync(path.dirname(outFile), { recursive: true });
+  await mkdir(path.dirname(outFile), { recursive: true });
   writeFileSync(
     outFile,
     [
