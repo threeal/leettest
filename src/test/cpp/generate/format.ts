@@ -6,8 +6,11 @@
  * @returns A string representation of the value in C++ format.
  */
 export function formatCpp(value: unknown, type: string): string {
-  if (type === "std::string") {
-    return `"${value}"`;
+  switch (type) {
+    case "std::string":
+      return `"${value}"`;
+    case "char":
+      return `'${value}'`;
   }
 
   if (type.match(/^std::vector<.*>$/)) {

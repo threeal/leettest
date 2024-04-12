@@ -1,0 +1,24 @@
+cpp:
+  function:
+    name: charToLower
+    inputs:
+      - type: char
+        value: c
+    output:
+      type: char
+
+cases:
+  - name: example 1
+    inputs:
+      c: A
+    output: a
+
+  - name: example 2
+    inputs:
+      c: b
+    output: b
+
+  - name: example 3
+    inputs:
+      c: $
+    output: $

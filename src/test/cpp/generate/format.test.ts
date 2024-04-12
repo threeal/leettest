@@ -5,6 +5,10 @@ describe("format values in C++ format", () => {
     expect(formatCpp(123, "int")).toBe("123");
   });
 
+  it("should format a character", () => {
+    expect(formatCpp("c", "char")).toBe(`'c'`);
+  });
+
   it("should format a string", () => {
     expect(formatCpp("something", "std::string")).toBe(`"something"`);
   });
