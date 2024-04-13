@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
 import { getErrorMessage } from "catched-error-message";
-import yargs from "yargs";
 import { globSync } from "glob";
+import ora from "ora";
+import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import { testCppSolution } from "./test/cpp/index.js";
 
@@ -31,16 +32,16 @@ yargs(hideBin(process.argv))
       }));
 
       let failures = 0;
+      const spinner = ora();
       for (const test of tests) {
+        spinner.start(`Testing ${test.file}...`);
         try {
           await test.prom;
-          process.stdout.write(`✔ Tested ${test.file}\n`);
+          spinner.succeed(`Tested ${test.file}`);
         } catch (err) {
           ++failures;
-          process.stdout.write(`✖ Failed to test ${test.file}\n`);
-          process.stdout.write(
-            `  ${getErrorMessage(err).replaceAll("\n", "\n  ").trimEnd()}\n\n`,
-          );
+          const msg = getErrorMessage(err).replaceAll("\n", "\n  ").trimEnd();
+          spinner.fail(`Failed to test ${test.file}\n  ${msg}\n`);
         }
       }
 
