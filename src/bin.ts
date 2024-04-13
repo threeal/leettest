@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
 import { getErrorMessage } from "catched-error-message";
-import { globSync } from "glob";
 import ora from "ora";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import { testCppSolution } from "./test/cpp/index.js";
+import { searchSolutions } from "./search.js";
 
 yargs(hideBin(process.argv))
   .scriptName("leettest")
@@ -21,10 +21,7 @@ yargs(hideBin(process.argv))
         array: true,
       }),
     async (argv) => {
-      const solutionFiles = argv.files
-        .map((file) => globSync(file))
-        .flat()
-        .sort();
+      const solutionFiles = searchSolutions(argv.files);
 
       const tests = solutionFiles.map((file) => ({
         file: file,
