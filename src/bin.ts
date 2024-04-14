@@ -1,10 +1,8 @@
 #!/usr/bin/env node
 
-import { getErrorMessage } from "catched-error-message";
-import ora from "ora";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
-import { testCppSolution } from "./test/cpp/index.js";
+import { testSolutions } from "./test/index.js";
 import { searchSolutions } from "./search.js";
 
 yargs(hideBin(process.argv))
@@ -22,26 +20,7 @@ yargs(hideBin(process.argv))
       }),
     async (argv) => {
       const solutionFiles = searchSolutions(argv.files);
-
-      const tests = solutionFiles.map((file) => ({
-        file: file,
-        prom: testCppSolution(file),
-      }));
-
-      let failures = 0;
-      const spinner = ora();
-      for (const test of tests) {
-        spinner.start(`Testing ${test.file}...`);
-        try {
-          await test.prom;
-          spinner.succeed(`Tested ${test.file}`);
-        } catch (err) {
-          ++failures;
-          const msg = getErrorMessage(err).replaceAll("\n", "\n  ").trimEnd();
-          spinner.fail(`Failed to test ${test.file}\n  ${msg}\n`);
-        }
-      }
-
+      const failures = await testSolutions(solutionFiles);
       process.exit(failures);
     },
   )
