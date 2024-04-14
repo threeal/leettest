@@ -11,20 +11,26 @@ import { testCppSolution } from "./cpp/index.js";
 export async function testSolutions(solutionFiles: string[]): Promise<number> {
   const tests = solutionFiles.map((file) => ({
     file: file,
-    prom: testCppSolution(file),
+    prom: (async () => {
+      try {
+        await testCppSolution(file);
+      } catch (err) {
+        return err;
+      }
+    })(),
   }));
 
   let failures = 0;
   const spinner = ora();
   for (const test of tests) {
     spinner.start(`Testing ${test.file}...`);
-    try {
-      await test.prom;
-      spinner.succeed(`Tested ${test.file}`);
-    } catch (err) {
+    const err = await test.prom;
+    if (err) {
       ++failures;
       const msg = getErrorMessage(err).replaceAll("\n", "\n  ").trimEnd();
       spinner.fail(`Failed to test ${test.file}\n  ${msg}\n`);
+    } else {
+      spinner.succeed(`Tested ${test.file}`);
     }
   }
 
