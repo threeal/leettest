@@ -1,4 +1,5 @@
 import { Schema } from "../../schema.js";
+import { cppVectorOstreamOperatorCode } from "./utility.js";
 
 /**
  * Generates C++ main function code from a test schema.
@@ -9,7 +10,13 @@ import { Schema } from "../../schema.js";
 export function generateCppMainCode(schema: Schema): {
   code: string;
   headers: Set<string>;
+  utilities: string[];
 } {
+  const utilities: string[] = [];
+  if (schema.cpp.function.output.type.match(/^std::vector<.*>$/)) {
+    utilities.push(cppVectorOstreamOperatorCode);
+  }
+
   return {
     code: [
       `int main() {`,
@@ -36,5 +43,6 @@ export function generateCppMainCode(schema: Schema): {
       ``,
     ].join("\n"),
     headers: new Set(["iostream"]),
+    utilities,
   };
 }

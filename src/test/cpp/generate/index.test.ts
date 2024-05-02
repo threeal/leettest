@@ -83,7 +83,6 @@ it("should generate a C++ test file", async () => {
       `#include <utility>`,
       ``,
       `// C++ test case code`,
-      `// C++ utility code`,
       `// C++ main function code`,
     ].join("\n"),
   );

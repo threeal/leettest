@@ -2,7 +2,6 @@ import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { Schema } from "../../schema.js";
 import { generateCppMainCode } from "./main.js";
-import { generateCppUtilityCode } from "./utility.js";
 import { generateCppTestCaseCode } from "./test_case.js";
 
 /**
@@ -31,8 +30,9 @@ export async function generateCppTest(
         .map((header) => `#include <${header}>`)
         .join("\n"),
       ``,
+      main.utilities.join("\n\n"),
+      ``,
       generateCppTestCaseCode(schema),
-      generateCppUtilityCode(schema),
       main.code,
     ].join("\n"),
   );
