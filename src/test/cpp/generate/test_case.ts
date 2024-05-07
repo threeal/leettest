@@ -23,7 +23,7 @@ export function generateCppTestCaseCode(schema: Schema): string {
         [
           `  {`,
           `    "${c.name}",`,
-          `    .inputs{`,
+          `    {`,
           schema.cpp.function.inputs
             .map(
               (input) =>
