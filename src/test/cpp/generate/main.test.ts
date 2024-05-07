@@ -1,3 +1,4 @@
+import { cppAssertionCode } from "./assertion.js";
 import { generateCppMainCode } from "./main.js";
 
 it("should generate a C++ main function code", () => {
@@ -40,12 +41,7 @@ it("should generate a C++ main function code", () => {
       `    std::cout << "testing " << test_cases[i].name << "...\\n";`,
       `    Solution s{};`,
       `    const int output{s.sum(test_cases[i].inputs.arg0, test_cases[i].inputs.arg1)};`,
-      `    if (output != test_cases[i].output) {`,
-      `      std::cerr << "failed to test " << test_cases[i].name << ":\\n";`,
-      `      std::cerr << ".  output: " << output << "\\n";`,
-      `      std::cerr << ".  expected: " << test_cases[i].output << "\\n\\n";`,
-      `      ++failures;`,
-      `    }`,
+      cppAssertionCode,
       `  }`,
       `  if (failures > 0) std::cerr << failures << " test cases have failed\\n";`,
       `  return failures;`,

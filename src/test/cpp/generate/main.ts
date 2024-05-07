@@ -1,4 +1,5 @@
 import { Schema } from "../../schema.js";
+import { cppAssertionCode } from "./assertion.js";
 
 /**
  * Generates C++ main function code from a test schema.
@@ -23,12 +24,7 @@ export function generateCppMainCode(schema: Schema): {
           .join(", ");
         return `    const ${schema.cpp.function.output.type} output{s.${schema.cpp.function.name}(${params})};`;
       })(),
-      `    if (output != test_cases[i].output) {`,
-      `      std::cerr << "failed to test " << test_cases[i].name << ":\\n";`,
-      `      std::cerr << ".  output: " << output << "\\n";`,
-      `      std::cerr << ".  expected: " << test_cases[i].output << "\\n\\n";`,
-      `      ++failures;`,
-      `    }`,
+      cppAssertionCode,
       `  }`,
       `  if (failures > 0) std::cerr << failures << " test cases have failed\\n";`,
       `  return failures;`,
