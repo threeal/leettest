@@ -9,7 +9,7 @@ import { formatCpp } from "./format.js";
  */
 export function generateCppTestCaseCode(schema: Schema): string {
   return [
-    `struct TestCase {`,
+    `struct {`,
     `  const char* name;`,
     `  struct {`,
     ...schema.cpp.function.inputs.map(
@@ -17,9 +17,7 @@ export function generateCppTestCaseCode(schema: Schema): string {
     ),
     `  } inputs;`,
     `  ${schema.cpp.function.output.type} output;`,
-    `};`,
-    ``,
-    `TestCase test_cases[${schema.cases.length}]{`,
+    `} test_cases[${schema.cases.length}]{`,
     schema.cases
       .map((c) =>
         [

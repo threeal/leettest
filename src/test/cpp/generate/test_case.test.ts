@@ -33,16 +33,14 @@ it("should generate a C++ test case code", () => {
   });
   expect(code).toBe(
     [
-      `struct TestCase {`,
+      `struct {`,
       `  const char* name;`,
       `  struct {`,
       `    int arg0;`,
       `    int arg1;`,
       `  } inputs;`,
       `  int output;`,
-      `};`,
-      ``,
-      `TestCase test_cases[2]{`,
+      `} test_cases[2]{`,
       `  {`,
       `    "example 1",`,
       `    .inputs{`,
