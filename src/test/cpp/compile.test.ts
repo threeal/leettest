@@ -1,36 +1,33 @@
-import { jest } from "@jest/globals";
-import "jest-extended";
+import { createTempDirectory, ITempDirectory } from "create-temp-directory";
+import fs from "node:fs/promises";
+import path from "node:path";
+import { compileCppTest } from "./compile.js";
 
-jest.unstable_mockModule("node:child_process", () => ({
-  exec: jest.fn((_, callback: () => void) => callback()),
-}));
-
-jest.unstable_mockModule("node:fs/promises", () => ({
-  mkdir: jest.fn(),
-}));
+let testDir: ITempDirectory;
 
 beforeEach(async () => {
-  const { exec } = await import("node:child_process");
-  const { mkdir } = await import("node:fs/promises");
+  testDir = await createTempDirectory();
+});
 
-  jest.mocked(exec).mockClear();
-  jest.mocked(mkdir).mockClear();
+afterEach(async () => {
+  await testDir.remove();
 });
 
 it("should compile a C++ test file", async () => {
-  const { exec } = await import("node:child_process");
-  const { mkdir } = await import("node:fs/promises");
-  const { compileCppTest } = await import("./compile.js");
-
-  await expect(
-    compileCppTest("path/to/test.cpp", "build/path/to/test"),
-  ).resolves.toBeUndefined();
-
-  expect(mkdir).toHaveBeenCalledExactlyOnceWith("build/path/to", {
-    recursive: true,
-  });
-  expect(jest.mocked(exec).mock.calls[0][0]).toBe(
-    "clang++ --std=c++20 -O2 path/to/test.cpp -o build/path/to/test",
+  const sourcePath = path.join(testDir.path, "test.cpp");
+  await fs.writeFile(
+    sourcePath,
+    [
+      `#include <iostream>`,
+      ``,
+      `int main() {`,
+      `  std::cout << "Hello world!\\n";`,
+      `}`,
+    ].join("\n"),
   );
-  expect(exec).toHaveBeenCalledAfter(jest.mocked(mkdir));
+
+  const executablePath = path.join(testDir.path, "build", "test");
+  await compileCppTest(sourcePath, executablePath);
+
+  await fs.access(executablePath, fs.constants.X_OK);
 });
