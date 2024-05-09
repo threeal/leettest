@@ -1816,6 +1816,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"create-temp-directory@npm:^2.4.0":
+  version: 2.4.0
+  resolution: "create-temp-directory@npm:2.4.0"
+  checksum: 10c0/52d63e6208007c56b24986f064ec49ef7fc6c13d43c154714191a486ec86639cd30103de2c6724a427825bda3b7cb5441818e1f028893c8fea3d2ba912996495
+  languageName: node
+  linkType: hard
+
 "cross-spawn@npm:^7.0.0, cross-spawn@npm:^7.0.2, cross-spawn@npm:^7.0.3":
   version: 7.0.3
   resolution: "cross-spawn@npm:7.0.3"
@@ -3444,6 +3451,7 @@ __metadata:
     "@types/node": "npm:^20.12.7"
     "@types/yargs": "npm:^17.0.32"
     catched-error-message: "npm:^0.0.1"
+    create-temp-directory: "npm:^2.4.0"
     eslint: "npm:^9.1.1"
     glob: "npm:^10.3.12"
     jest: "npm:^29.7.0"
