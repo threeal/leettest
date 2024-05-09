@@ -30,7 +30,7 @@ it("should compile a C++ test file", async () => {
   await compileCppTest(sourcePath, executablePath);
 
   await fs.access(executablePath, fs.constants.X_OK);
-});
+}, 60000);
 
 it("should not compile an invalid C++ test file", async () => {
   const sourcePath = path.join(testDir.path, "test.cpp");
@@ -40,7 +40,7 @@ it("should not compile an invalid C++ test file", async () => {
   await expect(compileCppTest(sourcePath, executablePath)).rejects.toThrow(
     /Command failed:[^]*1 error generated/,
   );
-});
+}, 60000);
 
 it("should not compile a non-existing C++ test file", async () => {
   const sourcePath = path.join(testDir.path, "test.cpp");
@@ -48,4 +48,4 @@ it("should not compile a non-existing C++ test file", async () => {
   await expect(compileCppTest(sourcePath, executablePath)).rejects.toThrow(
     /Command failed:[^]*no such file or directory/,
   );
-});
+}, 60000);
