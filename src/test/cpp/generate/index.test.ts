@@ -1,4 +1,5 @@
 import { jest } from "@jest/globals";
+import path from "node:path";
 import { Schema } from "../../schema.js";
 import "jest-extended";
 
@@ -77,7 +78,7 @@ it("should generate a C++ test file", async () => {
   expect(writeFile).toHaveBeenCalledExactlyOnceWith(
     "build/path/to/test.cpp",
     [
-      `#include "../../../path/to/solution.cpp"`,
+      `#include "${path.join("..", "..", "..", "path", "to", "solution.cpp")}"`,
       ``,
       `#include <iostream>`,
       `#include <utility>`,

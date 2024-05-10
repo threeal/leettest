@@ -5,11 +5,12 @@ jest.unstable_mockModule("node:child_process", () => ({
   exec: jest.fn((_, callback: () => void) => callback()),
 }));
 
-it("should run a C++ test executable", async () => {
+it("should run a C++ test executable on Linux", async () => {
   const { exec } = await import("node:child_process");
   const { runCppTest } = await import("./run.js");
 
   jest.mocked(exec).mockClear();
+  Object.defineProperty(process, "platform", { value: "linux" });
 
   await expect(runCppTest("build/path/to/test")).resolves.toBeUndefined();
 

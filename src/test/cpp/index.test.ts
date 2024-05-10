@@ -1,4 +1,5 @@
 import { jest } from "@jest/globals";
+import path from "node:path";
 import { Schema } from "../schema.js";
 import "jest-extended";
 
@@ -59,24 +60,28 @@ it("should test a C++ solution", async () => {
   jest.mocked(readYamlSchema).mockResolvedValue(schema);
 
   await expect(
-    testCppSolution("path/to/solution.cpp"),
+    testCppSolution(path.join("path", "to", "solution.cpp")),
   ).resolves.toBeUndefined();
 
-  expect(readYamlSchema).toHaveBeenCalledExactlyOnceWith("path/to/test.yaml");
+  expect(readYamlSchema).toHaveBeenCalledExactlyOnceWith(
+    path.join("path", "to", "test.yaml"),
+  );
 
   expect(generateCppTest).toHaveBeenCalledAfter(jest.mocked(readYamlSchema));
   expect(generateCppTest).toHaveBeenCalledExactlyOnceWith(
     schema,
-    "path/to/solution.cpp",
-    "build/path/to/test.cpp",
+    path.join("path", "to", "solution.cpp"),
+    path.join("build", "path", "to", "test.cpp"),
   );
 
   expect(compileCppTest).toHaveBeenCalledAfter(jest.mocked(generateCppTest));
   expect(compileCppTest).toHaveBeenCalledExactlyOnceWith(
-    "build/path/to/test.cpp",
-    "build/path/to/test",
+    path.join("build", "path", "to", "test.cpp"),
+    path.join("build", "path", "to", "test"),
   );
 
   expect(runCppTest).toHaveBeenCalledAfter(jest.mocked(compileCppTest));
-  expect(runCppTest).toHaveBeenCalledExactlyOnceWith("build/path/to/test");
+  expect(runCppTest).toHaveBeenCalledExactlyOnceWith(
+    path.join("build", "path", "to", "test"),
+  );
 });
