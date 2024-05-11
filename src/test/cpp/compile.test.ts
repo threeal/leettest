@@ -13,39 +13,53 @@ afterEach(async () => {
   await testDir.remove();
 });
 
-it("should compile a C++ test file", async () => {
-  const sourcePath = path.join(testDir.path, "test.cpp");
-  await fs.writeFile(
-    sourcePath,
-    [
-      `#include <iostream>`,
-      ``,
-      `int main() {`,
-      `  std::cout << "Hello world!\\n";`,
-      `}`,
-    ].join("\n"),
-  );
+describe("compile a C++ test file", () => {
+  let sourcePath: string;
+  beforeEach(async () => {
+    sourcePath = path.join(testDir.path, "test.cpp");
+    await fs.writeFile(
+      sourcePath,
+      [
+        `#include <iostream>`,
+        ``,
+        `int main() {`,
+        `  std::cout << "Hello world!\\n";`,
+        `  return 0;`,
+        `}`,
+      ].join("\n"),
+    );
+  });
 
-  let executablePath = path.join(testDir.path, "build", "test");
-  executablePath = await compileCppTest(sourcePath, executablePath);
+  it("should compile a C++ test file", async () => {
+    const executablePath = await compileCppTest(sourcePath);
 
-  await fs.access(executablePath, fs.constants.X_OK);
-}, 60000);
+    expect(executablePath).toBe(path.join(testDir.path, "test"));
+    await fs.access(executablePath, fs.constants.X_OK);
+  }, 60000);
+
+  it("should compile a C++ test file to a specified directory", async () => {
+    const executablePath = await compileCppTest(
+      sourcePath,
+      path.join(testDir.path, "build"),
+    );
+
+    expect(executablePath).toBe(path.join(testDir.path, "build", "test"));
+    await fs.access(executablePath, fs.constants.X_OK);
+  }, 60000);
+});
 
 it("should not compile an invalid C++ test file", async () => {
   const sourcePath = path.join(testDir.path, "test.cpp");
   await fs.writeFile(sourcePath, "int main() {");
 
-  const executablePath = path.join(testDir.path, "build", "test");
-  await expect(compileCppTest(sourcePath, executablePath)).rejects.toThrow(
+  await expect(compileCppTest(sourcePath)).rejects.toThrow(
     /Command failed:[^]*1 error generated/,
   );
 }, 60000);
 
 it("should not compile a non-existing C++ test file", async () => {
   const sourcePath = path.join(testDir.path, "test.cpp");
-  const executablePath = path.join(testDir.path, "build", "test");
-  await expect(compileCppTest(sourcePath, executablePath)).rejects.toThrow(
+  await expect(compileCppTest(sourcePath)).rejects.toThrow(
     /Command failed:[^]*no such file or directory/,
   );
 }, 60000);
