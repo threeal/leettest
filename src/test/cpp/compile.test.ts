@@ -1,7 +1,7 @@
 import { createTempDirectory, ITempDirectory } from "create-temp-directory";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { compileCppTest } from "./compile.js";
+import { compileCppTest, getCppExecutablePath } from "./compile.js";
 
 let testDir: ITempDirectory;
 
@@ -11,6 +11,30 @@ beforeEach(async () => {
 
 afterEach(async () => {
   await testDir.remove();
+});
+
+describe("retrieve an executable path", () => {
+  let originalProcessPlatform: string;
+  beforeEach(() => (originalProcessPlatform = process.platform));
+  afterEach(() =>
+    Object.defineProperty(process, "platform", {
+      value: originalProcessPlatform,
+    }),
+  );
+
+  it("should retrieve an executable path on Windows platform", () => {
+    Object.defineProperty(process, "platform", { value: "win32" });
+    expect(getCppExecutablePath(path.join("path", "to", "test.cpp"))).toBe(
+      path.join("path", "to", "test.exe"),
+    );
+  });
+
+  it("should retrieve an executable path on non-Windows platform", () => {
+    Object.defineProperty(process, "platform", { value: "non-win32" });
+    expect(getCppExecutablePath(path.join("path", "to", "test.cpp"))).toBe(
+      path.join("path", "to", "test"),
+    );
+  });
 });
 
 describe("compile a C++ test file", () => {
@@ -33,7 +57,9 @@ describe("compile a C++ test file", () => {
   it("should compile a C++ test file", async () => {
     const executablePath = await compileCppTest(sourcePath);
 
-    expect(executablePath).toBe(path.join(testDir.path, "test"));
+    expect(executablePath).toBe(
+      getCppExecutablePath(path.join(testDir.path, "test")),
+    );
     await fs.access(executablePath, fs.constants.X_OK);
   }, 60000);
 
@@ -43,7 +69,9 @@ describe("compile a C++ test file", () => {
       path.join(testDir.path, "build"),
     );
 
-    expect(executablePath).toBe(path.join(testDir.path, "build", "test"));
+    expect(executablePath).toBe(
+      getCppExecutablePath(path.join(testDir.path, "build", "test")),
+    );
     await fs.access(executablePath, fs.constants.X_OK);
   }, 60000);
 });
