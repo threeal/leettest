@@ -1,9 +1,9 @@
-import { exec } from "node:child_process";
+import { execFile } from "node:child_process";
 import { mkdir } from "node:fs/promises";
 import { promisify } from "node:util";
 import path from "node:path";
 
-const execPromise = promisify(exec);
+const execFilePromise = promisify(execFile);
 
 /**
  * Retrieves the executable path of the given C++ source file.
@@ -34,6 +34,12 @@ export async function compileCppTest(
     await mkdir(outDir, { recursive: true });
     outFile = path.join(outDir, path.basename(outFile));
   }
-  await execPromise(`clang++ --std=c++20 -O2 ${testFile} -o ${outFile}`);
+  await execFilePromise("clang++", [
+    "--std=c++20",
+    "-O2",
+    testFile,
+    "-o",
+    outFile,
+  ]);
   return outFile;
 }
