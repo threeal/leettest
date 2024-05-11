@@ -10,12 +10,13 @@ const execPromise = promisify(exec);
  *
  * @param testFile - The path of the C++ test file to compile.
  * @param outFile - The path of the compiled executable output.
- * @returns A promise that resolves to nothing.
+ * @returns A promise that resolves to the path of the compiled executable output.
  */
 export async function compileCppTest(
   testFile: string,
   outFile: string,
-): Promise<void> {
+): Promise<string> {
   await mkdir(path.dirname(outFile), { recursive: true });
   await execPromise(`clang++ --std=c++20 -O2 ${testFile} -o ${outFile}`);
+  return outFile;
 }

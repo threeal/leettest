@@ -26,8 +26,8 @@ it("should compile a C++ test file", async () => {
     ].join("\n"),
   );
 
-  const executablePath = path.join(testDir.path, "build", "test");
-  await compileCppTest(sourcePath, executablePath);
+  let executablePath = path.join(testDir.path, "build", "test");
+  executablePath = await compileCppTest(sourcePath, executablePath);
 
   await fs.access(executablePath, fs.constants.X_OK);
 }, 60000);

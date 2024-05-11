@@ -58,6 +58,7 @@ it("should test a C++ solution", async () => {
   };
 
   jest.mocked(readYamlSchema).mockResolvedValue(schema);
+  jest.mocked(compileCppTest).mockImplementation(async (_, outFile) => outFile);
 
   await expect(
     testCppSolution(path.join("path", "to", "solution.cpp")),
