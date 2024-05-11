@@ -58,6 +58,12 @@ it("should test a C++ solution", async () => {
   };
 
   jest.mocked(readYamlSchema).mockResolvedValue(schema);
+  jest.mocked(compileCppTest).mockImplementation(async (testFile, outDir) => {
+    const outFile = testFile.replace(path.extname(testFile), "");
+    return outDir !== undefined
+      ? path.join(outDir, path.basename(outFile))
+      : outFile;
+  });
 
   await expect(
     testCppSolution(path.join("path", "to", "solution.cpp")),
@@ -77,7 +83,6 @@ it("should test a C++ solution", async () => {
   expect(compileCppTest).toHaveBeenCalledAfter(jest.mocked(generateCppTest));
   expect(compileCppTest).toHaveBeenCalledExactlyOnceWith(
     path.join("build", "path", "to", "test.cpp"),
-    path.join("build", "path", "to", "test"),
   );
 
   expect(runCppTest).toHaveBeenCalledAfter(jest.mocked(compileCppTest));

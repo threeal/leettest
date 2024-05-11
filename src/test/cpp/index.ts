@@ -20,8 +20,7 @@ export async function testCppSolution(solutionFile: string): Promise<void> {
   const testFile = path.join("build", path.dirname(solutionFile), "test.cpp");
   await generateCppTest(schema, solutionFile, testFile);
 
-  const testExec = path.join(path.dirname(testFile), "test");
-  await compileCppTest(testFile, testExec);
+  const testExec = await compileCppTest(testFile);
 
   await runCppTest(testExec);
 }
