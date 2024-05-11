@@ -10,7 +10,5 @@ const execPromise = promisify(exec);
  * @returns A promise that resolves to nothing.
  */
 export async function runCppTest(testExec: string): Promise<void> {
-  await execPromise(
-    process.platform === "win32" ? `start ${testExec}` : testExec,
-  );
+  await execPromise(testExec);
 }
