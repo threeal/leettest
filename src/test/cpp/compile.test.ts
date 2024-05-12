@@ -40,14 +40,16 @@ describe("retrieve an executable path", () => {
 });
 
 describe("compile a C++ test file", () => {
-  let testDir: ITempDirectory;
-  beforeEach(async () => (testDir = await createTempDirectory()));
-  afterEach(async () => await testDir.remove());
+  const testDirs: ITempDirectory[] = [];
+  const getTestDir = async () => {
+    const testDir = await createTempDirectory();
+    testDirs.push(testDir);
+    return testDir;
+  };
 
   describe("compile a valid C++ test file", () => {
-    let sourcePath: string;
-    beforeEach(async () => {
-      sourcePath = path.join(testDir.path, "test.cpp");
+    const getSourcePath = async (testDir: ITempDirectory) => {
+      const sourcePath = path.join(testDir.path, "test.cpp");
       await fs.writeFile(
         sourcePath,
         [
@@ -59,43 +61,73 @@ describe("compile a C++ test file", () => {
           `}`,
         ].join("\n"),
       );
-    });
+      return sourcePath;
+    };
 
-    it("should compile a valid C++ test file", async () => {
-      const executablePath = await compileCppTest(sourcePath);
+    it.concurrent(
+      "should compile a valid C++ test file",
+      async () => {
+        const testDir = await getTestDir();
+        const sourcePath = await getSourcePath(testDir);
 
-      expect(executablePath).toBe(
-        getCppExecutablePath(path.join(testDir.path, "test")),
-      );
-      await fs.access(executablePath, fs.constants.X_OK);
-    }, 60000);
+        const executablePath = await compileCppTest(sourcePath);
 
-    it("should compile a valid C++ test file to a specified directory", async () => {
-      const executablePath = await compileCppTest(
-        sourcePath,
-        path.join(testDir.path, "build"),
-      );
+        expect(executablePath).toBe(
+          getCppExecutablePath(path.join(testDir.path, "test")),
+        );
+        await fs.access(executablePath, fs.constants.X_OK);
+      },
+      60000,
+    );
 
-      expect(executablePath).toBe(
-        getCppExecutablePath(path.join(testDir.path, "build", "test")),
-      );
-      await fs.access(executablePath, fs.constants.X_OK);
-    }, 60000);
+    it.concurrent(
+      "should compile a valid C++ test file to a specified directory",
+      async () => {
+        const testDir = await getTestDir();
+        const sourcePath = await getSourcePath(testDir);
+
+        const executablePath = await compileCppTest(
+          sourcePath,
+          path.join(testDir.path, "build"),
+        );
+
+        expect(executablePath).toBe(
+          getCppExecutablePath(path.join(testDir.path, "build", "test")),
+        );
+        await fs.access(executablePath, fs.constants.X_OK);
+      },
+      60000,
+    );
   });
 
-  it("should not compile an invalid C++ test file", async () => {
-    const sourcePath = path.join(testDir.path, "test.cpp");
-    await fs.writeFile(sourcePath, "int main() {");
+  it.concurrent(
+    "should not compile an invalid C++ test file",
+    async () => {
+      const testDir = await getTestDir();
 
-    await expect(compileCppTest(sourcePath)).rejects.toThrow(
-      /Command failed:[^]*1 error generated/,
-    );
-  }, 60000);
+      const sourcePath = path.join(testDir.path, "test.cpp");
+      await fs.writeFile(sourcePath, "int main() {");
 
-  it("should not compile a non-existing C++ test file", async () => {
-    const sourcePath = path.join(testDir.path, "test.cpp");
-    await expect(compileCppTest(sourcePath)).rejects.toThrow(
-      /Command failed:[^]*no such file or directory/,
-    );
-  }, 60000);
+      await expect(compileCppTest(sourcePath)).rejects.toThrow(
+        /Command failed:[^]*1 error generated/,
+      );
+    },
+    60000,
+  );
+
+  it.concurrent(
+    "should not compile a non-existing C++ test file",
+    async () => {
+      const testDir = await getTestDir();
+      const sourcePath = path.join(testDir.path, "test.cpp");
+      await expect(compileCppTest(sourcePath)).rejects.toThrow(
+        /Command failed:[^]*no such file or directory/,
+      );
+    },
+    60000,
+  );
+
+  afterAll(async () => {
+    await Promise.all(testDirs.map((testDir) => testDir.remove()));
+  });
 });
