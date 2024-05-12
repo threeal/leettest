@@ -4,27 +4,39 @@ import path from "node:path";
 import { compileCppTest, getCppExecutablePath } from "./compile.js";
 
 describe("retrieve an executable path", () => {
-  let originalProcessPlatform: string;
-  beforeEach(() => (originalProcessPlatform = process.platform));
-  afterEach(() =>
-    Object.defineProperty(process, "platform", {
-      value: originalProcessPlatform,
-    }),
+  let originalPlatform: string | undefined = undefined;
+
+  const mockPlatform = (newPlatform: string) => {
+    if (originalPlatform === undefined) originalPlatform = process.platform;
+    Object.defineProperty(process, "platform", { value: newPlatform });
+  };
+
+  const restorePlatform = () => {
+    if (originalPlatform === undefined) return;
+    Object.defineProperty(process, "platform", { value: originalPlatform });
+  };
+
+  it.concurrent(
+    "should retrieve an executable path on Windows platform",
+    () => {
+      mockPlatform("win32");
+      expect(getCppExecutablePath(path.join("path", "to", "test.cpp"))).toBe(
+        path.join("path", "to", "test.exe"),
+      );
+    },
   );
 
-  it("should retrieve an executable path on Windows platform", () => {
-    Object.defineProperty(process, "platform", { value: "win32" });
-    expect(getCppExecutablePath(path.join("path", "to", "test.cpp"))).toBe(
-      path.join("path", "to", "test.exe"),
-    );
-  });
+  it.concurrent(
+    "should retrieve an executable path on non-Windows platform",
+    () => {
+      mockPlatform("non-win32");
+      expect(getCppExecutablePath(path.join("path", "to", "test.cpp"))).toBe(
+        path.join("path", "to", "test"),
+      );
+    },
+  );
 
-  it("should retrieve an executable path on non-Windows platform", () => {
-    Object.defineProperty(process, "platform", { value: "non-win32" });
-    expect(getCppExecutablePath(path.join("path", "to", "test.cpp"))).toBe(
-      path.join("path", "to", "test"),
-    );
-  });
+  afterAll(() => restorePlatform());
 });
 
 describe("compile a C++ test file", () => {
