@@ -1,17 +1,31 @@
-import { jest } from "@jest/globals";
-import "jest-extended";
+import { createTempDirectory, ITempDirectory } from "create-temp-directory";
+import fs from "node:fs/promises";
+import path from "node:path";
+import { compileCppTest } from "./compile.js";
+import { runCppTest } from "./run.js";
 
-jest.unstable_mockModule("node:child_process", () => ({
-  execFile: jest.fn((_, callback: () => void) => callback()),
-}));
+const testDirs: ITempDirectory[] = [];
+const getTestDir = async () => {
+  const testDir = await createTempDirectory();
+  testDirs.push(testDir);
+  return testDir;
+};
 
-it("should run a C++ test executable", async () => {
-  const { execFile } = await import("node:child_process");
-  const { runCppTest } = await import("./run.js");
+it.concurrent(
+  "should run a C++ test executable",
+  async () => {
+    const testDir = await getTestDir();
 
-  jest.mocked(execFile).mockClear();
+    const sourcePath = path.join(testDir.path, "test.cpp");
+    await fs.writeFile(sourcePath, "int main() { return 0; }\n");
 
-  await expect(runCppTest("build/path/to/test")).resolves.toBeUndefined();
+    const executablePath = await compileCppTest(sourcePath);
 
-  expect(jest.mocked(execFile).mock.calls[0][0]).toBe("build/path/to/test");
+    await runCppTest(executablePath);
+  },
+  60000,
+);
+
+afterAll(async () => {
+  await Promise.all(testDirs.map((testDir) => testDir.remove()));
 });
