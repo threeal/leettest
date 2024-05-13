@@ -3466,7 +3466,7 @@ __metadata:
     ora: "npm:^8.0.1"
     prettier: "npm:^3.2.5"
     ts-jest: "npm:^29.1.2"
-    tsx: "npm:^4.9.3"
+    tsx: "npm:^4.10.2"
     typescript: "npm:^5.4.5"
     typescript-eslint: "npm:^7.8.0"
     yaml: "npm:^2.4.2"
@@ -4604,9 +4604,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsx@npm:^4.9.3":
-  version: 4.9.3
-  resolution: "tsx@npm:4.9.3"
+"tsx@npm:^4.10.2":
+  version: 4.10.2
+  resolution: "tsx@npm:4.10.2"
   dependencies:
     esbuild: "npm:~0.20.2"
     fsevents: "npm:~2.3.3"
@@ -4616,7 +4616,7 @@ __metadata:
       optional: true
   bin:
     tsx: dist/cli.mjs
-  checksum: 10c0/abc0d461885ef227959274de5e2f80961e860cc1524d090fc9161bf6450b732f9c3e88ec770ea8cbe49880c9fed7c65aa7853d060b83d9c56f70d935e9162d18
+  checksum: 10c0/d304427254fbc20b979ef9e817d9356f197b5caff857cbbe9df1d7b4f12c519d5f65feb746fa1728fbf5d6ec6b2008bd55c27eab744289f6c67bda94de8e1d7a
   languageName: node
   linkType: hard
 
