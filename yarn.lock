@@ -2452,7 +2452,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"get-tsconfig@npm:^4.7.3":
+"get-tsconfig@npm:^4.7.5":
   version: 4.7.5
   resolution: "get-tsconfig@npm:4.7.5"
   dependencies:
@@ -3466,7 +3466,7 @@ __metadata:
     ora: "npm:^8.0.1"
     prettier: "npm:^3.2.5"
     ts-jest: "npm:^29.1.2"
-    tsx: "npm:^4.9.3"
+    tsx: "npm:^4.10.3"
     typescript: "npm:^5.4.5"
     typescript-eslint: "npm:^7.8.0"
     yaml: "npm:^2.4.2"
@@ -4604,19 +4604,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsx@npm:^4.9.3":
-  version: 4.9.3
-  resolution: "tsx@npm:4.9.3"
+"tsx@npm:^4.10.3":
+  version: 4.10.3
+  resolution: "tsx@npm:4.10.3"
   dependencies:
     esbuild: "npm:~0.20.2"
     fsevents: "npm:~2.3.3"
-    get-tsconfig: "npm:^4.7.3"
+    get-tsconfig: "npm:^4.7.5"
   dependenciesMeta:
     fsevents:
       optional: true
   bin:
     tsx: dist/cli.mjs
-  checksum: 10c0/abc0d461885ef227959274de5e2f80961e860cc1524d090fc9161bf6450b732f9c3e88ec770ea8cbe49880c9fed7c65aa7853d060b83d9c56f70d935e9162d18
+  checksum: 10c0/0036641dcc4d7970b5aa8e9db1a3365ec615d32e2b9b26e762e24c0588e79bc80c96639eb9b1c08b16befee75add0e527d8c24cfa4e519f1bf5805b95769eba5
   languageName: node
   linkType: hard
 
