@@ -1,73 +1,85 @@
-import { jest } from "@jest/globals";
-import "jest-extended";
+import { createTempDirectory, ITempDirectory } from "create-temp-directory";
+import fs from "node:fs/promises";
+import path from "node:path";
+import { readYamlSchema } from "./schema.js";
 
-jest.unstable_mockModule("node:fs/promises", () => ({
-  readFile: jest.fn(),
-}));
+const testDirs: ITempDirectory[] = [];
+const getTestDir = async () => {
+  const testDir = await createTempDirectory();
+  testDirs.push(testDir);
+  return testDir;
+};
 
-it("should read a YAML schema file", async () => {
-  const { readFile } = await import("node:fs/promises");
-  const { readYamlSchema } = await import("./schema.js");
+it.concurrent(
+  "should read a YAML schema file",
+  async () => {
+    const testDir = await getTestDir();
 
-  jest.mocked(readFile).mockResolvedValue(`
-cpp:
-  function:
-    name: sum
-    inputs:
-      - type: int
-        value: num1
-      - type: int
-        value: num2
-    output:
-      type: int
+    const schemaPath = path.join(testDir.path, "test.yaml");
+    await fs.writeFile(
+      schemaPath,
+      [
+        `cpp:`,
+        `  function:`,
+        `    name: sum`,
+        `    inputs:`,
+        `      - type: int`,
+        `        value: num1`,
+        `      - type: int`,
+        `        value: num2`,
+        `    output:`,
+        `      type: int`,
+        ``,
+        `cases:`,
+        `  - name: example 1`,
+        `    inputs:`,
+        `      num1: 12`,
+        `      num2: 5`,
+        `    output: 17`,
+        ``,
+        `  - name: example 2`,
+        `    inputs:`,
+        `      num1: -10`,
+        `      num2: 4`,
+        `    output: -6`,
+        ``,
+      ].join("\n"),
+    );
 
-cases:
-  - name: example 1
-    inputs:
-      num1: 12
-      num2: 5
-    output: 17
-
-  - name: example 2
-    inputs:
-      num1: -10
-      num2: 4
-    output: -6
-  `);
-
-  await expect(readYamlSchema("path/to/test.yaml")).resolves.toStrictEqual({
-    cpp: {
-      function: {
-        name: "sum",
-        inputs: [
-          { type: "int", value: "num1" },
-          { type: "int", value: "num2" },
-        ],
-        output: { type: "int" },
-      },
-    },
-    cases: [
-      {
-        name: "example 1",
-        inputs: {
-          num1: 12,
-          num2: 5,
+    await expect(readYamlSchema(schemaPath)).resolves.toEqual({
+      cpp: {
+        function: {
+          name: "sum",
+          inputs: [
+            { type: "int", value: "num1" },
+            { type: "int", value: "num2" },
+          ],
+          output: { type: "int" },
         },
-        output: 17,
       },
-      {
-        name: "example 2",
-        inputs: {
-          num1: -10,
-          num2: 4,
+      cases: [
+        {
+          name: "example 1",
+          inputs: {
+            num1: 12,
+            num2: 5,
+          },
+          output: 17,
         },
-        output: -6,
-      },
-    ],
-  });
+        {
+          name: "example 2",
+          inputs: {
+            num1: -10,
+            num2: 4,
+          },
+          output: -6,
+        },
+      ],
+    });
+  },
+  60000,
+);
 
-  expect(readFile).toHaveBeenCalledExactlyOnceWith(
-    "path/to/test.yaml",
-    "utf-8",
-  );
+afterAll(async () => {
+  await Promise.all(testDirs.map((testDir) => testDir.remove()));
 });
