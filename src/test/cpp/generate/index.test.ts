@@ -1,91 +1,71 @@
-import { jest } from "@jest/globals";
+import { createTempDirectory, ITempDirectory } from "create-temp-directory";
+import fs from "node:fs/promises";
 import path from "node:path";
 import { Schema } from "../../schema.js";
-import "jest-extended";
+import { compileCppTest } from "./../compile.js";
+import { runCppTest } from "./../run.js";
+import { generateCppTest } from "./index.js";
 
-jest.unstable_mockModule("node:fs/promises", () => ({
-  mkdir: jest.fn(),
-  writeFile: jest.fn(),
-}));
+const testDirs: ITempDirectory[] = [];
+const getTestDir = async () => {
+  const testDir = await createTempDirectory();
+  testDirs.push(testDir);
+  return testDir;
+};
 
-jest.unstable_mockModule("./main.js", () => ({
-  generateCppMainCode: jest.fn(),
-}));
-
-jest.unstable_mockModule("./test_case.js", () => ({
-  generateCppTestCaseCode: jest.fn(),
-}));
-
-jest.unstable_mockModule("./utility.js", () => ({
-  generateCppUtilityCode: jest.fn(),
-}));
-
-it("should generate a C++ test file", async () => {
-  const { mkdir, writeFile } = await import("node:fs/promises");
-  const { generateCppMainCode } = await import("./main.js");
-  const { generateCppTest } = await import("./index.js");
-  const { generateCppTestCaseCode } = await import("./test_case.js");
-  const { generateCppUtilityCode } = await import("./utility.js");
-
-  const schema: Schema = {
-    cpp: {
-      function: {
-        name: "sum",
-        inputs: [
-          { type: "int", value: "num1" },
-          { type: "int", value: "num2" },
-        ],
-        output: { type: "int" },
-      },
-    },
-    cases: [
-      {
-        name: "example 1",
-        inputs: {
-          num1: 12,
-          num2: 5,
+it.concurrent(
+  "should generate a C++ test file",
+  async () => {
+    const schema: Schema = {
+      cpp: {
+        function: {
+          name: "sum",
+          inputs: [
+            { type: "int", value: "num1" },
+            { type: "int", value: "num2" },
+          ],
+          output: { type: "int" },
         },
-        output: 17,
       },
-      {
-        name: "example 2",
-        inputs: {
-          num1: -10,
-          num2: 4,
+      cases: [
+        {
+          name: "example 1",
+          inputs: { num1: 12, num2: 5 },
+          output: 17,
         },
-        output: -6,
-      },
-    ],
-  };
+        {
+          name: "example 2",
+          inputs: { num1: -10, num2: 4 },
+          output: -6,
+        },
+      ],
+    };
 
-  jest.mocked(generateCppMainCode).mockReturnValue({
-    code: "// C++ main function code",
-    headers: new Set(["iostream", "utility"]),
-  });
+    const testDir = await getTestDir();
 
-  jest.mocked(generateCppTestCaseCode).mockReturnValue("// C++ test case code");
-  jest.mocked(generateCppUtilityCode).mockReturnValue("// C++ utility code");
+    const solutionSourcePath = path.join(testDir.path, "solution.cpp");
+    await fs.writeFile(
+      solutionSourcePath,
+      [
+        `class Solution {`,
+        ` public:`,
+        `  int sum(int num1, int num2) {`,
+        `    return num1 + num2;`,
+        `  }`,
+        `};`,
+      ].join("\n"),
+    );
 
-  await expect(
-    generateCppTest(schema, "path/to/solution.cpp", "build/path/to/test.cpp"),
-  ).resolves.toBeUndefined();
+    const testSourcePath = path.join(testDir.path, "test.cpp");
+    await generateCppTest(schema, solutionSourcePath, testSourcePath);
 
-  expect(mkdir).toHaveBeenCalledExactlyOnceWith("build/path/to", {
-    recursive: true,
-  });
+    const executablePath = await compileCppTest(testSourcePath);
 
-  expect(writeFile).toHaveBeenCalledAfter(jest.mocked(mkdir));
-  expect(writeFile).toHaveBeenCalledExactlyOnceWith(
-    "build/path/to/test.cpp",
-    [
-      `#include "${path.join("..", "..", "..", "path", "to", "solution.cpp")}"`,
-      ``,
-      `#include <iostream>`,
-      `#include <utility>`,
-      ``,
-      `// C++ test case code`,
-      `// C++ utility code`,
-      `// C++ main function code`,
-    ].join("\n"),
-  );
+    await runCppTest(executablePath);
+  },
+  60000,
+);
+
+afterAll(async () => {
+  await Promise.all(testDirs.map((testDir) => testDir.remove()));
 });
