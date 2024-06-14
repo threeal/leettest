@@ -34,7 +34,7 @@
     "catched-error-message": "^0.0.1",
     "glob": "^10.4.1",
     "ora": "^8.0.1",
-    "yaml": "^2.4.2",
+    "yaml": "^2.4.5",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
