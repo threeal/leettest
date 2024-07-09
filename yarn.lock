@@ -3459,7 +3459,7 @@ __metadata:
     jest-extended: "npm:^4.0.2"
     ora: "npm:^8.0.1"
     prettier: "npm:^3.3.2"
-    ts-jest: "npm:^29.1.4"
+    ts-jest: "npm:^29.2.0"
     tsx: "npm:^4.11.0"
     typescript: "npm:^5.5.3"
     typescript-eslint: "npm:^7.13.0"
@@ -4572,9 +4572,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-jest@npm:^29.1.4":
-  version: 29.1.4
-  resolution: "ts-jest@npm:29.1.4"
+"ts-jest@npm:^29.2.0":
+  version: 29.2.0
+  resolution: "ts-jest@npm:29.2.0"
   dependencies:
     bs-logger: "npm:0.x"
     fast-json-stable-stringify: "npm:2.x"
@@ -4604,7 +4604,7 @@ __metadata:
       optional: true
   bin:
     ts-jest: cli.js
-  checksum: 10c0/97def10be26a553e529dfacafe264fa9833d638052bc2b1ebe6301262ae2d3e43954f4d91f2d2d07cf92352cdd4fa163a86f8116a1f6bb8cef7060cddfec794b
+  checksum: 10c0/a20fb23f1b54cbdb3d793bf527df81fa212c4a9e0dbad00f73923f94c199eea7d3b6f88de208ecaf5ddd52c781119a958af045fc807e10f0d37f5a1c4fcee7fb
   languageName: node
   linkType: hard
 
