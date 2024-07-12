@@ -1,9 +1,9 @@
 import { createTempDirectory, ITempDirectory } from "create-temp-directory";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { compileCppTest, getCppExecutablePath } from "./compile.js";
+import { compileCppSource, getExecutableFromSource } from "./compile.js";
 
-describe("retrieve an executable path", () => {
+describe("retrieve an executable file path from source file path", () => {
   let originalPlatform: string | undefined = undefined;
 
   const mockPlatform = (newPlatform: string) => {
@@ -17,21 +17,21 @@ describe("retrieve an executable path", () => {
   };
 
   it.concurrent(
-    "should retrieve an executable path on Windows platform",
+    "should retrieve an executable file path on Windows platform",
     () => {
       mockPlatform("win32");
-      expect(getCppExecutablePath(path.join("path", "to", "test.cpp"))).toBe(
-        path.join("path", "to", "test.exe"),
+      expect(getExecutableFromSource(path.join("path", "to", "main.cpp"))).toBe(
+        path.join("path", "to", "main.exe"),
       );
     },
   );
 
   it.concurrent(
-    "should retrieve an executable path on non-Windows platform",
+    "should retrieve an executable file path on non-Windows platform",
     () => {
       mockPlatform("non-win32");
-      expect(getCppExecutablePath(path.join("path", "to", "test.cpp"))).toBe(
-        path.join("path", "to", "test"),
+      expect(getExecutableFromSource(path.join("path", "to", "main.cpp"))).toBe(
+        path.join("path", "to", "main"),
       );
     },
   );
@@ -39,7 +39,7 @@ describe("retrieve an executable path", () => {
   afterAll(() => restorePlatform());
 });
 
-describe("compile a C++ test file", () => {
+describe("compile a C++ source file", () => {
   const testDirs: ITempDirectory[] = [];
   const getTestDir = async () => {
     const testDir = await createTempDirectory();
@@ -47,11 +47,11 @@ describe("compile a C++ test file", () => {
     return testDir;
   };
 
-  describe("compile a valid C++ test file", () => {
+  describe("compile a valid C++ source file", () => {
     const getSourcePath = async (testDir: ITempDirectory) => {
-      const sourcePath = path.join(testDir.path, "test.cpp");
+      const sourceFile = path.join(testDir.path, "main.cpp");
       await fs.writeFile(
-        sourcePath,
+        sourceFile,
         [
           `#include <iostream>`,
           ``,
@@ -61,54 +61,54 @@ describe("compile a C++ test file", () => {
           `}`,
         ].join("\n"),
       );
-      return sourcePath;
+      return sourceFile;
     };
 
     it.concurrent(
-      "should compile a valid C++ test file",
+      "should compile a valid C++ source file",
       async () => {
         const testDir = await getTestDir();
-        const sourcePath = await getSourcePath(testDir);
+        const sourceFile = await getSourcePath(testDir);
 
-        const executablePath = await compileCppTest(sourcePath);
+        const exeFile = await compileCppSource(sourceFile);
 
-        expect(executablePath).toBe(
-          getCppExecutablePath(path.join(testDir.path, "test")),
+        expect(exeFile).toBe(
+          getExecutableFromSource(path.join(testDir.path, "main")),
         );
-        await fs.access(executablePath, fs.constants.X_OK);
+        await fs.access(exeFile, fs.constants.X_OK);
       },
       60000,
     );
 
     it.concurrent(
-      "should compile a valid C++ test file to a specified directory",
+      "should compile a valid C++ source file to a specified directory",
       async () => {
         const testDir = await getTestDir();
-        const sourcePath = await getSourcePath(testDir);
+        const sourceFile = await getSourcePath(testDir);
 
-        const executablePath = await compileCppTest(
-          sourcePath,
+        const exeFile = await compileCppSource(
+          sourceFile,
           path.join(testDir.path, "build"),
         );
 
-        expect(executablePath).toBe(
-          getCppExecutablePath(path.join(testDir.path, "build", "test")),
+        expect(exeFile).toBe(
+          getExecutableFromSource(path.join(testDir.path, "build", "main")),
         );
-        await fs.access(executablePath, fs.constants.X_OK);
+        await fs.access(exeFile, fs.constants.X_OK);
       },
       60000,
     );
   });
 
   it.concurrent(
-    "should not compile an invalid C++ test file",
+    "should not compile an invalid C++ source file",
     async () => {
       const testDir = await getTestDir();
 
-      const sourcePath = path.join(testDir.path, "test.cpp");
-      await fs.writeFile(sourcePath, "int main() {");
+      const sourceFile = path.join(testDir.path, "main.cpp");
+      await fs.writeFile(sourceFile, "int main() {");
 
-      await expect(compileCppTest(sourcePath)).rejects.toThrow(
+      await expect(compileCppSource(sourceFile)).rejects.toThrow(
         /Command failed:[^]*1 error generated/,
       );
     },
@@ -116,11 +116,11 @@ describe("compile a C++ test file", () => {
   );
 
   it.concurrent(
-    "should not compile a non-existing C++ test file",
+    "should not compile a non-existing C++ source file",
     async () => {
       const testDir = await getTestDir();
-      const sourcePath = path.join(testDir.path, "test.cpp");
-      await expect(compileCppTest(sourcePath)).rejects.toThrow(
+      const sourceFile = path.join(testDir.path, "main.cpp");
+      await expect(compileCppSource(sourceFile)).rejects.toThrow(
         /Command failed:[^]*no such file or directory/,
       );
     },

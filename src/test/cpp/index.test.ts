@@ -3,6 +3,9 @@ import path from "node:path";
 import { Schema } from "../schema.js";
 import "jest-extended";
 
+jest.unstable_mockModule("../../compile.js", () => ({
+  compileCppSource: jest.fn(),
+}));
 
 jest.unstable_mockModule("../../run.js", () => ({
   runExecutable: jest.fn(),
@@ -12,19 +15,15 @@ jest.unstable_mockModule("../schema.js", () => ({
   readYamlSchema: jest.fn(),
 }));
 
-jest.unstable_mockModule("./compile.js", () => ({
-  compileCppTest: jest.fn(),
-}));
-
 jest.unstable_mockModule("./generate.js", () => ({
   generateCppTest: jest.fn(),
 }));
 
 it("should test a C++ solution", async () => {
+  const { compileCppSource } = await import("../../compile.js");
   const { runExecutable } = await import("../../run.js");
   const { readYamlSchema } = await import("../schema.js");
   const { generateCppTest } = await import("./generate/index.js");
-  const { compileCppTest } = await import("./compile.js");
   const { testCppSolution } = await import("./index.js");
 
   const schema: Schema = {
@@ -59,7 +58,7 @@ it("should test a C++ solution", async () => {
   };
 
   jest.mocked(readYamlSchema).mockResolvedValue(schema);
-  jest.mocked(compileCppTest).mockImplementation(async (testFile, outDir) => {
+  jest.mocked(compileCppSource).mockImplementation(async (testFile, outDir) => {
     const outFile = testFile.replace(path.extname(testFile), "");
     return outDir !== undefined
       ? path.join(outDir, path.basename(outFile))
@@ -81,12 +80,12 @@ it("should test a C++ solution", async () => {
     path.join("build", "path", "to", "test.cpp"),
   );
 
-  expect(compileCppTest).toHaveBeenCalledAfter(jest.mocked(generateCppTest));
-  expect(compileCppTest).toHaveBeenCalledExactlyOnceWith(
+  expect(compileCppSource).toHaveBeenCalledAfter(jest.mocked(generateCppTest));
+  expect(compileCppSource).toHaveBeenCalledExactlyOnceWith(
     path.join("build", "path", "to", "test.cpp"),
   );
 
-  expect(runExecutable).toHaveBeenCalledAfter(jest.mocked(compileCppTest));
+  expect(runExecutable).toHaveBeenCalledAfter(jest.mocked(compileCppSource));
   expect(runExecutable).toHaveBeenCalledExactlyOnceWith(
     path.join("build", "path", "to", "test"),
   );

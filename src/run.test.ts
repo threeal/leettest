@@ -1,7 +1,7 @@
 import { createTempDirectory, ITempDirectory } from "create-temp-directory";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { compileCppTest, getCppExecutablePath } from "./test/cpp/compile.js";
+import { compileCppSource, getExecutableFromSource } from "./compile.js";
 import { runExecutable } from "./run.js";
 
 const testDirs: ITempDirectory[] = [];
@@ -19,7 +19,7 @@ it.concurrent(
     const sourceFile = path.join(testDir.path, "main.cpp");
     await fs.writeFile(sourceFile, "int main() { return 0; }\n");
 
-    const exeFile = await compileCppTest(sourceFile);
+    const exeFile = await compileCppSource(sourceFile);
 
     await runExecutable(exeFile);
   },
@@ -44,7 +44,7 @@ it.concurrent(
       ].join("\n"),
     );
 
-    const exeFile = await compileCppTest(sourceFile);
+    const exeFile = await compileCppSource(sourceFile);
 
     await expect(runExecutable(exeFile)).rejects.toThrow(
       /Command failed:[^]*unknown error/,
@@ -57,7 +57,7 @@ it.concurrent(
   "should not run a non-existing executable file",
   async () => {
     const testDir = await getTestDir();
-    const exeFile = getCppExecutablePath(path.join(testDir.path, "main"));
+    const exeFile = getExecutableFromSource(path.join(testDir.path, "main"));
     await expect(runExecutable(exeFile)).rejects.toThrow(/spawn.*ENOENT/);
   },
   60000,
