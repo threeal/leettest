@@ -1,8 +1,8 @@
 import { createTempDirectory, ITempDirectory } from "create-temp-directory";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { compileCppTest, getCppExecutablePath } from "./compile.js";
-import { runCppTest } from "./run.js";
+import { compileCppTest, getCppExecutablePath } from "./test/cpp/compile.js";
+import { runExecutable } from "./run.js";
 
 const testDirs: ITempDirectory[] = [];
 const getTestDir = async () => {
@@ -12,28 +12,28 @@ const getTestDir = async () => {
 };
 
 it.concurrent(
-  "should run a C++ test executable",
+  "should run an executable file",
   async () => {
     const testDir = await getTestDir();
 
-    const sourcePath = path.join(testDir.path, "test.cpp");
-    await fs.writeFile(sourcePath, "int main() { return 0; }\n");
+    const sourceFile = path.join(testDir.path, "main.cpp");
+    await fs.writeFile(sourceFile, "int main() { return 0; }\n");
 
-    const executablePath = await compileCppTest(sourcePath);
+    const exeFile = await compileCppTest(sourceFile);
 
-    await runCppTest(executablePath);
+    await runExecutable(exeFile);
   },
   60000,
 );
 
 it.concurrent(
-  "should run a failing C++ test executable",
+  "should run a failing executable file",
   async () => {
     const testDir = await getTestDir();
 
-    const sourcePath = path.join(testDir.path, "test.cpp");
+    const sourceFile = path.join(testDir.path, "main.cpp");
     await fs.writeFile(
-      sourcePath,
+      sourceFile,
       [
         `#include <iostream>`,
         ``,
@@ -44,9 +44,9 @@ it.concurrent(
       ].join("\n"),
     );
 
-    const executablePath = await compileCppTest(sourcePath);
+    const exeFile = await compileCppTest(sourceFile);
 
-    await expect(runCppTest(executablePath)).rejects.toThrow(
+    await expect(runExecutable(exeFile)).rejects.toThrow(
       /Command failed:[^]*unknown error/,
     );
   },
@@ -54,13 +54,11 @@ it.concurrent(
 );
 
 it.concurrent(
-  "should not run a non-existing C++ test executable",
+  "should not run a non-existing executable file",
   async () => {
     const testDir = await getTestDir();
-    const executablePath = getCppExecutablePath(
-      path.join(testDir.path, "test"),
-    );
-    await expect(runCppTest(executablePath)).rejects.toThrow(/spawn.*ENOENT/);
+    const exeFile = getCppExecutablePath(path.join(testDir.path, "main"));
+    await expect(runExecutable(exeFile)).rejects.toThrow(/spawn.*ENOENT/);
   },
   60000,
 );

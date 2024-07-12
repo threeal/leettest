@@ -1,9 +1,9 @@
 import { createTempDirectory, ITempDirectory } from "create-temp-directory";
 import fs from "node:fs/promises";
 import path from "node:path";
+import { runExecutable } from "../../../run.js";
 import { Schema } from "../../schema.js";
 import { compileCppTest } from "./../compile.js";
-import { runCppTest } from "./../run.js";
 import { generateCppTest } from "./index.js";
 
 const testDirs: ITempDirectory[] = [];
@@ -61,7 +61,7 @@ it.concurrent(
 
     const executablePath = await compileCppTest(testSourcePath);
 
-    await runCppTest(executablePath);
+    await runExecutable(executablePath);
   },
   60000,
 );

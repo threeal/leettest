@@ -1,8 +1,8 @@
 import path from "node:path";
+import { runExecutable } from "../../run.js";
 import { readYamlSchema } from "../schema.js";
 import { generateCppTest } from "./generate/index.js";
 import { compileCppTest } from "./compile.js";
-import { runCppTest } from "./run.js";
 
 /**
  * Tests the C++ solution of a LeetCode problem.
@@ -22,5 +22,5 @@ export async function testCppSolution(solutionFile: string): Promise<void> {
 
   const testExec = await compileCppTest(testFile);
 
-  await runCppTest(testExec);
+  await runExecutable(testExec);
 }
