@@ -2,20 +2,9 @@ import { execFile } from "node:child_process";
 import { mkdir } from "node:fs/promises";
 import { promisify } from "node:util";
 import path from "node:path";
+import { getExecutableFromSource } from "./utils.js";
 
 const execFilePromise = promisify(execFile);
-
-/**
- * Retrieves the executable file path for the given C++ source file.
- *
- * @param sourceFile - The path of the C++ source file.
- * @returns The executable file path corresponding to the C++ source file.
- */
-export function getExecutableFromSource(sourceFile: string): string {
-  let executableFile = sourceFile.replace(path.extname(sourceFile), "");
-  if (process.platform === "win32") executableFile += ".exe";
-  return executableFile;
-}
 
 /**
  * Compiles a C++ source file using Clang.

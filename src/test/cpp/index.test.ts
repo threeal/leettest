@@ -3,7 +3,7 @@ import path from "node:path";
 import { Schema } from "../schema.js";
 import "jest-extended";
 
-jest.unstable_mockModule("../../compile.js", () => ({
+jest.unstable_mockModule("../../compile/cpp.js", () => ({
   compileCppSource: jest.fn(),
 }));
 
@@ -20,7 +20,7 @@ jest.unstable_mockModule("./generate.js", () => ({
 }));
 
 it("should test a C++ solution", async () => {
-  const { compileCppSource } = await import("../../compile.js");
+  const { compileCppSource } = await import("../../compile/cpp.js");
   const { runExecutable } = await import("../../run.js");
   const { readYamlSchema } = await import("../schema.js");
   const { generateCppTest } = await import("./generate/index.js");

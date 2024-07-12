@@ -1,7 +1,8 @@
 import { createTempDirectory, ITempDirectory } from "create-temp-directory";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { compileCppSource, getExecutableFromSource } from "./compile.js";
+import { compileCppSource } from "./compile/cpp.js";
+import { getExecutableFromSource } from "./compile/utils.js";
 import { runExecutable } from "./run.js";
 
 const testDirs: ITempDirectory[] = [];

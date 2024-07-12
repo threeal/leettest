@@ -1,5 +1,5 @@
 import path from "node:path";
-import { compileCppSource } from "../../compile.js";
+import { compileCppSource } from "../../compile/cpp.js";
 import { runExecutable } from "../../run.js";
 import { readYamlSchema } from "../schema.js";
 import { generateCppTest } from "./generate/index.js";
