@@ -1,7 +1,7 @@
 import { createTempDirectory, ITempDirectory } from "create-temp-directory";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { compileCppSource } from "./cpp.js";
+import { compileCppSource, findCppClangExecutable } from "./cpp.js";
 import { getExecutableFromSource } from "./utils.js";
 
 const testDirs: ITempDirectory[] = [];
@@ -10,6 +10,11 @@ const getTestDir = async () => {
   testDirs.push(testDir);
   return testDir;
 };
+
+it.concurrent("should find the C++ Clang executable", async () => {
+  const exeFile = await findCppClangExecutable();
+  await fs.access(exeFile, fs.constants.X_OK);
+});
 
 describe("compile a C++ source file", () => {
   describe("compile a valid C++ source file", () => {

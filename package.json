@@ -34,6 +34,7 @@
     "catched-error-message": "^0.0.1",
     "glob": "^10.4.1",
     "ora": "^8.0.1",
+    "which": "^4.0.0",
     "yaml": "^2.4.5",
     "yargs": "^17.7.2"
   },
@@ -42,6 +43,7 @@
     "@jest/globals": "^29.7.0",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.14.9",
+    "@types/which": "^3.0.4",
     "@types/yargs": "^17.0.32",
     "create-temp-directory": "^2.4.0",
     "eslint": "^9.4.0",

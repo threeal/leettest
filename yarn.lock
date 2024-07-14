@@ -1154,6 +1154,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/which@npm:^3.0.4":
+  version: 3.0.4
+  resolution: "@types/which@npm:3.0.4"
+  checksum: 10c0/036e4cb243ebfd5cf4893be2ab3b9a60a22368811c1f1c78fb8fc70cadc274024282d04b8d7c0948268372600003252d84e2d3a5e064014a543a5da235c5989d
+  languageName: node
+  linkType: hard
+
 "@types/yargs-parser@npm:*":
   version: 21.0.3
   resolution: "@types/yargs-parser@npm:21.0.3"
@@ -3450,6 +3457,7 @@ __metadata:
     "@jest/globals": "npm:^29.7.0"
     "@types/jest": "npm:^29.5.12"
     "@types/node": "npm:^20.14.9"
+    "@types/which": "npm:^3.0.4"
     "@types/yargs": "npm:^17.0.32"
     catched-error-message: "npm:^0.0.1"
     create-temp-directory: "npm:^2.4.0"
@@ -3463,6 +3471,7 @@ __metadata:
     tsx: "npm:^4.16.2"
     typescript: "npm:^5.5.3"
     typescript-eslint: "npm:^7.13.0"
+    which: "npm:^4.0.0"
     yaml: "npm:^2.4.5"
     yargs: "npm:^17.7.2"
   bin:

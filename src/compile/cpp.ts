@@ -2,9 +2,19 @@ import { execFile } from "node:child_process";
 import { mkdir } from "node:fs/promises";
 import { promisify } from "node:util";
 import path from "node:path";
+import which from "which";
 import { getExecutableFromSource } from "./utils.js";
 
 const execFilePromise = promisify(execFile);
+
+/**
+ * Finds the C++ Clang executable file.
+ *
+ * @returns A promise that resolves to the path of the C++ Clang executable file.
+ */
+export async function findCppClangExecutable(): Promise<string> {
+  return await which("clang++");
+}
 
 /**
  * Compiles a C++ source file using Clang.
@@ -17,12 +27,13 @@ export async function compileCppSource(
   sourceFile: string,
   outDir?: string,
 ): Promise<string> {
+  const cppClangExeFile = await findCppClangExecutable();
   let exeFile = getExecutableFromSource(sourceFile);
   if (outDir !== undefined) {
     await mkdir(outDir, { recursive: true });
     exeFile = path.join(outDir, path.basename(exeFile));
   }
-  await execFilePromise("clang++", [
+  await execFilePromise(cppClangExeFile, [
     "--std=c++20",
     "-O2",
     sourceFile,
