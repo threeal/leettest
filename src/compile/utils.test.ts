@@ -24,6 +24,11 @@ describe("find an executable file", () => {
     await fs.access(exeFile, fs.constants.X_OK);
   });
 
+  it("should find an existing executable file using an alternative name", async () => {
+    const exeFile = await findExecutable("other-exe", "some-exe");
+    await fs.access(exeFile, fs.constants.X_OK);
+  });
+
   it("should not find a non-existing executable file", async () => {
     await expect(findExecutable("non-existing-exe")).rejects.toThrow(
       "not found: non-existing-exe",
