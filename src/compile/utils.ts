@@ -1,4 +1,15 @@
 import path from "node:path";
+import which from "which";
+
+/**
+ * Finds the path of an executable file with the given name.
+ *
+ * @param name - The name of the executable file to find.
+ * @returns A promise that resolves to the path of the executable file.
+ */
+export async function findExecutable(name: string): Promise<string> {
+  return which(name);
+}
 
 /**
  * Retrieves the executable file path for the given C++ source file.
