@@ -1,19 +1,16 @@
 import { createTempDirectory, ITempDirectory } from "create-temp-directory";
-import { execFile } from "node:child_process";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { promisify } from "node:util";
+import { runExecutable } from "../run.js";
 import { compileCSource, findGccExecutable } from "./c.js";
 import { getExecutableFromSource } from "./utils.js";
-
-const execFilePromise = promisify(execFile);
 
 it.concurrent("should find the GCC executable", async () => {
   const exeFile = await findGccExecutable();
   await fs.access(exeFile, fs.constants.X_OK);
 
-  const { stdout } = await execFilePromise(exeFile, ["--version"]);
-  expect(stdout).toMatch("gcc");
+  const output = await runExecutable(exeFile, ["--version"]);
+  expect(output).toMatch(/gcc/);
 });
 
 describe("compile a C source file", () => {
