@@ -2,8 +2,7 @@ import { execFile } from "node:child_process";
 import { mkdir } from "node:fs/promises";
 import { promisify } from "node:util";
 import path from "node:path";
-import which from "which";
-import { getExecutableFromSource } from "./utils.js";
+import { findExecutable, getExecutableFromSource } from "./utils.js";
 
 const execFilePromise = promisify(execFile);
 
@@ -13,7 +12,7 @@ const execFilePromise = promisify(execFile);
  * @returns A promise that resolves to the path of the C++ Clang executable file.
  */
 export async function findCppClangExecutable(): Promise<string> {
-  return await which("clang++");
+  return await findExecutable("clang++");
 }
 
 /**
