@@ -7,8 +7,13 @@ const execFilePromise = promisify(execFile);
  * Runs an executable file.
  *
  * @param exeFile - The path of the executable file to run.
- * @returns A promise that resolves when the executable file has finished running.
+ * @param args - The arguments to pass to the executable file.
+ * @returns A promise that resolves to the output of the executable run.
  */
-export async function runExecutable(exeFile: string): Promise<void> {
-  await execFilePromise(exeFile);
+export async function runExecutable(
+  exeFile: string,
+  args?: string[],
+): Promise<string> {
+  const { stdout } = await execFilePromise(exeFile, args);
+  return stdout;
 }

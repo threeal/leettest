@@ -1,10 +1,7 @@
-import { execFile } from "node:child_process";
 import { mkdir } from "node:fs/promises";
-import { promisify } from "node:util";
 import path from "node:path";
+import { runExecutable } from "../run.js";
 import { findExecutable, getExecutableFromSource } from "./utils.js";
-
-const execFilePromise = promisify(execFile);
 
 /**
  * Finds the GCC executable file.
@@ -32,6 +29,6 @@ export async function compileCSource(
     await mkdir(outDir, { recursive: true });
     exeFile = path.join(outDir, path.basename(exeFile));
   }
-  await execFilePromise(gccExeFile, ["-O2", sourceFile, "-o", exeFile]);
+  await runExecutable(gccExeFile, ["-O2", sourceFile, "-o", exeFile]);
   return exeFile;
 }
