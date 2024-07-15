@@ -18,11 +18,23 @@ it.concurrent(
     const testDir = await getTestDir();
 
     const sourceFile = path.join(testDir.path, "main.cpp");
-    await fs.writeFile(sourceFile, "int main() { return 0; }\n");
+    await fs.writeFile(
+      sourceFile,
+      [
+        `#include <iostream>`,
+        ``,
+        `int main() {`,
+        `  std::cout << "some output\\n";`,
+        `  return 0;`,
+        `}`,
+        ``,
+      ].join("\n"),
+    );
 
     const exeFile = await compileCppSource(sourceFile);
 
-    await runExecutable(exeFile);
+    const output = await runExecutable(exeFile);
+    expect(output).toMatch(/some output/);
   },
   60000,
 );
@@ -36,13 +48,15 @@ it.concurrent(
     await fs.writeFile(
       sourceFile,
       [
-        `#include <cassert>`,
-        `#include <cstring>`,
+        `#include <iostream>`,
         ``,
         `int main(int argc, char** argv) {`,
-        `  assert(argc == 3);`,
-        `  assert(strcmp(argv[1], "foo") == 0);`,
-        `  assert(strcmp(argv[2], "bar") == 0);`,
+        `  if (argc < 2) return 1;`,
+        `  std::cout << argv[1];`,
+        `  for (int i{2}; i < argc; ++i) {`,
+        `    std::cout << " " << argv[i];`,
+        `  }`,
+        `  std::cout << "\\n";`,
         `  return 0;`,
         `}`,
         ``,
@@ -51,7 +65,8 @@ it.concurrent(
 
     const exeFile = await compileCppSource(sourceFile);
 
-    await runExecutable(exeFile, ["foo", "bar"]);
+    const output = await runExecutable(exeFile, ["foo", "bar"]);
+    expect(output).toMatch(/foo bar/);
   },
   60000,
 );
