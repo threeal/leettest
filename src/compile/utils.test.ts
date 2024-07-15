@@ -1,36 +1,70 @@
+import { createTempDirectory, ITempDirectory } from "create-temp-directory";
+import fs from "node:fs/promises";
 import path from "node:path";
-import { getExecutableFromSource } from "./utils.js";
+import { findExecutable, getExecutableFromSource } from "./utils.js";
 
-let originalPlatform: string | undefined = undefined;
+describe("find an executable file", () => {
+  let testDir: ITempDirectory;
+  let originalPathEnv: string | undefined;
 
-const mockPlatform = (newPlatform: string) => {
-  if (originalPlatform === undefined) originalPlatform = process.platform;
-  Object.defineProperty(process, "platform", { value: newPlatform });
-};
+  beforeAll(async () => {
+    testDir = await createTempDirectory();
 
-const restorePlatform = () => {
-  if (originalPlatform === undefined) return;
-  Object.defineProperty(process, "platform", { value: originalPlatform });
-};
+    let exeFilePath = path.join(testDir.path, "some-exe");
+    if (process.platform == "win32") exeFilePath += ".exe";
 
-it.concurrent(
-  "should retrieve an executable file path on Windows platform",
-  () => {
+    await (await fs.open(exeFilePath, "w", 0o777)).close();
+
+    originalPathEnv = process.env.PATH;
+    process.env.PATH = testDir.path;
+  });
+
+  it("should find an existing executable file", async () => {
+    const exeFile = await findExecutable("some-exe");
+    await fs.access(exeFile, fs.constants.X_OK);
+  });
+
+  it("should find an existing executable file using an alternative name", async () => {
+    const exeFile = await findExecutable("other-exe", "some-exe");
+    await fs.access(exeFile, fs.constants.X_OK);
+  });
+
+  it("should not find a non-existing executable file", async () => {
+    await expect(findExecutable("non-existing-exe")).rejects.toThrow(
+      "not found: non-existing-exe",
+    );
+  });
+
+  afterAll(async () => {
+    testDir.remove();
+    process.env.PATH = originalPathEnv;
+  });
+});
+
+describe("retrieve an executable file path", () => {
+  let originalPlatform: string | undefined = undefined;
+  const mockPlatform = (newPlatform: string) => {
+    if (originalPlatform === undefined) originalPlatform = process.platform;
+    Object.defineProperty(process, "platform", { value: newPlatform });
+  };
+
+  it("should retrieve an executable file path on Windows platform", () => {
     mockPlatform("win32");
     expect(getExecutableFromSource(path.join("path", "to", "main.cpp"))).toBe(
       path.join("path", "to", "main.exe"),
     );
-  },
-);
+  });
 
-it.concurrent(
-  "should retrieve an executable file path on non-Windows platform",
-  () => {
+  it("should retrieve an executable file path on non-Windows platform", () => {
     mockPlatform("non-win32");
     expect(getExecutableFromSource(path.join("path", "to", "main.cpp"))).toBe(
       path.join("path", "to", "main"),
     );
-  },
-);
+  });
 
-afterAll(() => restorePlatform());
+  afterEach(() => {
+    if (originalPlatform !== undefined) {
+      Object.defineProperty(process, "platform", { value: originalPlatform });
+    }
+  });
+});
