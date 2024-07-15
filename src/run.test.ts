@@ -28,6 +28,35 @@ it.concurrent(
 );
 
 it.concurrent(
+  "should run an executable file with arguments",
+  async () => {
+    const testDir = await getTestDir();
+
+    const sourceFile = path.join(testDir.path, "main.cpp");
+    await fs.writeFile(
+      sourceFile,
+      [
+        `#include <cassert>`,
+        `#include <cstring>`,
+        ``,
+        `int main(int argc, char** argv) {`,
+        `  assert(argc == 3);`,
+        `  assert(strcmp(argv[1], "foo") == 0);`,
+        `  assert(strcmp(argv[2], "bar") == 0);`,
+        `  return 0;`,
+        `}`,
+        ``,
+      ].join("\n"),
+    );
+
+    const exeFile = await compileCppSource(sourceFile);
+
+    await runExecutable(exeFile, ["foo", "bar"]);
+  },
+  60000,
+);
+
+it.concurrent(
   "should run a failing executable file",
   async () => {
     const testDir = await getTestDir();
