@@ -3,7 +3,6 @@ import path from "node:path";
 import { Schema } from "../../schema.js";
 import { generateCppMainCode } from "./main.js";
 import { generateCppUtilityCode } from "./utility.js";
-import { generateCppTestCaseCode } from "./test_case.js";
 
 /**
  * Generates a C++ test file from a test schema.
@@ -31,7 +30,6 @@ export async function generateCppTest(
         .map((header) => `#include <${header}>`)
         .join("\n"),
       ``,
-      generateCppTestCaseCode(schema),
       generateCppUtilityCode(schema),
       main.code,
     ].join("\n"),
