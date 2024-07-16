@@ -1,4 +1,5 @@
 import { Schema } from "../../schema.js";
+import { formatCpp } from "./format.js";
 
 /**
  * Generates C++ main function code from a test schema.
@@ -14,22 +15,29 @@ export function generateCppMainCode(schema: Schema): {
     code: [
       `int main() {`,
       `  int failures{0};`,
-      `  for (int i{0}; i < ${schema.cases.length}; ++i) {`,
-      `    std::cout << "testing " << test_cases[i].name << "...\\n";`,
-      `    Solution s{};`,
-      (() => {
-        const params = schema.cpp.function.inputs
-          .map((_, i) => `test_cases[i].inputs.arg${i}`)
-          .join(", ");
-        return `    const ${schema.cpp.function.output.type} output{s.${schema.cpp.function.name}(${params})};`;
-      })(),
-      `    if (output != test_cases[i].output) {`,
-      `      std::cerr << "failed to test " << test_cases[i].name << ":\\n";`,
-      `      std::cerr << "  output: " << output << "\\n";`,
-      `      std::cerr << "  expected: " << test_cases[i].output << "\\n\\n";`,
-      `      ++failures;`,
-      `    }`,
-      `  }`,
+      schema.cases
+        .map((c) => {
+          const f = schema.cpp.function;
+          const params = f.inputs
+            .map((i) => {
+              return formatCpp(c.inputs[i.value], i.type);
+            })
+            .join(", ");
+          return [
+            `  {`,
+            `    std::cout << "testing ${c.name}...\\n";`,
+            `    const ${f.output.type} output = Solution{}.${f.name}(${params});`,
+            `    const ${f.output.type} expected = ${formatCpp(c.output, f.output.type)};`,
+            `    if (output != expected) {`,
+            `      std::cerr << "failed to test ${c.name}:\\n";`,
+            `      std::cerr << "  output: " << output << "\\n";`,
+            `      std::cerr << "  expected: " << expected << "\\n\\n";`,
+            `      ++failures;`,
+            `    }`,
+            `  }`,
+          ].join("\n");
+        })
+        .join("\n"),
       `  if (failures > 0) std::cerr << failures << " test cases have failed\\n";`,
       `  return failures;`,
       `}`,
