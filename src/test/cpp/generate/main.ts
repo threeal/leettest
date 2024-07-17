@@ -17,17 +17,18 @@ export function generateCppMainCode(schema: Schema): {
       `  int failures{0};`,
       schema.cases
         .map((c) => {
-          const f = schema.cpp.function;
-          const params = f.inputs
-            .map((i) => {
-              return formatCpp(c.inputs[i.value], i.type);
+          const funName = schema.cpp.function.name;
+          const funArgs = schema.cpp.function.arguments
+            .map((arg) => {
+              return formatCpp(c.inputs[arg], schema.cpp.inputs[arg]);
             })
             .join(", ");
+          const outType = schema.cpp.output;
           return [
             `  {`,
             `    std::cout << "testing ${c.name}...\\n";`,
-            `    const ${f.output.type} output = Solution{}.${f.name}(${params});`,
-            `    const ${f.output.type} expected = ${formatCpp(c.output, f.output.type)};`,
+            `    const ${outType} output = Solution{}.${funName}(${funArgs});`,
+            `    const ${outType} expected = ${formatCpp(c.output, outType)};`,
             `    if (output != expected) {`,
             `      std::cerr << "failed to test ${c.name}:\\n";`,
             `      std::cerr << "  output: " << output << "\\n";`,

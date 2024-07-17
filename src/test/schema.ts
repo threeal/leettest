@@ -5,14 +5,10 @@ export interface Schema {
   cpp: {
     function: {
       name: string;
-      inputs: {
-        type: string;
-        value: string;
-      }[];
-      output: {
-        type: string;
-      };
+      arguments: string[];
     };
+    inputs: Record<string, string>;
+    output: string;
   };
   cases: {
     name: string;

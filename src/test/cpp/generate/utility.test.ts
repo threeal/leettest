@@ -10,9 +10,10 @@ it("should generate empty code for functions that return `int`", () => {
     cpp: {
       function: {
         name: "",
-        inputs: [],
-        output: { type: "int" },
+        arguments: [],
       },
+      inputs: {},
+      output: "int",
     },
     cases: [],
   });
@@ -24,9 +25,10 @@ it("should generate ostream operator code for functions that return `std::vector
     cpp: {
       function: {
         name: "",
-        inputs: [],
-        output: { type: "std::vector<int>" },
+        arguments: [],
       },
+      inputs: {},
+      output: "std::vector<int>",
     },
     cases: [],
   });
