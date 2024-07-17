@@ -1,13 +1,11 @@
 cpp:
   function:
     name: appendStringsArrays
-    inputs:
-      - type: std::vector<std::string>
-        value: strs1
-      - type: std::vector<std::string>
-        value: strs2
-    output:
-      type: std::vector<std::string>
+    arguments: [strs1, strs2]
+  inputs:
+    strs1: std::vector<std::string>
+    strs2: std::vector<std::string>
+  output: std::vector<std::string>
 
 cases:
   - name: example 1

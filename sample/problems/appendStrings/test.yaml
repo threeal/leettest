@@ -1,13 +1,11 @@
 cpp:
   function:
     name: appendStrings
-    inputs:
-      - type: std::string
-        value: str1
-      - type: std::string
-        value: str2
-    output:
-      type: std::string
+    arguments: [str1, str2]
+  inputs:
+    str1: std::string
+    str2: std::string
+  output: std::string
 
 cases:
   - name: example 1

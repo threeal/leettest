@@ -22,7 +22,7 @@ export const cppVectorOstreamOperatorCode = [
  * @returns The generated C++ utility functions code.
  */
 export function generateCppUtilityCode(schema: Schema): string {
-  if (schema.cpp.function.output.type.match(/^std::vector<.*>$/)) {
+  if (schema.cpp.output.match(/^std::vector<.*>$/)) {
     return cppVectorOstreamOperatorCode;
   }
 

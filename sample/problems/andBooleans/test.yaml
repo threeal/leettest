@@ -1,13 +1,11 @@
 cpp:
   function:
     name: andBooleans
-    inputs:
-      - type: bool
-        value: bool1
-      - type: bool
-        value: bool2
-    output:
-      type: bool
+    arguments: [bool1, bool2]
+  inputs:
+    bool1: bool
+    bool2: bool
+  output: bool
 
 cases:
   - name: example 1

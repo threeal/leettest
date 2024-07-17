@@ -5,12 +5,13 @@ it("should generate a C++ main function code", () => {
     cpp: {
       function: {
         name: "sum",
-        inputs: [
-          { type: "int", value: "num1" },
-          { type: "int", value: "num2" },
-        ],
-        output: { type: "int" },
+        arguments: ["num1", "num2"],
       },
+      inputs: {
+        num1: "int",
+        num2: "int",
+      },
+      output: "int",
     },
     cases: [
       {
