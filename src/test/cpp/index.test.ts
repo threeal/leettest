@@ -1,6 +1,6 @@
 import { jest } from "@jest/globals";
 import path from "node:path";
-import { Schema } from "../schema.js";
+import { RawTestSchema } from "../schema.js";
 import "jest-extended";
 
 jest.unstable_mockModule("../../compile/cpp.js", () => ({
@@ -26,7 +26,7 @@ it("should test a C++ solution", async () => {
   const { generateCppTest } = await import("./generate/index.js");
   const { testCppSolution } = await import("./index.js");
 
-  const schema: Schema = {
+  const schema: RawTestSchema = {
     cpp: {
       function: {
         name: "sum",

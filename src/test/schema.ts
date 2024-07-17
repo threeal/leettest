@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import YAML from "yaml";
 
-export interface Schema {
+export interface RawTestSchema {
   cpp: {
     function: {
       name: string;
@@ -23,7 +23,9 @@ export interface Schema {
  * @param schemaFile - The path of the YAML schema file.
  * @returns A promise that resolves to the parsed test schema.
  */
-export async function readYamlSchema(schemaFile: string): Promise<Schema> {
+export async function readYamlSchema(
+  schemaFile: string,
+): Promise<RawTestSchema> {
   const data = await readFile(schemaFile, "utf-8");
   return YAML.parse(data);
 }
