@@ -1,13 +1,13 @@
-import { Schema } from "../../schema.js";
+import { RawTestSchema } from "../../schema.js";
 import { formatCpp } from "./format.js";
 
 /**
  * Generates C++ main function code from a test schema.
  *
- * @param schema - The test schema.
+ * @param schema - The raw test schema.
  * @returns An object containing the generated C++ code and a set of required headers.
  */
-export function generateCppMainCode(schema: Schema): {
+export function generateCppMainCode(schema: RawTestSchema): {
   code: string;
   headers: Set<string>;
 } {

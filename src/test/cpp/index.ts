@@ -1,7 +1,7 @@
 import path from "node:path";
 import { compileCppSource } from "../../compile/cpp.js";
 import { runExecutable } from "../../run.js";
-import { readYamlSchema } from "../schema.js";
+import { readRawTestSchema } from "../schema.js";
 import { generateCppTest } from "./generate/index.js";
 
 /**
@@ -15,7 +15,7 @@ import { generateCppTest } from "./generate/index.js";
  */
 export async function testCppSolution(solutionFile: string): Promise<void> {
   const schemaFile = path.join(path.dirname(solutionFile), "test.yaml");
-  const schema = await readYamlSchema(schemaFile);
+  const schema = await readRawTestSchema(schemaFile);
 
   const testFile = path.join("build", path.dirname(solutionFile), "test.cpp");
   await generateCppTest(schema, solutionFile, testFile);

@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { compileCppSource } from "../../../compile/cpp.js";
 import { runExecutable } from "../../../run.js";
-import { Schema } from "../../schema.js";
+import { RawTestSchema } from "../../schema.js";
 import { generateCppTest } from "./index.js";
 
 const testDirs: ITempDirectory[] = [];
@@ -16,7 +16,7 @@ const getTestDir = async () => {
 it.concurrent(
   "should generate a C++ test file",
   async () => {
-    const schema: Schema = {
+    const schema: RawTestSchema = {
       cpp: {
         function: {
           name: "sum",
