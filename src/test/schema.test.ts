@@ -1,7 +1,7 @@
 import { createTempDirectory, ITempDirectory } from "create-temp-directory";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { readYamlSchema } from "./schema.js";
+import { readRawTestSchema } from "./schema.js";
 
 const testDirs: ITempDirectory[] = [];
 const getTestDir = async () => {
@@ -11,7 +11,7 @@ const getTestDir = async () => {
 };
 
 it.concurrent(
-  "should read a YAML schema file",
+  "should read a raw test schema file",
   async () => {
     const testDir = await getTestDir();
 
@@ -44,7 +44,7 @@ it.concurrent(
       ].join("\n"),
     );
 
-    await expect(readYamlSchema(schemaPath)).resolves.toEqual({
+    await expect(readRawTestSchema(schemaPath)).resolves.toEqual({
       cpp: {
         function: {
           name: "sum",

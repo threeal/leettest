@@ -12,7 +12,7 @@ jest.unstable_mockModule("../../run.js", () => ({
 }));
 
 jest.unstable_mockModule("../schema.js", () => ({
-  readYamlSchema: jest.fn(),
+  readRawTestSchema: jest.fn(),
 }));
 
 jest.unstable_mockModule("./generate.js", () => ({
@@ -22,7 +22,7 @@ jest.unstable_mockModule("./generate.js", () => ({
 it("should test a C++ solution", async () => {
   const { compileCppSource } = await import("../../compile/cpp.js");
   const { runExecutable } = await import("../../run.js");
-  const { readYamlSchema } = await import("../schema.js");
+  const { readRawTestSchema } = await import("../schema.js");
   const { generateCppTest } = await import("./generate/index.js");
   const { testCppSolution } = await import("./index.js");
 
@@ -58,7 +58,7 @@ it("should test a C++ solution", async () => {
     ],
   };
 
-  jest.mocked(readYamlSchema).mockResolvedValue(schema);
+  jest.mocked(readRawTestSchema).mockResolvedValue(schema);
   jest.mocked(compileCppSource).mockImplementation(async (testFile, outDir) => {
     const outFile = testFile.replace(path.extname(testFile), "");
     return outDir !== undefined
@@ -70,11 +70,11 @@ it("should test a C++ solution", async () => {
     testCppSolution(path.join("path", "to", "solution.cpp")),
   ).resolves.toBeUndefined();
 
-  expect(readYamlSchema).toHaveBeenCalledExactlyOnceWith(
+  expect(readRawTestSchema).toHaveBeenCalledExactlyOnceWith(
     path.join("path", "to", "test.yaml"),
   );
 
-  expect(generateCppTest).toHaveBeenCalledAfter(jest.mocked(readYamlSchema));
+  expect(generateCppTest).toHaveBeenCalledAfter(jest.mocked(readRawTestSchema));
   expect(generateCppTest).toHaveBeenCalledExactlyOnceWith(
     schema,
     path.join("path", "to", "solution.cpp"),
