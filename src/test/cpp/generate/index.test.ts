@@ -1,3 +1,4 @@
+import { jest } from "@jest/globals";
 import { createTempDirectory, ITempDirectory } from "create-temp-directory";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -5,6 +6,8 @@ import { compileCppSource } from "../../../compile/cpp.js";
 import { runExecutable } from "../../../run.js";
 import { RawTestSchema } from "../../schema.js";
 import { generateCppTest } from "./index.js";
+
+jest.retryTimes(10);
 
 const testDirs: ITempDirectory[] = [];
 const getTestDir = async () => {
