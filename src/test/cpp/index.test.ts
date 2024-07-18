@@ -78,16 +78,16 @@ it("should test a C++ solution", async () => {
   expect(generateCppTest).toHaveBeenCalledExactlyOnceWith(
     schema,
     path.join("path", "to", "solution.cpp"),
-    path.join("build", "path", "to", "test.cpp"),
+    path.join("path", "to", "build", "test.cpp"),
   );
 
   expect(compileCppSource).toHaveBeenCalledAfter(jest.mocked(generateCppTest));
   expect(compileCppSource).toHaveBeenCalledExactlyOnceWith(
-    path.join("build", "path", "to", "test.cpp"),
+    path.join("path", "to", "build", "test.cpp"),
   );
 
   expect(runExecutable).toHaveBeenCalledAfter(jest.mocked(compileCppSource));
   expect(runExecutable).toHaveBeenCalledExactlyOnceWith(
-    path.join("build", "path", "to", "test"),
+    path.join("path", "to", "build", "test"),
   );
 });
