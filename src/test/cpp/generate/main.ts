@@ -18,14 +18,13 @@ export function generateCppMainCode(schema: CppTestSchema): {
       schema.cases
         .map((c) => {
           const funName = c.function.name;
-          const funArgs = c.function.arguments
-            .map((arg) => {
-              return formatCpp(c.inputs[arg].value, c.inputs[arg].type);
-            })
-            .join(", ");
+          const funArgs = c.function.arguments.join(", ");
           return [
             `  {`,
             `    std::cout << "testing ${c.name}...\\n";`,
+            ...Object.entries(c.inputs).map(([name, { type, value }]) => {
+              return `    ${type} ${name} = ${formatCpp(value, type)};`;
+            }),
             `    const ${c.output.type} output = Solution{}.${funName}(${funArgs});`,
             `    const ${c.output.type} expected = ${formatCpp(c.output.value, c.output.type)};`,
             `    if (output != expected) {`,
