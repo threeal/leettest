@@ -4,7 +4,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { compileCppSource } from "../../../compile/cpp.js";
 import { runExecutable } from "../../../run.js";
-import { RawTestSchema } from "../../schema/raw.js";
+import { CppTestSchema } from "../../schema/cpp.js";
 import { generateCppTest } from "./index.js";
 
 jest.retryTimes(10);
@@ -19,28 +19,49 @@ const getTestDir = async () => {
 it.concurrent(
   "should generate a C++ test file",
   async () => {
-    const schema: RawTestSchema = {
-      cpp: {
-        function: {
-          name: "sum",
-          arguments: ["num1", "num2"],
-        },
-        inputs: {
-          num1: "int",
-          num2: "int",
-        },
-        output: "int",
-      },
+    const schema: CppTestSchema = {
       cases: [
         {
           name: "example 1",
-          inputs: { num1: 12, num2: 5 },
-          output: 17,
+          function: {
+            name: "sum",
+            arguments: ["num1", "num2"],
+          },
+          inputs: {
+            num1: {
+              type: "int",
+              value: 12,
+            },
+            num2: {
+              type: "int",
+              value: 5,
+            },
+          },
+          output: {
+            type: "int",
+            value: 17,
+          },
         },
         {
           name: "example 2",
-          inputs: { num1: -10, num2: 4 },
-          output: -6,
+          function: {
+            name: "sum",
+            arguments: ["num1", "num2"],
+          },
+          inputs: {
+            num1: {
+              type: "int",
+              value: -10,
+            },
+            num2: {
+              type: "int",
+              value: 4,
+            },
+          },
+          output: {
+            type: "int",
+            value: -6,
+          },
         },
       ],
     };

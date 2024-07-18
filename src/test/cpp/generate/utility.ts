@@ -1,4 +1,4 @@
-import { RawTestSchema } from "../../schema/raw.js";
+import { CppTestSchema } from "../../schema/cpp.js";
 
 export const cppVectorOstreamOperatorCode = [
   `template <typename T>`,
@@ -18,11 +18,13 @@ export const cppVectorOstreamOperatorCode = [
 /**
  * Generates C++ utility functions code from a test schema.
  *
- * @param schema - The raw test schema.
+ * @param schema - The C++ test schema.
  * @returns The generated C++ utility functions code.
  */
-export function generateCppUtilityCode(schema: RawTestSchema): string {
-  if (schema.cpp.output.match(/^std::vector<.*>$/)) {
+export function generateCppUtilityCode(schema: CppTestSchema): string {
+  if (
+    schema.cases.some(({ output }) => output.type.match(/^std::vector<.*>$/))
+  ) {
     return cppVectorOstreamOperatorCode;
   }
 
