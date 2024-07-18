@@ -1,93 +1,102 @@
-import { jest } from "@jest/globals";
+import { createTempDirectory, ITempDirectory } from "create-temp-directory";
+import fs from "node:fs/promises";
 import path from "node:path";
-import { RawTestSchema } from "../schema.js";
-import "jest-extended";
+import { testCppSolution } from "./index.js";
 
-jest.unstable_mockModule("../../compile/cpp.js", () => ({
-  compileCppSource: jest.fn(),
-}));
-
-jest.unstable_mockModule("../../run.js", () => ({
-  runExecutable: jest.fn(),
-}));
-
-jest.unstable_mockModule("../schema.js", () => ({
-  readRawTestSchema: jest.fn(),
-}));
-
-jest.unstable_mockModule("./generate.js", () => ({
-  generateCppTest: jest.fn(),
-}));
-
-it("should test a C++ solution", async () => {
-  const { compileCppSource } = await import("../../compile/cpp.js");
-  const { runExecutable } = await import("../../run.js");
-  const { readRawTestSchema } = await import("../schema.js");
-  const { generateCppTest } = await import("./generate/index.js");
-  const { testCppSolution } = await import("./index.js");
-
-  const schema: RawTestSchema = {
-    cpp: {
-      function: {
-        name: "sum",
-        arguments: ["num1", "num2"],
-      },
-      inputs: {
-        num1: "int",
-        num2: "int",
-      },
-      output: "int",
-    },
-    cases: [
-      {
-        name: "example 1",
-        inputs: {
-          num1: 12,
-          num2: 5,
-        },
-        output: 17,
-      },
-      {
-        name: "example 2",
-        inputs: {
-          num1: -10,
-          num2: 4,
-        },
-        output: -6,
-      },
-    ],
+describe("test a C++ solution file", () => {
+  const testDirs: ITempDirectory[] = [];
+  const getTestDir = async () => {
+    const testDir = await createTempDirectory();
+    testDirs.push(testDir);
+    return testDir;
   };
 
-  jest.mocked(readRawTestSchema).mockResolvedValue(schema);
-  jest.mocked(compileCppSource).mockImplementation(async (testFile, outDir) => {
-    const outFile = testFile.replace(path.extname(testFile), "");
-    return outDir !== undefined
-      ? path.join(outDir, path.basename(outFile))
-      : outFile;
+  const writeSchemaFile = async (schemaDir: string) =>
+    fs.writeFile(
+      path.join(schemaDir, "test.yaml"),
+      [
+        `cpp:`,
+        `  function:`,
+        `    name: sum`,
+        `    arguments: [num1, num2]`,
+        `  inputs:`,
+        `    num1: int`,
+        `    num2: int`,
+        `  output: int`,
+        ``,
+        `cases:`,
+        `  - name: example 1`,
+        `    inputs:`,
+        `      num1: 12`,
+        `      num2: 5`,
+        `    output: 17`,
+        ``,
+        `  - name: example 2`,
+        `    inputs:`,
+        `      num1: -10`,
+        `      num2: 4`,
+        `    output: -6`,
+        ``,
+      ].join("\n"),
+    );
+
+  it.concurrent(
+    "should test a correct C++ solution file",
+    async () => {
+      const testDir = await getTestDir();
+
+      const solutionFile = path.join(testDir.path, "solution.cpp");
+      await Promise.all([
+        fs.writeFile(
+          solutionFile,
+          [
+            `class Solution {`,
+            ` public:`,
+            `  int sum(int num1, int num2) {`,
+            `    return num1 + num2;`,
+            `  }`,
+            `};`,
+            ``,
+          ].join("\n"),
+        ),
+        writeSchemaFile(testDir.path),
+      ]);
+
+      await testCppSolution(solutionFile);
+    },
+    60000,
+  );
+
+  it.concurrent(
+    "should test a wrong C++ solution file",
+    async () => {
+      const testDir = await getTestDir();
+
+      const solutionFile = path.join(testDir.path, "solution.cpp");
+      await Promise.all([
+        fs.writeFile(
+          solutionFile,
+          [
+            `class Solution {`,
+            ` public:`,
+            `  int sum(int num1, int num2) {`,
+            `    return num1 - num2;`,
+            `  }`,
+            `};`,
+            ``,
+          ].join("\n"),
+        ),
+        writeSchemaFile(testDir.path),
+      ]);
+
+      await expect(testCppSolution(solutionFile)).rejects.toThrow(
+        /2 test cases have failed/,
+      );
+    },
+    60000,
+  );
+
+  afterAll(async () => {
+    await Promise.all(testDirs.map((testDir) => testDir.remove()));
   });
-
-  await expect(
-    testCppSolution(path.join("path", "to", "solution.cpp")),
-  ).resolves.toBeUndefined();
-
-  expect(readRawTestSchema).toHaveBeenCalledExactlyOnceWith(
-    path.join("path", "to", "test.yaml"),
-  );
-
-  expect(generateCppTest).toHaveBeenCalledAfter(jest.mocked(readRawTestSchema));
-  expect(generateCppTest).toHaveBeenCalledExactlyOnceWith(
-    schema,
-    path.join("path", "to", "solution.cpp"),
-    path.join("path", "to", "build", "test.cpp"),
-  );
-
-  expect(compileCppSource).toHaveBeenCalledAfter(jest.mocked(generateCppTest));
-  expect(compileCppSource).toHaveBeenCalledExactlyOnceWith(
-    path.join("path", "to", "build", "test.cpp"),
-  );
-
-  expect(runExecutable).toHaveBeenCalledAfter(jest.mocked(compileCppSource));
-  expect(runExecutable).toHaveBeenCalledExactlyOnceWith(
-    path.join("path", "to", "build", "test"),
-  );
 });
