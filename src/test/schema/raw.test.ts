@@ -1,7 +1,7 @@
 import { createTempDirectory, ITempDirectory } from "create-temp-directory";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { readRawTestSchema } from "./schema.js";
+import { readRawTestSchema } from "./raw.js";
 
 const testDirs: ITempDirectory[] = [];
 const getTestDir = async () => {

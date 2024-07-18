@@ -1,6 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { RawTestSchema } from "../../schema.js";
+import { RawTestSchema } from "../../schema/raw.js";
 import { generateCppMainCode } from "./main.js";
 import { generateCppUtilityCode } from "./utility.js";
 

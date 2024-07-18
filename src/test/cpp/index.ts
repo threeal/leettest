@@ -1,7 +1,7 @@
 import path from "node:path";
 import { compileCppSource } from "../../compile/cpp.js";
 import { runExecutable } from "../../run.js";
-import { readRawTestSchema } from "../schema.js";
+import { readRawTestSchema } from "../schema/raw.js";
 import { generateCppTest } from "./generate/index.js";
 
 /**

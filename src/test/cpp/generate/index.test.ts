@@ -4,7 +4,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { compileCppSource } from "../../../compile/cpp.js";
 import { runExecutable } from "../../../run.js";
-import { RawTestSchema } from "../../schema.js";
+import { RawTestSchema } from "../../schema/raw.js";
 import { generateCppTest } from "./index.js";
 
 jest.retryTimes(10);

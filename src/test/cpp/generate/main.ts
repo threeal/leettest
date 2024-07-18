@@ -1,4 +1,4 @@
-import { RawTestSchema } from "../../schema.js";
+import { RawTestSchema } from "../../schema/raw.js";
 import { formatCpp } from "./format.js";
 
 /**
