@@ -6,31 +6,26 @@ import {
 import "jest-extended";
 
 it("should generate empty code for functions that return `int`", () => {
-  const code = generateCppUtilityCode({
-    cpp: {
-      function: {
-        name: "",
-        arguments: [],
-      },
-      inputs: {},
-      output: "int",
-    },
-    cases: [],
-  });
+  const code = generateCppUtilityCode({ cases: [] });
   expect(code).toBeEmpty();
 });
 
 it("should generate ostream operator code for functions that return `std::vector<int>`", () => {
   const code = generateCppUtilityCode({
-    cpp: {
-      function: {
+    cases: [
+      {
         name: "",
-        arguments: [],
+        function: {
+          name: "",
+          arguments: [],
+        },
+        inputs: {},
+        output: {
+          type: "std::vector<int>",
+          value: null,
+        },
       },
-      inputs: {},
-      output: "std::vector<int>",
-    },
-    cases: [],
+    ],
   });
   expect(code).toBe(cppVectorOstreamOperatorCode);
 });

@@ -1,13 +1,13 @@
-import { RawTestSchema } from "../../schema.js";
+import { CppTestSchema } from "../../schema/cpp.js";
 import { formatCpp } from "./format.js";
 
 /**
  * Generates C++ main function code from a test schema.
  *
- * @param schema - The raw test schema.
+ * @param schema - The C++ test schema.
  * @returns An object containing the generated C++ code and a set of required headers.
  */
-export function generateCppMainCode(schema: RawTestSchema): {
+export function generateCppMainCode(schema: CppTestSchema): {
   code: string;
   headers: Set<string>;
 } {
@@ -17,18 +17,17 @@ export function generateCppMainCode(schema: RawTestSchema): {
       `  int failures{0};`,
       schema.cases
         .map((c) => {
-          const funName = schema.cpp.function.name;
-          const funArgs = schema.cpp.function.arguments
+          const funName = c.function.name;
+          const funArgs = c.function.arguments
             .map((arg) => {
-              return formatCpp(c.inputs[arg], schema.cpp.inputs[arg]);
+              return formatCpp(c.inputs[arg].value, c.inputs[arg].type);
             })
             .join(", ");
-          const outType = schema.cpp.output;
           return [
             `  {`,
             `    std::cout << "testing ${c.name}...\\n";`,
-            `    const ${outType} output = Solution{}.${funName}(${funArgs});`,
-            `    const ${outType} expected = ${formatCpp(c.output, outType)};`,
+            `    const ${c.output.type} output = Solution{}.${funName}(${funArgs});`,
+            `    const ${c.output.type} expected = ${formatCpp(c.output.value, c.output.type)};`,
             `    if (output != expected) {`,
             `      std::cerr << "failed to test ${c.name}:\\n";`,
             `      std::cerr << "  output: " << output << "\\n";`,

@@ -2,33 +2,48 @@ import { generateCppMainCode } from "./main.js";
 
 it("should generate a C++ main function code", () => {
   const { code, headers } = generateCppMainCode({
-    cpp: {
-      function: {
-        name: "sum",
-        arguments: ["num1", "num2"],
-      },
-      inputs: {
-        num1: "int",
-        num2: "int",
-      },
-      output: "int",
-    },
     cases: [
       {
         name: "example 1",
-        inputs: {
-          num1: 12,
-          num2: 5,
+        function: {
+          name: "sum",
+          arguments: ["num1", "num2"],
         },
-        output: 17,
+        inputs: {
+          num1: {
+            type: "int",
+            value: 12,
+          },
+          num2: {
+            type: "int",
+            value: 5,
+          },
+        },
+        output: {
+          type: "int",
+          value: 17,
+        },
       },
       {
         name: "example 2",
-        inputs: {
-          num1: -10,
-          num2: 4,
+        function: {
+          name: "sum",
+          arguments: ["num1", "num2"],
         },
-        output: -6,
+        inputs: {
+          num1: {
+            type: "int",
+            value: -10,
+          },
+          num2: {
+            type: "int",
+            value: 4,
+          },
+        },
+        output: {
+          type: "int",
+          value: -6,
+        },
       },
     ],
   });

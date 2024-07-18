@@ -1,19 +1,19 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { RawTestSchema } from "../../schema.js";
+import { CppTestSchema } from "../../schema/cpp.js";
 import { generateCppMainCode } from "./main.js";
 import { generateCppUtilityCode } from "./utility.js";
 
 /**
  * Generates a C++ test file from a test schema.
  *
- * @param schema - The raw test schema.
+ * @param schema - The C++ test schema.
  * @param solutionFile - The path of the C++ solution file.
  * @param outFile - The path of the C++ test file output.
  * @returns A promise that resolves to nothing.
  */
 export async function generateCppTest(
-  schema: RawTestSchema,
+  schema: CppTestSchema,
   solutionFile: string,
   outFile: string,
 ): Promise<void> {
