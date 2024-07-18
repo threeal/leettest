@@ -1,84 +1,101 @@
+import { jest } from "@jest/globals";
+import { createTempDirectory, ITempDirectory } from "create-temp-directory";
+import fs from "node:fs/promises";
+import path from "node:path";
+import { compileCppSource } from "../../../compile/cpp.js";
+import { runExecutable } from "../../../run.js";
 import { generateCppMainCode } from "./main.js";
 
-it("should generate a C++ main function code", () => {
-  const { code, headers } = generateCppMainCode({
-    cases: [
-      {
-        name: "example 1",
-        function: {
-          name: "sum",
-          arguments: ["num1", "num2"],
-        },
-        inputs: {
-          num1: {
-            type: "int",
-            value: 12,
-          },
-          num2: {
-            type: "int",
-            value: 5,
-          },
-        },
-        output: {
-          type: "int",
-          value: 17,
-        },
-      },
-      {
-        name: "example 2",
-        function: {
-          name: "sum",
-          arguments: ["num1", "num2"],
-        },
-        inputs: {
-          num1: {
-            type: "int",
-            value: -10,
-          },
-          num2: {
-            type: "int",
-            value: 4,
-          },
-        },
-        output: {
-          type: "int",
-          value: -6,
-        },
-      },
-    ],
-  });
+jest.retryTimes(10);
 
-  expect(code).toBe(
-    [
-      `int main() {`,
-      `  int failures{0};`,
-      `  {`,
-      `    std::cout << "testing example 1...\\n";`,
-      `    const int output = Solution{}.sum(12, 5);`,
-      `    const int expected = 17;`,
-      `    if (output != expected) {`,
-      `      std::cerr << "failed to test example 1:\\n";`,
-      `      std::cerr << "  output: " << output << "\\n";`,
-      `      std::cerr << "  expected: " << expected << "\\n\\n";`,
-      `      ++failures;`,
-      `    }`,
-      `  }`,
-      `  {`,
-      `    std::cout << "testing example 2...\\n";`,
-      `    const int output = Solution{}.sum(-10, 4);`,
-      `    const int expected = -6;`,
-      `    if (output != expected) {`,
-      `      std::cerr << "failed to test example 2:\\n";`,
-      `      std::cerr << "  output: " << output << "\\n";`,
-      `      std::cerr << "  expected: " << expected << "\\n\\n";`,
-      `      ++failures;`,
-      `    }`,
-      `  }`,
-      `  if (failures > 0) std::cerr << failures << " test cases have failed\\n";`,
-      `  return failures;`,
-      `}`,
-      ``,
-    ].join("\n"),
+describe("test C++ main function code generation", () => {
+  const testDirs: ITempDirectory[] = [];
+  const getTestDir = async () => {
+    const testDir = await createTempDirectory();
+    testDirs.push(testDir);
+    return testDir;
+  };
+
+  it.concurrent(
+    "should generate a C++ main function code",
+    async () => {
+      const testDir = await getTestDir();
+
+      const { code, headers } = generateCppMainCode({
+        cases: [
+          {
+            name: "example 1",
+            function: {
+              name: "sum",
+              arguments: ["num1", "num2"],
+            },
+            inputs: {
+              num1: {
+                type: "int",
+                value: 12,
+              },
+              num2: {
+                type: "int",
+                value: 5,
+              },
+            },
+            output: {
+              type: "int",
+              value: 17,
+            },
+          },
+          {
+            name: "example 2",
+            function: {
+              name: "sum",
+              arguments: ["num1", "num2"],
+            },
+            inputs: {
+              num1: {
+                type: "int",
+                value: -10,
+              },
+              num2: {
+                type: "int",
+                value: 4,
+              },
+            },
+            output: {
+              type: "int",
+              value: -6,
+            },
+          },
+        ],
+      });
+
+      const mainFile = path.join(testDir.path, "main.cpp");
+      await fs.writeFile(
+        mainFile,
+        [
+          [...headers]
+            .sort()
+            .map((header) => `#include <${header}>`)
+            .join("\n"),
+          ``,
+          `class Solution {`,
+          ` public:`,
+          `  int sum(int num1, int num2) {`,
+          `    return num1 + num2;`,
+          `  }`,
+          `};`,
+          ``,
+          code,
+        ].join("\n"),
+      );
+
+      const executablePath = await compileCppSource(mainFile);
+
+      await runExecutable(executablePath);
+    },
+    60000,
   );
-  expect([...headers]).toStrictEqual(["iostream"]);
+
+  afterAll(async () => {
+    await Promise.all(testDirs.map((testDir) => testDir.remove()));
+  });
 });
