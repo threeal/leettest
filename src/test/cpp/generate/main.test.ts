@@ -72,10 +72,7 @@ describe("test C++ main function code generation", () => {
       await fs.writeFile(
         mainFile,
         [
-          [...headers]
-            .sort()
-            .map((header) => `#include <${header}>`)
-            .join("\n"),
+          headers.generateCode(),
           ``,
           `class Solution {`,
           ` public:`,
