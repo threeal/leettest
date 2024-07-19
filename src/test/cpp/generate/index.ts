@@ -25,10 +25,7 @@ export async function generateCppTest(
     [
       `#include "${path.relative(path.dirname(outFile), solutionFile)}"`,
       ``,
-      [...main.headers]
-        .sort()
-        .map((header) => `#include <${header}>`)
-        .join("\n"),
+      main.headers.generateCode(),
       ``,
       generateCppUtilityCode(schema),
       main.code,

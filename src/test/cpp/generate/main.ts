@@ -1,15 +1,16 @@
 import { CppTestSchema } from "../../schema/cpp.js";
 import { formatCpp } from "./format.js";
+import { CppHeaders } from "./headers.js";
 
 /**
  * Generates C++ main function code from a test schema.
  *
  * @param schema - The C++ test schema.
- * @returns An object containing the generated C++ code and a set of required headers.
+ * @returns An object containing the generated C++ code and the required headers.
  */
 export function generateCppMainCode(schema: CppTestSchema): {
   code: string;
-  headers: Set<string>;
+  headers: CppHeaders;
 } {
   return {
     code: [
@@ -42,6 +43,6 @@ export function generateCppMainCode(schema: CppTestSchema): {
       `}`,
       ``,
     ].join("\n"),
-    headers: new Set(["iostream"]),
+    headers: new CppHeaders(["iostream"]),
   };
 }
