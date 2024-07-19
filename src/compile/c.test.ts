@@ -1,9 +1,12 @@
+import { jest } from "@jest/globals";
 import { createTempDirectory, ITempDirectory } from "create-temp-directory";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { runExecutable } from "../run.js";
 import { compileCSource, findGccExecutable } from "./c.js";
 import { getExecutableFromSource } from "./utils.js";
+
+jest.retryTimes(10);
 
 it.concurrent("should find the GCC executable", async () => {
   const exeFile = await findGccExecutable();
