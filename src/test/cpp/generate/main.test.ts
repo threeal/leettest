@@ -29,20 +29,11 @@ describe("test C++ main function code generation", () => {
               name: "sum",
               arguments: ["num1", "num2"],
             },
-            inputs: {
-              num1: {
-                type: "int",
-                value: 12,
-              },
-              num2: {
-                type: "int",
-                value: 5,
-              },
-            },
-            output: {
-              type: "int",
-              value: 17,
-            },
+            inputs: [
+              { name: "num1", type: "int", value: 12 },
+              { name: "num2", type: "int", value: 5 },
+            ],
+            output: { name: "output", type: "int", value: 17 },
           },
           {
             name: "example 2",
@@ -50,20 +41,11 @@ describe("test C++ main function code generation", () => {
               name: "sum",
               arguments: ["num1", "num2"],
             },
-            inputs: {
-              num1: {
-                type: "int",
-                value: -10,
-              },
-              num2: {
-                type: "int",
-                value: 4,
-              },
-            },
-            output: {
-              type: "int",
-              value: -6,
-            },
+            inputs: [
+              { name: "num1", type: "int", value: -10 },
+              { name: "num2", type: "int", value: 4 },
+            ],
+            output: { name: "output", type: "int", value: -6 },
           },
         ],
       });

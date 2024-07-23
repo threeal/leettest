@@ -1,6 +1,7 @@
 import { RawTestSchema } from "./raw.js";
 
 export interface CppVariableSchema {
+  name: string;
   type: string;
   value: unknown;
 }
@@ -12,7 +13,7 @@ export interface CppTestSchema {
       name: string;
       arguments: string[];
     };
-    inputs: Record<string, CppVariableSchema>;
+    inputs: CppVariableSchema[];
     output: CppVariableSchema;
   }[];
 }
@@ -29,12 +30,13 @@ export function parseCppTestSchema(rawSchema: RawTestSchema): CppTestSchema {
       return {
         name,
         function: rawSchema.cpp.function,
-        inputs: Object.fromEntries(
-          Object.entries(inputs).map(([name, value]) => {
-            return [name, { type: rawSchema.cpp.inputs[name], value }];
-          }),
-        ),
+        inputs: Object.entries(inputs).map(([name, value]) => ({
+          name,
+          type: rawSchema.cpp.inputs[name],
+          value,
+        })),
         output: {
+          name: "output",
           type: rawSchema.cpp.output,
           value: output,
         },

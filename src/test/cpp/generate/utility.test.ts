@@ -19,11 +19,8 @@ it("should generate ostream operator code for functions that return `std::vector
           name: "",
           arguments: [],
         },
-        inputs: {},
-        output: {
-          type: "std::vector<int>",
-          value: null,
-        },
+        inputs: [],
+        output: { name: "output", type: "std::vector<int>", value: null },
       },
     ],
   });
