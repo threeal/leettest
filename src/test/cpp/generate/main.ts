@@ -23,9 +23,10 @@ export function generateCppMainCode(schema: CppTestSchema): {
           return [
             `  {`,
             `    std::cout << "testing ${c.name}...\\n";`,
-            ...Object.entries(c.inputs).map(([name, { type, value }]) => {
-              return `    ${type} ${name} = ${formatCpp(value, type)};`;
-            }),
+            ...c.inputs.map(
+              ({ name, type, value }) =>
+                `    ${type} ${name} = ${formatCpp(value, type)};`,
+            ),
             `    const ${c.output.type} output = Solution{}.${funName}(${funArgs});`,
             `    const ${c.output.type} expected = ${formatCpp(c.output.value, c.output.type)};`,
             `    if (output != expected) {`,
