@@ -1,5 +1,10 @@
 import { RawTestSchema } from "./raw.js";
 
+export interface CppVariableSchema {
+  type: string;
+  value: unknown;
+}
+
 export interface CppTestSchema {
   cases: {
     name: string;
@@ -7,8 +12,8 @@ export interface CppTestSchema {
       name: string;
       arguments: string[];
     };
-    inputs: Record<string, { type: string; value: unknown }>;
-    output: { type: string; value: unknown };
+    inputs: Record<string, CppVariableSchema>;
+    output: CppVariableSchema;
   }[];
 }
 
