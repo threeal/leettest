@@ -1,6 +1,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { CppTestSchema } from "../../schema/cpp.js";
+import { generateCppIncludeHeadersCode } from "./headers.js";
 import { generateCppMainCode } from "./main.js";
 import { generateCppUtilityCode } from "./utility.js";
 
@@ -25,7 +26,7 @@ export async function generateCppTest(
     [
       `#include "${path.relative(path.dirname(outFile), solutionFile)}"`,
       ``,
-      main.headers.generateCode(),
+      generateCppIncludeHeadersCode(main.headers),
       ``,
       generateCppUtilityCode(schema),
       main.code,

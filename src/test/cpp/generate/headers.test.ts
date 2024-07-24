@@ -4,29 +4,17 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { compileCppSource } from "../../../compile/cpp.js";
 import { runExecutable } from "../../../run.js";
-import { CppHeaders } from "./headers.js";
+import { generateCppIncludeHeadersCode } from "./headers.js";
 
 jest.retryTimes(10);
 
 describe("generate C++ code for including headers", () => {
   it.concurrent("should generate C++ code for including headers", () => {
-    const headers = new CppHeaders(["iostream", "vector"]);
-    expect(headers.generateCode()).toEqual(
+    const headers = new Set(["vector", "iostream"]);
+    expect(generateCppIncludeHeadersCode(headers)).toEqual(
       `#include <iostream>\n#include <vector>`,
     );
   });
-
-  it.concurrent(
-    "should generate C++ code for including headers after inserting a new header",
-    () => {
-      const headers = new CppHeaders(["iostream", "vector"]);
-      headers.add("string");
-
-      expect(headers.generateCode()).toEqual(
-        `#include <iostream>\n#include <string>\n#include <vector>`,
-      );
-    },
-  );
 
   describe("compile the generated C++ code for including headers", () => {
     const testDirs: ITempDirectory[] = [];
@@ -41,13 +29,11 @@ describe("generate C++ code for including headers", () => {
       async () => {
         const testDir = await getTestDir();
 
-        const headers = new CppHeaders(["iostream", "vector"]);
-
         const mainFile = path.join(testDir.path, "main.cpp");
         await fs.writeFile(
           mainFile,
           [
-            headers.generateCode(),
+            generateCppIncludeHeadersCode(new Set(["vector", "iostream"])),
             ``,
             `int main() {`,
             `  std::vector<int> nums{2, 3, 5, 7};`,
@@ -57,6 +43,7 @@ describe("generate C++ code for including headers", () => {
             `  std::cout << "\\n";`,
             `  return 0;`,
             `};`,
+            ``,
           ].join("\n"),
         );
 
