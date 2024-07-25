@@ -1,5 +1,4 @@
 import { CppVariableSchema } from "../../schema/cpp.js";
-import { formatCpp } from "./format.js";
 
 /**
  * Generates C++ code for declaring a variable.
@@ -10,5 +9,21 @@ import { formatCpp } from "./format.js";
 export function generateCppVariableDeclarationCode(
   schema: CppVariableSchema,
 ): string {
-  return `${schema.type} ${schema.name} = ${formatCpp(schema.value, schema.type)};`;
+  function formatValue(value: unknown, type: string): string {
+    switch (type) {
+      case "std::string":
+        return `"${value}"`;
+      case "char":
+        return `'${value}'`;
+    }
+
+    if (type.match(/^std::vector<.*>$/)) {
+      const subtype = type.substring(12, type.length - 1);
+      return `{${(value as unknown[]).map((v) => formatValue(v, subtype)).join(", ")}}`;
+    }
+
+    return `${value}`;
+  }
+
+  return `${schema.type} ${schema.name} = ${formatValue(schema.value, schema.type)};`;
 }
