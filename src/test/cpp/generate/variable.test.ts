@@ -73,6 +73,56 @@ describe("generate C++ code for declaring variables", () => {
       expectedCode: `std::string string = "foo";`,
       expectedOutput: /foo/,
     },
+    {
+      name: "declaring a boolean array variable",
+      schema: {
+        name: "booleans",
+        type: "std::vector<bool>",
+        value: [true, false, 0, 1],
+      },
+      expectedCode: `std::vector<bool> booleans = {true, false, 0, 1};`,
+      expectedOutput: /true false false true/,
+    },
+    {
+      name: "declaring a character array variable",
+      schema: {
+        name: "characters",
+        type: "std::vector<char>",
+        value: ["A", 1],
+      },
+      expectedCode: `std::vector<char> characters = {'A', '1'};`,
+      expectedOutput: /A 1/,
+    },
+    {
+      name: "declaring an integer array variable",
+      schema: {
+        name: "integers",
+        type: "std::vector<int>",
+        value: [1024, -1024, 0],
+      },
+      expectedCode: `std::vector<int> integers = {1024, -1024, 0};`,
+      expectedOutput: /1024 -1024 0/,
+    },
+    {
+      name: "declaring a floating-point array variable",
+      schema: {
+        name: "floatings",
+        type: "std::vector<double>",
+        value: [0.125, -0.125, 0],
+      },
+      expectedCode: `std::vector<double> floatings = {0.125, -0.125, 0};`,
+      expectedOutput: /0.125 -0.125 0/,
+    },
+    {
+      name: "declaring a string array variable",
+      schema: {
+        name: "strings",
+        type: "std::vector<std::string>",
+        value: ["foo", "A", "", 123],
+      },
+      expectedCode: `std::vector<std::string> strings = {"foo", "A", "", "123"};`,
+      expectedOutput: /foo A {2}123/,
+    },
   ];
 
   for (const { name, schema, expectedCode, expectedOutput } of testCases) {
@@ -94,6 +144,15 @@ describe("generate C++ code for declaring variables", () => {
               `#include <iomanip>`,
               `#include <iostream>`,
               `#include <string>`,
+              `#include <vector>`,
+              ``,
+              `template <typename T>`,
+              `std::ostream& operator<<(std::ostream& os, const std::vector<T>& vals) {`,
+              `  for (const auto& val : vals) {`,
+              `    os << val << " ";`,
+              `  }`,
+              `  return os;`,
+              `}`,
               ``,
               `int main() {`,
               `  ${generateCppVariableDeclarationCode(schema)}`,
