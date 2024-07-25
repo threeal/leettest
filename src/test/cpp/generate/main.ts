@@ -22,11 +22,10 @@ export function generateCppMainCode(schema: CppTestSchema): {
           return [
             `  {`,
             `    std::cout << "testing ${c.name}...\\n";`,
-            ...c.inputs.map(
+            ...[...c.inputs, c.output].map(
               (input) => `    ${generateCppVariableDeclarationCode(input)}`,
             ),
             `    const ${c.output.type} actualOutput = Solution{}.${funName}(${funArgs});`,
-            `    const ${generateCppVariableDeclarationCode(c.output)}`,
             `    if (actualOutput != ${c.output.name}) {`,
             `      std::cerr << "failed to test ${c.name}:\\n";`,
             `      std::cerr << "  actual: " << actualOutput << "\\n";`,
