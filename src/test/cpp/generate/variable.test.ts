@@ -5,6 +5,7 @@ import path from "node:path";
 import { compileCppSource } from "../../../compile/cpp.js";
 import { runExecutable } from "../../../run.js";
 import { CppVariableSchema } from "../../schema/cpp.js";
+import { generateCppIncludeHeadersCode } from "./headers.js";
 import { generateCppVariableDeclarationCode } from "./variable.js";
 
 jest.retryTimes(10);
@@ -21,6 +22,7 @@ describe("generate C++ code for declaring variables", () => {
     name: string;
     schema: CppVariableSchema;
     expectedCode: string;
+    expectedRequiredHeaders?: string[];
     expectedOutput: RegExp;
   }[] = [
     {
@@ -71,6 +73,7 @@ describe("generate C++ code for declaring variables", () => {
         value: "foo",
       },
       expectedCode: `std::string string = "foo";`,
+      expectedRequiredHeaders: ["string"],
       expectedOutput: /foo/,
     },
     {
@@ -81,6 +84,7 @@ describe("generate C++ code for declaring variables", () => {
         value: [true, false, 0, 1],
       },
       expectedCode: `std::vector<bool> booleans = {true, false, 0, 1};`,
+      expectedRequiredHeaders: ["vector"],
       expectedOutput: /true false false true/,
     },
     {
@@ -91,6 +95,7 @@ describe("generate C++ code for declaring variables", () => {
         value: ["A", 1],
       },
       expectedCode: `std::vector<char> characters = {'A', '1'};`,
+      expectedRequiredHeaders: ["vector"],
       expectedOutput: /A 1/,
     },
     {
@@ -101,6 +106,7 @@ describe("generate C++ code for declaring variables", () => {
         value: [1024, -1024, 0],
       },
       expectedCode: `std::vector<int> integers = {1024, -1024, 0};`,
+      expectedRequiredHeaders: ["vector"],
       expectedOutput: /1024 -1024 0/,
     },
     {
@@ -111,6 +117,7 @@ describe("generate C++ code for declaring variables", () => {
         value: [0.125, -0.125, 0],
       },
       expectedCode: `std::vector<double> floatings = {0.125, -0.125, 0};`,
+      expectedRequiredHeaders: ["vector"],
       expectedOutput: /0.125 -0.125 0/,
     },
     {
@@ -121,6 +128,7 @@ describe("generate C++ code for declaring variables", () => {
         value: ["foo", "A", "", 123],
       },
       expectedCode: `std::vector<std::string> strings = {"foo", "A", "", "123"};`,
+      expectedRequiredHeaders: ["string", "vector"],
       expectedOutput: /foo A {2}123/,
     },
     {
@@ -134,6 +142,7 @@ describe("generate C++ code for declaring variables", () => {
         ],
       },
       expectedCode: `std::vector<std::vector<bool>> booleans = {{true, false}, {0, 1}};`,
+      expectedRequiredHeaders: ["vector"],
       expectedOutput: /true false {2}false true/,
     },
     {
@@ -144,6 +153,7 @@ describe("generate C++ code for declaring variables", () => {
         value: [["A"], [1]],
       },
       expectedCode: `std::vector<std::vector<char>> characters = {{'A'}, {'1'}};`,
+      expectedRequiredHeaders: ["vector"],
       expectedOutput: /A {2}1/,
     },
     {
@@ -157,6 +167,7 @@ describe("generate C++ code for declaring variables", () => {
         ],
       },
       expectedCode: `std::vector<std::vector<int>> integers = {{1024, -1024}, {0, 0}};`,
+      expectedRequiredHeaders: ["vector"],
       expectedOutput: /1024 -1024 {2}0 0/,
     },
     {
@@ -170,6 +181,7 @@ describe("generate C++ code for declaring variables", () => {
         ],
       },
       expectedCode: `std::vector<std::vector<double>> floatings = {{0.125, -0.125}, {0, 0}};`,
+      expectedRequiredHeaders: ["vector"],
       expectedOutput: /0.125 -0.125 {2}0 0/,
     },
     {
@@ -183,15 +195,21 @@ describe("generate C++ code for declaring variables", () => {
         ],
       },
       expectedCode: `std::vector<std::vector<std::string>> strings = {{"foo", "A"}, {"", "123"}};`,
+      expectedRequiredHeaders: ["string", "vector"],
       expectedOutput: /foo A {3}123/,
     },
   ];
 
-  for (const { name, schema, expectedCode, expectedOutput } of testCases) {
-    describe(name, () => {
+  for (const tc of testCases) {
+    describe(tc.name, () => {
       it.concurrent("should generate C++ code", () => {
-        const code = generateCppVariableDeclarationCode(schema);
-        expect(code).toEqual(expectedCode);
+        const { code, requiredHeaders } = generateCppVariableDeclarationCode(
+          tc.schema,
+        );
+        expect(code).toEqual(tc.expectedCode);
+        expect([...requiredHeaders].sort()).toEqual(
+          tc.expectedRequiredHeaders ?? [],
+        );
       });
 
       it.concurrent(
@@ -199,14 +217,22 @@ describe("generate C++ code for declaring variables", () => {
         async () => {
           const testDir = await getTestDir();
 
+          const variableDeclaration = generateCppVariableDeclarationCode(
+            tc.schema,
+          );
+
           const mainFile = path.join(testDir.path, "main.cpp");
           await fs.writeFile(
             mainFile,
             [
-              `#include <iomanip>`,
-              `#include <iostream>`,
-              `#include <string>`,
-              `#include <vector>`,
+              generateCppIncludeHeadersCode(
+                new Set<string>([
+                  "iomanip",
+                  "iostream",
+                  "vector",
+                  ...variableDeclaration.requiredHeaders,
+                ]),
+              ),
               ``,
               `template <typename T>`,
               `std::ostream& operator<<(std::ostream& os, const std::vector<T>& vals) {`,
@@ -217,8 +243,8 @@ describe("generate C++ code for declaring variables", () => {
               `}`,
               ``,
               `int main() {`,
-              `  ${generateCppVariableDeclarationCode(schema)}`,
-              `  std::cout << std::boolalpha << ${schema.name} << "\\n";`,
+              `  ${variableDeclaration.code}`,
+              `  std::cout << std::boolalpha << ${tc.schema.name} << "\\n";`,
               `  return 0;`,
               `};`,
               ``,
@@ -227,7 +253,7 @@ describe("generate C++ code for declaring variables", () => {
 
           const exeFile = await compileCppSource(mainFile);
           const output = await runExecutable(exeFile);
-          expect(output).toMatch(expectedOutput);
+          expect(output).toMatch(tc.expectedOutput);
         },
         60000,
       );

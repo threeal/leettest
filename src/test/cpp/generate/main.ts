@@ -11,6 +11,7 @@ export function generateCppMainCode(schema: CppTestSchema): {
   code: string;
   headers: Set<string>;
 } {
+  let headers = new Set<string>(["iostream"]);
   return {
     code: [
       `int main() {`,
@@ -22,9 +23,14 @@ export function generateCppMainCode(schema: CppTestSchema): {
           return [
             `  {`,
             `    std::cout << "testing ${c.name}...\\n";`,
-            ...[...c.inputs, c.output].map(
-              (input) => `    ${generateCppVariableDeclarationCode(input)}`,
-            ),
+            ...[...c.inputs, c.output].map((input) => {
+              const varDeclaration = generateCppVariableDeclarationCode(input);
+              headers = new Set<string>([
+                ...headers,
+                ...varDeclaration.requiredHeaders,
+              ]);
+              return `    ${varDeclaration.code}`;
+            }),
             `    const ${c.output.type} actualOutput = Solution{}.${funName}(${funArgs});`,
             `    if (actualOutput != ${c.output.name}) {`,
             `      std::cerr << "failed to test ${c.name}:\\n";`,
@@ -41,6 +47,6 @@ export function generateCppMainCode(schema: CppTestSchema): {
       `}`,
       ``,
     ].join("\n"),
-    headers: new Set(["iostream"]),
+    headers,
   };
 }
