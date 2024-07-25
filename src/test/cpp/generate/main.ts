@@ -1,5 +1,5 @@
 import { CppTestSchema } from "../../schema/cpp.js";
-import { formatCpp } from "./format.js";
+import { generateCppVariableDeclarationCode } from "./variable.js";
 
 /**
  * Generates C++ main function code from a test schema.
@@ -23,15 +23,14 @@ export function generateCppMainCode(schema: CppTestSchema): {
             `  {`,
             `    std::cout << "testing ${c.name}...\\n";`,
             ...c.inputs.map(
-              ({ name, type, value }) =>
-                `    ${type} ${name} = ${formatCpp(value, type)};`,
+              (input) => `    ${generateCppVariableDeclarationCode(input)}`,
             ),
-            `    const ${c.output.type} output = Solution{}.${funName}(${funArgs});`,
-            `    const ${c.output.type} expected = ${formatCpp(c.output.value, c.output.type)};`,
-            `    if (output != expected) {`,
+            `    const ${c.output.type} actualOutput = Solution{}.${funName}(${funArgs});`,
+            `    const ${generateCppVariableDeclarationCode(c.output)}`,
+            `    if (actualOutput != ${c.output.name}) {`,
             `      std::cerr << "failed to test ${c.name}:\\n";`,
-            `      std::cerr << "  output: " << output << "\\n";`,
-            `      std::cerr << "  expected: " << expected << "\\n\\n";`,
+            `      std::cerr << "  actual: " << actualOutput << "\\n";`,
+            `      std::cerr << "  expected: " << ${c.output.name} << "\\n\\n";`,
             `      ++failures;`,
             `    }`,
             `  }`,
