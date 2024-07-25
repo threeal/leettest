@@ -123,6 +123,68 @@ describe("generate C++ code for declaring variables", () => {
       expectedCode: `std::vector<std::string> strings = {"foo", "A", "", "123"};`,
       expectedOutput: /foo A {2}123/,
     },
+    {
+      name: "declaring a boolean matrix variable",
+      schema: {
+        name: "booleans",
+        type: "std::vector<std::vector<bool>>",
+        value: [
+          [true, false],
+          [0, 1],
+        ],
+      },
+      expectedCode: `std::vector<std::vector<bool>> booleans = {{true, false}, {0, 1}};`,
+      expectedOutput: /true false {2}false true/,
+    },
+    {
+      name: "declaring a character matrix variable",
+      schema: {
+        name: "characters",
+        type: "std::vector<std::vector<char>>",
+        value: [["A"], [1]],
+      },
+      expectedCode: `std::vector<std::vector<char>> characters = {{'A'}, {'1'}};`,
+      expectedOutput: /A {2}1/,
+    },
+    {
+      name: "declaring an integer matrix variable",
+      schema: {
+        name: "integers",
+        type: "std::vector<std::vector<int>>",
+        value: [
+          [1024, -1024],
+          [0, 0],
+        ],
+      },
+      expectedCode: `std::vector<std::vector<int>> integers = {{1024, -1024}, {0, 0}};`,
+      expectedOutput: /1024 -1024 {2}0 0/,
+    },
+    {
+      name: "declaring a floating-point matrix variable",
+      schema: {
+        name: "floatings",
+        type: "std::vector<std::vector<double>>",
+        value: [
+          [0.125, -0.125],
+          [0, 0],
+        ],
+      },
+      expectedCode: `std::vector<std::vector<double>> floatings = {{0.125, -0.125}, {0, 0}};`,
+      expectedOutput: /0.125 -0.125 {2}0 0/,
+    },
+    {
+      name: "declaring a string matrix variable",
+      schema: {
+        name: "strings",
+        type: "std::vector<std::vector<std::string>>",
+        value: [
+          ["foo", "A"],
+          ["", 123],
+        ],
+      },
+      expectedCode: `std::vector<std::vector<std::string>> strings = {{"foo", "A"}, {"", "123"}};`,
+      expectedOutput: /foo A {3}123/,
+    },
   ];
 
   for (const { name, schema, expectedCode, expectedOutput } of testCases) {
