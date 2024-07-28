@@ -11,7 +11,12 @@ export function generateCppMainCode(schema: CppTestSchema): {
   code: string;
   headers: Set<string>;
 } {
-  let headers = new Set<string>(["iostream"]);
+  let headers = new Set<string>([
+    "exception",
+    "iostream",
+    "sstream",
+    "stdexcept",
+  ]);
   return {
     code: [
       `int main() {`,
@@ -31,11 +36,16 @@ export function generateCppMainCode(schema: CppTestSchema): {
               ]);
               return `    ${varDeclaration.code}`;
             }),
-            `    const ${c.output.type} actualOutput = Solution{}.${funName}(${funArgs});`,
-            `    if (actualOutput != ${c.output.name}) {`,
-            `      std::cerr << "failed to test ${c.name}:\\n";`,
-            `      std::cerr << "  actual: " << actualOutput << "\\n";`,
-            `      std::cerr << "  expected: " << ${c.output.name} << "\\n\\n";`,
+            `    try {`,
+            `      const ${c.output.type} actualOutput = Solution{}.${funName}(${funArgs});`,
+            `      if (actualOutput != ${c.output.name}) {`,
+            `        std::stringstream ss{};`,
+            `        ss << "  actual: " << actualOutput << "\\n";`,
+            `        ss << "  expected: " << ${c.output.name};`,
+            `        throw std::runtime_error(ss.str());`,
+            `      }`,
+            `    } catch (std::exception& e) {`,
+            `      std::cerr << "failed to test ${c.name}:\\n" << e.what() << "\\n\\n";`,
             `      ++failures;`,
             `    }`,
             `  }`,
