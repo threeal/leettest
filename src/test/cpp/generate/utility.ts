@@ -1,4 +1,4 @@
-import { CppTestSchema } from "../../schema/cpp.js";
+import { CppTestSchema } from "../../../schema/cpp.js";
 
 export const cppVectorOstreamOperatorCode = [
   `template <typename T>`,

@@ -1,4 +1,4 @@
-import { CppTestSchema } from "../../schema/cpp.js";
+import { CppTestSchema } from "../../../schema/cpp.js";
 import { generateCppVariableDeclarationCode } from "./variable.js";
 
 /**

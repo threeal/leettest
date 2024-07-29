@@ -4,7 +4,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { compileCppSource } from "../../../compile/cpp.js";
 import { runExecutable } from "../../../run.js";
-import { CppVariableSchema } from "../../schema/cpp.js";
+import { CppVariableSchema } from "../../../schema/cpp.js";
 import { generateCppIncludeHeadersCode } from "./headers.js";
 import { generateCppVariableDeclarationCode } from "./variable.js";
 
