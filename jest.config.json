@@ -17,5 +17,6 @@
   "transform": {
     "^.+\\.ts$": ["ts-jest", { "useESM": true }]
   },
+  "testMatch": ["**/*.test.ts"],
   "verbose": true
 }

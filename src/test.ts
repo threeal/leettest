@@ -1,6 +1,6 @@
 import { getErrorMessage } from "catched-error-message";
 import ora from "ora";
-import { testCppSolution } from "./cpp/index.js";
+import { testCppSolution } from "./test/cpp.js";
 
 /**
  * Tests solutions to LeetCode problems.

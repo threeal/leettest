@@ -2,10 +2,10 @@ import { jest } from "@jest/globals";
 import { createTempDirectory, ITempDirectory } from "create-temp-directory";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { compileCppSource } from "../../../compile/cpp.js";
-import { runExecutable } from "../../../run.js";
-import { CppTestSchema } from "../../schema/cpp.js";
-import { generateCppTest } from "./index.js";
+import { compileCppSource } from "../compile/cpp.js";
+import { CppTestSchema } from "../schema/cpp.js";
+import { runExecutable } from "../run.js";
+import { generateCppTest } from "./cpp.js";
 
 jest.retryTimes(10);
 

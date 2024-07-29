@@ -1,7 +1,7 @@
 import { createTempDirectory, ITempDirectory } from "create-temp-directory";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { testCppSolution } from "./index.js";
+import { testCppSolution } from "./cpp.js";
 
 describe("test a C++ solution file", () => {
   const testDirs: ITempDirectory[] = [];
