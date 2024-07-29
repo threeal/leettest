@@ -1,4 +1,4 @@
-import { CppVariableSchema } from "../../../schema/cpp.js";
+import { CppVariableSchema } from "../../schema/cpp.js";
 
 /**
  * Generates C++ code for declaring a variable.

@@ -1,9 +1,9 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { CppTestSchema } from "../../../schema/cpp.js";
-import { generateCppIncludeHeadersCode } from "./headers.js";
-import { generateCppMainCode } from "./main.js";
-import { generateCppUtilityCode } from "./utility.js";
+import { CppTestSchema } from "../schema/cpp.js";
+import { generateCppIncludeHeadersCode } from "./cpp/headers.js";
+import { generateCppMainCode } from "./cpp/main.js";
+import { generateCppUtilityCode } from "./cpp/utility.js";
 
 /**
  * Generates a C++ test file from a test schema.
