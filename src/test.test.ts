@@ -18,12 +18,12 @@ jest.unstable_mockModule("ora", () => ({
   }),
 }));
 
-jest.unstable_mockModule("./cpp/index.js", () => ({
+jest.unstable_mockModule("./test/cpp.js", () => ({
   testCppSolution: jest.fn(),
 }));
 
 it("should test solution files", async () => {
-  const { testCppSolution } = await import("./cpp/index.js");
+  const { testCppSolution } = await import("./test/cpp.js");
   const { testSolutions } = await import("./index.js");
 
   jest.mocked(testCppSolution).mockImplementation((solutionFile) => {
