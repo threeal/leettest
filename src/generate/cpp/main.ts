@@ -1,5 +1,6 @@
 import { CppTestSchema } from "../../schema/cpp.js";
 import { indentCode } from "../utils.js";
+import { generateCppEqualityAssertionCode } from "./assertions.js";
 import { generateCppVariableDeclarationCode } from "./variable.js";
 
 /**
@@ -12,12 +13,7 @@ export function generateCppMainCode(schema: CppTestSchema): {
   code: string;
   headers: Set<string>;
 } {
-  let headers = new Set<string>([
-    "exception",
-    "iostream",
-    "sstream",
-    "stdexcept",
-  ]);
+  let headers = new Set<string>(["exception", "iostream"]);
   return {
     code: [
       `int main() {`,
@@ -27,6 +23,16 @@ export function generateCppMainCode(schema: CppTestSchema): {
           .map((c) => {
             const funName = c.function.name;
             const funArgs = c.function.arguments.join(", ");
+
+            const equalityAssertion = generateCppEqualityAssertionCode(
+              "actualOutput",
+              c.output.name,
+            );
+            headers = new Set<string>([
+              ...headers,
+              ...equalityAssertion.requiredHeaders,
+            ]);
+
             return [
               `{`,
               `  std::cout << "testing ${c.name}...\\n";`,
@@ -41,12 +47,7 @@ export function generateCppMainCode(schema: CppTestSchema): {
               }),
               `  try {`,
               `    const ${c.output.type} actualOutput = Solution{}.${funName}(${funArgs});`,
-              `    if (actualOutput != ${c.output.name}) {`,
-              `      std::stringstream ss{};`,
-              `      ss << "  actual: " << actualOutput << "\\n";`,
-              `      ss << "  expected: " << ${c.output.name};`,
-              `      throw std::runtime_error(ss.str());`,
-              `    }`,
+              indentCode(equalityAssertion.code, "    "),
               `  } catch (std::exception& e) {`,
               `    std::cerr << "failed to test ${c.name}:\\n" << e.what() << "\\n\\n";`,
               `    ++failures;`,
