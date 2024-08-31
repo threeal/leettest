@@ -1,6 +1,7 @@
 .*
 !.env.yarn
 !.git*
+!.nvmrc
 
 build/
 dist/
