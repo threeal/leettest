@@ -19,8 +19,6 @@ jobs:
 
       - name: Setup Yarn
         uses: threeal/setup-yarn-action@v2.0.0
-        with:
-          version: stable
 
       - name: Check Format
         run: |
@@ -48,8 +46,6 @@ jobs:
 
       - name: Setup Yarn
         uses: threeal/setup-yarn-action@v2.0.0
-        with:
-          version: stable
 
       - name: Test Package
         run: yarn test
@@ -72,8 +68,6 @@ jobs:
 
       - name: Setup Yarn
         uses: threeal/setup-yarn-action@v2.0.0
-        with:
-          version: stable
 
       - name: Test Sample Problems
         run: yarn start
