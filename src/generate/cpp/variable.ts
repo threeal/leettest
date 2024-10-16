@@ -10,28 +10,13 @@ export function generateCppVariableDeclarationCode(schema: CppVariableSchema): {
   code: string;
   requiredHeaders: Set<string>;
 } {
-  const requiredHeaders = new Set<string>();
+  switch (schema.type) {
+    case 'boolean':
+      return {
+        code: `bool ${schema.name} = ${schema.value};`,
+        requiredHeaders: new Set<string>(),
+      };
+  }
 
-  const formatValue = (value: unknown, type: string): string => {
-    switch (type) {
-      case "std::string":
-        requiredHeaders.add("string");
-        return `"${value}"`;
-      case "char":
-        return `'${value}'`;
-    }
-
-    if (type.match(/^std::vector<.*>$/)) {
-      requiredHeaders.add("vector");
-      const subtype = type.substring(12, type.length - 1);
-      return `{${(value as unknown[]).map((v) => formatValue(v, subtype)).join(", ")}}`;
-    }
-
-    return `${value}`;
-  };
-
-  return {
-    code: `${schema.type} ${schema.name} = ${formatValue(schema.value, schema.type)};`,
-    requiredHeaders,
-  };
+  throw new Error(`Unsupported variable type: ${schema.type}`);
 }
