@@ -33,7 +33,7 @@
   "dependencies": {
     "catched-error-message": "^0.0.1",
     "glob": "^11.0.0",
-    "ora": "^8.1.0",
+    "ora": "^8.1.1",
     "which": "^5.0.0",
     "yaml": "^2.6.0",
     "yargs": "^17.7.2"
