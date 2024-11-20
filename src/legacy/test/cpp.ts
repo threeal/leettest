@@ -1,9 +1,9 @@
 import path from "node:path";
-import { compileCppSource } from "../compile/cpp.js";
+import { compileCppSource } from "../../compile/cpp.js";
+import { runExecutable } from "../../run.js";
 import { generateCppTest } from "../generate/cpp.js";
 import { parseCppTestSchema } from "../schema/cpp.js";
 import { readRawTestSchema } from "../schema/raw.js";
-import { runExecutable } from "../run.js";
 
 /**
  * Tests the C++ solution of a LeetCode problem.

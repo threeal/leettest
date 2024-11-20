@@ -24,7 +24,7 @@ jest.unstable_mockModule("./test/cpp.js", () => ({
 
 it("should test solution files", async () => {
   const { testCppSolution } = await import("./test/cpp.js");
-  const { testSolutions } = await import("./index.js");
+  const { testSolutions } = await import("./test.js");
 
   jest.mocked(testCppSolution).mockImplementation((solutionFile) => {
     return new Promise((resolve, reject) => {

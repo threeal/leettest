@@ -1,3 +1,3 @@
-export { RawTestSchema, readRawTestSchema } from "./schema/raw.js";
+export { RawTestSchema, readRawTestSchema } from "./legacy/schema/raw.js";
+export { testSolutions } from "./legacy/test.js";
 export { searchSolutions } from "./search.js";
-export { testSolutions } from "./test.js";

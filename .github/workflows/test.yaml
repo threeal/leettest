@@ -62,4 +62,6 @@ jobs:
         uses: threeal/setup-yarn-action@v2.0.0
 
       - name: Test Sample Problems
-        run: yarn start
+        run: |
+          yarn start sample/*/solution.cpp
+          yarn start --legacy sample/legacy/*/solution.cpp
