@@ -2,9 +2,9 @@ import { jest } from "@jest/globals";
 import { createTempDirectory, ITempDirectory } from "create-temp-directory";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { compileCppSource } from "../../compile/cpp.js";
+import { compileCppSource } from "../../../compile/cpp.js";
+import { runExecutable } from "../../../run.js";
 import { CppVariableSchema } from "../../schema/cpp.js";
-import { runExecutable } from "../../run.js";
 import { generateCppIncludeHeadersCode } from "./headers.js";
 import { generateCppVariableDeclarationCode } from "./variable.js";
 

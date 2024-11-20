@@ -2,8 +2,8 @@
 
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
+import { testSolutions } from "./legacy/test.js";
 import { searchSolutions } from "./search.js";
-import { testSolutions } from "./test.js";
 
 yargs(hideBin(process.argv))
   .scriptName("leettest")
