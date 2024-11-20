@@ -29,7 +29,5 @@ export async function findExecutable(
  * @returns The executable file path corresponding to the C++ source file.
  */
 export function getExecutableFromSource(sourceFile: string): string {
-  let executableFile = sourceFile.replace(path.extname(sourceFile), "");
-  if (process.platform === "win32") executableFile += ".exe";
-  return executableFile;
+  return sourceFile.replace(path.extname(sourceFile), "");
 }
