@@ -12,16 +12,24 @@ yargs(hideBin(process.argv))
     "$0 [files..]",
     "Compile and test solutions to LeetCode problems",
     (yargs) =>
-      yargs.positional("files", {
-        describe: "A list of pattern for solution files to process",
-        default: ["**/solution.cpp"],
-        type: "string",
-        array: true,
-      }),
+      yargs
+        .positional("files", {
+          describe: "A list of pattern for solution files to process",
+          default: ["**/solution.cpp"],
+          type: "string",
+          array: true,
+        })
+        .option("legacy", {
+          describe: "Use the legacy behavior",
+        }),
     async (argv) => {
       const solutionFiles = searchSolutions(argv.files);
-      const failures = await testSolutions(solutionFiles);
-      process.exit(failures);
+      if (argv.legacy) {
+        const failures = await testSolutions(solutionFiles);
+        process.exit(failures);
+      } else {
+        console.log(solutionFiles);
+      }
     },
   )
   .parse();
