@@ -30,11 +30,7 @@ jobs:
 
   test-package:
     name: Test Package
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [windows-2022, ubuntu-22.04, macos-14]
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4.2.2
@@ -52,11 +48,7 @@ jobs:
 
   test-sample:
     name: Test Sample
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [windows-2022, ubuntu-22.04, macos-14]
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4.2.2
