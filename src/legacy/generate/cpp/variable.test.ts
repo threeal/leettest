@@ -1,14 +1,12 @@
-import { jest } from "@jest/globals";
 import { createTempDirectory, ITempDirectory } from "create-temp-directory";
 import fs from "node:fs/promises";
 import path from "node:path";
+import { afterAll, describe, expect, it } from "vitest";
 import { compileCppSource } from "../../../compile/cpp.js";
 import { runExecutable } from "../../../run.js";
 import { CppVariableSchema } from "../../schema/cpp.js";
 import { generateCppIncludeHeadersCode } from "./headers.js";
 import { generateCppVariableDeclarationCode } from "./variable.js";
-
-jest.retryTimes(10);
 
 describe("generate C++ code for declaring variables", () => {
   const testDirs: ITempDirectory[] = [];

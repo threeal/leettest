@@ -1,6 +1,7 @@
 import { createTempDirectory, ITempDirectory } from "create-temp-directory";
 import fs from "node:fs/promises";
 import path from "node:path";
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { findExecutable, getExecutableFromSource } from "./utils.js";
 
 describe("find an executable file", () => {

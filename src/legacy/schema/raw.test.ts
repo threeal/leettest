@@ -1,6 +1,7 @@
 import { createTempDirectory, ITempDirectory } from "create-temp-directory";
 import fs from "node:fs/promises";
 import path from "node:path";
+import { afterAll, expect, it } from "vitest";
 import { readRawTestSchema } from "./raw.js";
 
 const testDirs: ITempDirectory[] = [];

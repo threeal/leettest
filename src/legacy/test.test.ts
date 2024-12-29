@@ -1,9 +1,8 @@
-import { jest } from "@jest/globals";
-import "jest-extended";
+import { expect, it, vi } from "vitest";
 
 const spinnerOut: string[] = [];
-jest.unstable_mockModule("ora", () => ({
-  default: jest.fn(() => {
+vi.mock("ora", () => ({
+  default: vi.fn(() => {
     return {
       start(text: string) {
         spinnerOut.push(`start: ${text}`);
@@ -18,15 +17,15 @@ jest.unstable_mockModule("ora", () => ({
   }),
 }));
 
-jest.unstable_mockModule("./test/cpp.js", () => ({
-  testCppSolution: jest.fn(),
+vi.mock("./test/cpp.js", () => ({
+  testCppSolution: vi.fn(),
 }));
 
 it("should test solution files", async () => {
   const { testCppSolution } = await import("./test/cpp.js");
   const { testSolutions } = await import("./test.js");
 
-  jest.mocked(testCppSolution).mockImplementation((solutionFile) => {
+  vi.mocked(testCppSolution).mockImplementation((solutionFile) => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         if (solutionFile === "bar/solution.cpp") {

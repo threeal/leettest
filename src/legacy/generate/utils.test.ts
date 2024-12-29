@@ -1,3 +1,4 @@
+import { expect, it } from "vitest";
 import { indentCode } from "./utils.js";
 
 it("it should indent code", () => {

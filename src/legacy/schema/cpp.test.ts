@@ -1,4 +1,5 @@
 import { parseCppTestSchema } from "./cpp.js";
+import { expect, it } from "vitest";
 
 it("should parse a C++ test schema from a raw test schema", () => {
   const schema = parseCppTestSchema({

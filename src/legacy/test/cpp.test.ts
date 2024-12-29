@@ -1,6 +1,7 @@
 import { createTempDirectory, ITempDirectory } from "create-temp-directory";
 import fs from "node:fs/promises";
 import path from "node:path";
+import { afterAll, describe, expect, it } from "vitest";
 import { testCppSolution } from "./cpp.js";
 
 describe("test a C++ solution file", () => {

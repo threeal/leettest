@@ -1,13 +1,13 @@
+import { expect, it } from "vitest";
+
 import {
   generateCppUtilityCode,
   cppVectorOstreamOperatorCode,
 } from "./utility.js";
 
-import "jest-extended";
-
 it("should generate empty code for functions that return `int`", () => {
   const code = generateCppUtilityCode({ cases: [] });
-  expect(code).toBeEmpty();
+  expect(code).toBe("");
 });
 
 it("should generate ostream operator code for functions that return `std::vector<int>`", () => {

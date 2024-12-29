@@ -1,12 +1,10 @@
-import { jest } from "@jest/globals";
 import { createTempDirectory, ITempDirectory } from "create-temp-directory";
 import fs from "node:fs/promises";
 import path from "node:path";
+import { afterAll, describe, expect, it } from "vitest";
 import { compileCppSource } from "../../../compile/cpp.js";
 import { runExecutable } from "../../../run.js";
 import { generateCppIncludeHeadersCode } from "./headers.js";
-
-jest.retryTimes(10);
 
 describe("generate C++ code for including headers", () => {
   it.concurrent("should generate C++ code for including headers", () => {

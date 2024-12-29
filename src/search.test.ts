@@ -1,8 +1,7 @@
-import { jest } from "@jest/globals";
-import "jest-extended";
+import { expect, it, vi } from "vitest";
 
-jest.unstable_mockModule("glob", () => ({
-  globSync: jest.fn((pattern) => {
+vi.mock("glob", () => ({
+  globSync: vi.fn((pattern) => {
     switch (pattern) {
       case "foo/solution.cpp":
         return ["foo/solution.cpp"];
