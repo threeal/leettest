@@ -1,13 +1,11 @@
-import { jest } from "@jest/globals";
 import { createTempDirectory, ITempDirectory } from "create-temp-directory";
 import fs from "node:fs/promises";
 import path from "node:path";
+import { afterAll, describe, it } from "vitest";
 import { compileCppSource } from "../../../compile/cpp.js";
 import { runExecutable } from "../../../run.js";
 import { generateCppIncludeHeadersCode } from "./headers.js";
 import { generateCppMainCode } from "./main.js";
-
-jest.retryTimes(10);
 
 describe("test C++ main function code generation", () => {
   const testDirs: ITempDirectory[] = [];

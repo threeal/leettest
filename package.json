@@ -28,7 +28,7 @@
     "lint": "eslint",
     "prepack": "tsc",
     "start": "tsx src/bin.ts",
-    "test": "jest"
+    "test": "vitest"
   },
   "dependencies": {
     "catched-error-message": "^0.0.1",
@@ -40,20 +40,17 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
-    "@jest/globals": "^29.7.0",
-    "@types/jest": "^29.5.14",
     "@types/node": "^22.10.2",
     "@types/which": "^3.0.4",
     "@types/yargs": "^17.0.33",
+    "@vitest/coverage-v8": "^2.1.8",
     "create-temp-directory": "^2.4.0",
     "eslint": "^9.17.0",
-    "jest": "^29.7.0",
-    "jest-extended": "^4.0.2",
     "prettier": "^3.4.2",
-    "ts-jest": "^29.2.5",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2",
-    "typescript-eslint": "^8.18.2"
+    "typescript-eslint": "^8.18.2",
+    "vitest": "^2.1.8"
   },
   "packageManager": "yarn@4.6.0"
 }
