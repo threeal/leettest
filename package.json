@@ -31,11 +31,8 @@
     "test": "vitest"
   },
   "dependencies": {
-    "catched-error-message": "^0.0.1",
     "glob": "^11.0.1",
-    "ora": "^8.1.1",
     "which": "^5.0.0",
-    "yaml": "^2.7.0",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
