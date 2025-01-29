@@ -31,20 +31,14 @@
     "test": "vitest"
   },
   "dependencies": {
-    "catched-error-message": "^0.0.1",
     "glob": "^11.0.1",
-    "ora": "^8.1.1",
-    "which": "^5.0.0",
-    "yaml": "^2.7.0",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.18.0",
     "@types/node": "^22.10.10",
-    "@types/which": "^3.0.4",
     "@types/yargs": "^17.0.33",
     "@vitest/coverage-v8": "^3.0.4",
-    "create-temp-directory": "^2.4.0",
     "eslint": "^9.18.0",
     "prettier": "^3.4.2",
     "tsx": "^4.19.2",
