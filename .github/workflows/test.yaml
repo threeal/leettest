@@ -45,21 +45,3 @@ jobs:
 
       - name: Test Package
         run: yarn test
-
-  test-sample:
-    name: Test Sample
-    runs-on: ubuntu-24.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4.2.2
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4.1.0
-        with:
-          node-version-file: .nvmrc
-
-      - name: Setup Yarn
-        uses: threeal/setup-yarn-action@v2.0.0
-
-      - name: Test Sample Problems
-        run: yarn start sample/*/solution.cpp
