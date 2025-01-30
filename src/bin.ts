@@ -2,7 +2,7 @@
 
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
-import { searchSolutions } from "./search.js";
+import { testSolutions } from "./index.js";
 
 yargs(hideBin(process.argv))
   .scriptName("leettest")
@@ -18,8 +18,10 @@ yargs(hideBin(process.argv))
         array: true,
       }),
     async (argv) => {
-      const solutionFiles = searchSolutions(argv.files);
-      console.log(solutionFiles);
+      const solutionFiles = await testSolutions(argv.files);
+      for (const solutionFile of solutionFiles) {
+        console.info(`Found ${solutionFile}`);
+      }
     },
   )
   .parse();
