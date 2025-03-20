@@ -5,11 +5,11 @@ on:
   push:
     branches: [main]
 jobs:
-  build-package:
-    name: Build Package
+  build-library:
+    name: Build Library
     runs-on: ubuntu-24.04
     steps:
-      - name: Checkout
+      - name: Checkout Project
         uses: actions/checkout@v4.2.2
 
       - name: Setup pnpm
@@ -18,10 +18,21 @@ jobs:
       - name: Install Dependencies
         run: pnpm install
 
-      - name: Create Package
+      - name: Check Formatting
+        run: |
+          pnpm format
+          git diff --exit-code HEAD
+
+      - name: Check Lint
+        run: pnpm lint
+
+      - name: Test Library
+        run: pnpm test
+
+      - name: Package Library
         run: pnpm pack
 
-      - name: Upload Package as Artifact
+      - name: Upload Package
         uses: actions/upload-artifact@v4.6.1
         with:
           path: package.tgz
