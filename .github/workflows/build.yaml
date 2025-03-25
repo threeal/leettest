@@ -32,8 +32,3 @@ jobs:
 
       - name: Package Library
         run: pnpm pack
-
-      - name: Upload Package
-        uses: actions/upload-artifact@v4.6.2
-        with:
-          path: package.tgz
