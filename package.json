@@ -26,7 +26,7 @@
   "scripts": {
     "prepack": "tsc",
     "start": "vite-node src/bin.ts",
-    "test": "vitest"
+    "test": "vitest run"
   },
   "dependencies": {
     "commander": "^13.1.0",
