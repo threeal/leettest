@@ -10,10 +10,5 @@ program
   .argument("[files...]", "A list of pattern for solution files to process", [
     "**/solution.cpp",
   ])
-  .action(async (files) => {
-    const solutionFiles = await testSolutions(files);
-    for (const solutionFile of solutionFiles) {
-      console.info(`Found ${solutionFile}`);
-    }
-  })
+  .action(testSolutions)
   .parse();
