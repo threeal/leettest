@@ -1,9 +1,7 @@
-import { globSync } from "glob";
+import { glob } from "glob";
+import path from "node:path";
 
-export async function testSolutions(patterns: string[]): Promise<string[]> {
+export async function testSolutions(dir: string): Promise<string[]> {
   // TODO: It currently only returns the list of solution files.
-  return patterns
-    .map((pattern) => globSync(pattern))
-    .flat()
-    .sort();
+  return glob(path.join(dir, "**", "solution.cpp"));
 }
