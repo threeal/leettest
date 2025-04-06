@@ -7,11 +7,9 @@ program
   .name("leettest")
   .version("0.2.0")
   .description("Compile and test solutions to LeetCode problems")
-  .argument("[files...]", "A list of pattern for solution files to process", [
-    "**/solution.cpp",
-  ])
-  .action(async (files) => {
-    const solutionFiles = await testSolutions(files);
+  .argument("[dir]", "The root directory to search for solution files", ".")
+  .action(async (dir) => {
+    const solutionFiles = await testSolutions(dir);
     for (const solutionFile of solutionFiles) {
       console.info(`Found ${solutionFile}`);
     }
