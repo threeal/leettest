@@ -1,16 +1,16 @@
-import fs from "node:fs/promises";
+import fsPromises from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, expect, it } from "vitest";
 import { testSolutions } from "./index.js";
 
-const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "temp"));
+const tempDir = await fsPromises.mkdtemp(path.join(os.tmpdir(), "temp"));
 
 it("should test solutions", async () => {
   const solutionDir = path.join(tempDir, "multiply_integers");
-  await fs.mkdir(solutionDir);
+  await fsPromises.mkdir(solutionDir);
 
-  await fs.writeFile(
+  await fsPromises.writeFile(
     path.join(solutionDir, "solution.cpp"),
     [
       `class Solution {`,
@@ -27,4 +27,4 @@ it("should test solutions", async () => {
   expect(solutionFiles).toEqual([path.join(solutionDir, "solution.cpp")]);
 });
 
-afterAll(() => fs.rmdir(tempDir, { recursive: true }));
+afterAll(() => fsPromises.rmdir(tempDir, { recursive: true }));
