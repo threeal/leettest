@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { program } from "commander";
-import { testSolutions } from "./index.js";
+import { testSolutions } from "./solution.js";
 
 program
   .name("leettest")

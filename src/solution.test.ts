@@ -2,7 +2,7 @@ import fsPromises from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, expect, it } from "vitest";
-import { testSolutions } from "./index.js";
+import { testSolutions } from "./solution.js";
 
 const tempDir = await fsPromises.mkdtemp(path.join(os.tmpdir(), "temp"));
 
