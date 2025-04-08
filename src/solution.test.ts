@@ -1,30 +1,32 @@
-import fsPromises from "node:fs/promises";
-import os from "node:os";
+import { rm } from "node:fs/promises";
 import path from "node:path";
-import { afterAll, expect, it } from "vitest";
+import { afterAll, expect, test } from "vitest";
 import { testSolutions } from "./solution.js";
+import { createTempFs } from "./internal/temp-fs.js";
 
-const tempDir = await fsPromises.mkdtemp(path.join(os.tmpdir(), "temp"));
-
-it("should test solutions", async () => {
-  const solutionDir = path.join(tempDir, "multiply_integers");
-  await fsPromises.mkdir(solutionDir);
-
-  await fsPromises.writeFile(
-    path.join(solutionDir, "solution.cpp"),
-    [
-      `class Solution {`,
-      ` public:`,
-      `  int multiplyIntegers(int num1, int num2) {`,
-      `    return num1 * num2;`,
-      `  }`,
-      `};`,
-      ``,
-    ].join("\n"),
-  );
-
-  const solutionFiles = await testSolutions(tempDir);
-  expect(solutionFiles).toEqual([path.join(solutionDir, "solution.cpp")]);
+const tempDir = await createTempFs({
+  foo: {
+    bar: {
+      "solution.cpp": "",
+    },
+    baz: {
+      "solution.js": "",
+    },
+    "solution.cpp": "",
+  },
+  bar: {
+    "solution.cpp": "",
+  },
+  baz: {},
 });
 
-afterAll(() => fsPromises.rmdir(tempDir, { recursive: true }));
+test("test solutions", async () => {
+  const solutionFiles = await testSolutions(tempDir);
+  expect(solutionFiles).toEqual([
+    path.join(tempDir, "foo", "solution.cpp"),
+    path.join(tempDir, "foo", "bar", "solution.cpp"),
+    path.join(tempDir, "bar", "solution.cpp"),
+  ]);
+});
+
+afterAll(() => rm(tempDir, { recursive: true }));
