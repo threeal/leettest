@@ -23,9 +23,9 @@ const tempDir = await createTempFs({
 test("test solutions", async () => {
   const solutionFiles = await testSolutions(tempDir);
   expect(solutionFiles).toEqual([
-    path.join(tempDir, "foo", "solution.cpp"),
-    path.join(tempDir, "foo", "bar", "solution.cpp"),
     path.join(tempDir, "bar", "solution.cpp"),
+    path.join(tempDir, "foo", "bar", "solution.cpp"),
+    path.join(tempDir, "foo", "solution.cpp"),
   ]);
 });
 
