@@ -1,5 +1,6 @@
 import { readdir } from "node:fs/promises";
 import path from "node:path";
+import { testCppSolution } from "./internal/solution.js";
 
 export interface TestResult {
   dir: string;
@@ -13,10 +14,12 @@ export async function* testSolutions(dir: string): AsyncIterable<TestResult> {
   for (const file of await readdir(dir, { withFileTypes: true })) {
     if (file.isDirectory()) {
       childResults.push(testSolutions(path.join(dir, file.name)));
-    } else if (file.isFile() && file.name === "solution.cpp") {
+    } else if (file.isFile() && file.name === "test.cpp") {
       results.push({
-        dir: path.join(dir, file.name),
-        prom: Promise.resolve(null), // TODO: modify to test the solution.
+        dir,
+        prom: new Promise((resolve) =>
+          testCppSolution(dir).then(resolve).catch(resolve),
+        ),
       });
     }
   }
