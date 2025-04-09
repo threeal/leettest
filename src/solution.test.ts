@@ -1,7 +1,7 @@
 import { rm } from "node:fs/promises";
 import path from "node:path";
 import { afterAll, expect, test } from "vitest";
-import { testSolutions } from "./solution.js";
+import { type TestResult, testSolutions } from "./solution.js";
 import { createTempFs } from "./internal/temp-fs.js";
 
 const tempDir = await createTempFs({
@@ -21,11 +21,15 @@ const tempDir = await createTempFs({
 });
 
 test("test solutions", async () => {
-  const solutionFiles = await testSolutions(tempDir);
-  expect(solutionFiles).toEqual([
-    path.join(tempDir, "bar", "solution.cpp"),
-    path.join(tempDir, "foo", "bar", "solution.cpp"),
-    path.join(tempDir, "foo", "solution.cpp"),
+  const results: TestResult[] = [];
+  for await (const result of testSolutions(tempDir)) {
+    results.push(result);
+  }
+
+  expect(results).toEqual([
+    { dir: path.join(tempDir, "bar", "solution.cpp"), err: null },
+    { dir: path.join(tempDir, "foo", "solution.cpp"), err: null },
+    { dir: path.join(tempDir, "foo", "bar", "solution.cpp"), err: null },
   ]);
 });
 

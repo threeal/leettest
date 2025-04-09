@@ -7,11 +7,14 @@ program
   .name("leettest")
   .version("0.2.0")
   .description("Compile and test solutions to LeetCode problems")
-  .argument("[dir]", "The root directory to search for solution files", ".")
-  .action(async (dir) => {
-    const solutionFiles = await testSolutions(dir);
-    for (const solutionFile of solutionFiles) {
-      console.info(`Found ${solutionFile}`);
+  .argument("[root]", "The root directory to search for solution files", ".")
+  .action(async (root) => {
+    for await (const { dir, err } of testSolutions(root)) {
+      if (err == null) {
+        console.info(`Tested ${dir}`);
+      } else {
+        console.error(`Failed to test ${dir}:`, err);
+      }
     }
   })
   .parse();

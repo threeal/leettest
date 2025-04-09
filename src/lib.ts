@@ -1,1 +1,1 @@
-export { testSolutions } from "./solution.js";
+export { type TestResult, testSolutions } from "./solution.js";

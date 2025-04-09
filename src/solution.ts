@@ -1,18 +1,33 @@
 import { readdir } from "node:fs/promises";
 import path from "node:path";
 
-export async function testSolutions(dir: string): Promise<string[]> {
-  const childSolutions: Promise<string[]>[] = [];
-  const solutions: string[] = [];
+export interface TestResult {
+  dir: string;
+  err: unknown;
+}
+
+export async function* testSolutions(dir: string): AsyncIterable<TestResult> {
+  const childResults: AsyncIterable<TestResult>[] = [];
+  const results: { dir: string; prom: Promise<unknown> }[] = [];
 
   for (const file of await readdir(dir, { withFileTypes: true })) {
     if (file.isDirectory()) {
-      childSolutions.push(testSolutions(path.join(dir, file.name)));
+      childResults.push(testSolutions(path.join(dir, file.name)));
     } else if (file.isFile() && file.name === "solution.cpp") {
-      solutions.push(path.join(dir, file.name));
+      results.push({
+        dir: path.join(dir, file.name),
+        prom: Promise.resolve(null), // TODO: modify to test the solution.
+      });
     }
   }
 
-  // TODO: It currently only returns the list of solution files.
-  return [...(await Promise.all(childSolutions)).flat(), ...solutions];
+  for (const { dir, prom } of results) {
+    yield { dir, err: await prom };
+  }
+
+  for (const results of childResults) {
+    for await (const result of results) {
+      yield result;
+    }
+  }
 }
