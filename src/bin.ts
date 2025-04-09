@@ -10,10 +10,10 @@ program
   .argument("[root]", "The root directory to search for solution files", ".")
   .action(async (root) => {
     for await (const { dir, err } of testSolutions(root)) {
-      if (err == null) {
-        console.info(`Tested ${dir}`);
-      } else {
+      if (err) {
         console.error(`Failed to test ${dir}:`, err);
+      } else {
+        console.info(`Tested ${dir}`);
       }
     }
   })
