@@ -2,6 +2,7 @@
 
 import { program } from "commander";
 import { testSolutions } from "./solution.js";
+import { stringifyError } from "./internal/stringify.js";
 
 program
   .name("leettest")
@@ -11,9 +12,11 @@ program
   .action(async (root) => {
     for await (const { dir, err } of testSolutions(root)) {
       if (err) {
-        console.error(`Failed to test ${dir}:`, err);
+        process.stderr.write(
+          `✖ Failed to test ${dir}\n${stringifyError(err, "  ")}\n`,
+        );
       } else {
-        console.info(`Tested ${dir}`);
+        process.stdout.write(`✔ Tested ${dir}\n`);
       }
     }
   })
