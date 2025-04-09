@@ -1,3 +1,16 @@
+export class CompileError extends AggregateError {
+  file: string;
+
+  constructor(error: unknown[], file: string) {
+    super(error, `Failed to compile: ${file}`);
+
+    this.name = this.constructor.name;
+    this.file = file;
+
+    Error.captureStackTrace?.(this, this.constructor);
+  }
+}
+
 export class OutputError extends Error {
   constructor(buffer: Buffer) {
     super(buffer.toString());

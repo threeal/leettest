@@ -1,5 +1,12 @@
 import { describe, expect, test } from "vitest";
-import { OutputError, ProcessError } from "./errors.js";
+import { CompileError, OutputError, ProcessError } from "./errors.js";
+
+test("create a compile error", () => {
+  const err = new CompileError([new Error()], "main.cpp");
+  expect(err.name).toBe("CompileError");
+  expect(err.message).toBe("Failed to compile: main.cpp");
+  expect(err.errors).toStrictEqual([new Error()]);
+});
 
 test("create an output error", { concurrent: true }, () => {
   const err = new OutputError(Buffer.from("a message"));
