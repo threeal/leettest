@@ -37,3 +37,16 @@ export class ProcessError extends AggregateError {
     Error.captureStackTrace?.(this, this.constructor);
   }
 }
+
+export class RunError extends AggregateError {
+  file: string;
+
+  constructor(error: unknown[], file: string) {
+    super(error, `Failed to run: ${file}`);
+
+    this.name = this.constructor.name;
+    this.file = file;
+
+    Error.captureStackTrace?.(this, this.constructor);
+  }
+}

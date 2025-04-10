@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
-import { CompileError, OutputError, ProcessError } from "./errors.js";
+import { CompileError, OutputError, ProcessError, RunError } from "./errors.js";
 
-test("create a compile error", () => {
+test("create a compile error", { concurrent: true }, () => {
   const err = new CompileError([new Error()], "main.cpp");
   expect(err.name).toBe("CompileError");
   expect(err.message).toBe("Failed to compile: main.cpp");
@@ -28,4 +28,11 @@ describe("create process errors", { concurrent: true }, () => {
     expect(err.message).toBe("Process failed: cmd arg0 arg1");
     expect(err.errors).toStrictEqual([new Error()]);
   });
+});
+
+test("create a run error", { concurrent: true }, () => {
+  const err = new RunError([new Error()], "main");
+  expect(err.name).toBe("RunError");
+  expect(err.message).toBe("Failed to run: main");
+  expect(err.errors).toStrictEqual([new Error()]);
 });

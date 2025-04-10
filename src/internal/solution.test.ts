@@ -1,13 +1,13 @@
 import { rm } from "node:fs/promises";
 import path from "node:path";
 import { afterAll, describe, expect, test } from "vitest";
-import { CompileError } from "../errors.js";
+import { CompileError, RunError } from "../errors.js";
 import { testCppSolution } from "./solution.js";
 import { createTempFs } from "./temp-fs.js";
 
 describe(
   "test C++ solutions",
-  { concurrent: true, timeout: 15000 },
+  { concurrent: true, timeout: 30000 },
   async () => {
     const tempDir = await createTempFs({
       success: {
@@ -15,6 +15,9 @@ describe(
       },
       compile_error: {
         "test.cpp": "int main() {",
+      },
+      run_error: {
+        "test.cpp": "int main() { return 1; }",
       },
     });
 
@@ -24,6 +27,11 @@ describe(
       expect(
         testCppSolution(path.join(tempDir, "compile_error")),
       ).rejects.toThrow(CompileError));
+
+    test("run error", () =>
+      expect(testCppSolution(path.join(tempDir, "run_error"))).rejects.toThrow(
+        RunError,
+      ));
 
     afterAll(() => rm(tempDir, { recursive: true }));
   },

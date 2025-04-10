@@ -1,7 +1,7 @@
 import { spawn } from "node:child_process";
 import { mkdir } from "node:fs/promises";
 import path from "node:path";
-import { CompileError } from "../errors.js";
+import { CompileError, RunError } from "../errors.js";
 import { waitProcess } from "./process.js";
 
 export async function testCppSolution(dir: string): Promise<void> {
@@ -20,5 +20,12 @@ export async function testCppSolution(dir: string): Promise<void> {
     await waitProcess(proc);
   } catch (err) {
     throw new CompileError([err], testCppFile);
+  }
+
+  try {
+    const proc = spawn(executableFile);
+    await waitProcess(proc);
+  } catch (err) {
+    throw new RunError([err], executableFile);
   }
 }
