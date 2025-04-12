@@ -13,10 +13,10 @@ program
     for await (const { dir, err } of testSolutions(root)) {
       if (err) {
         process.stderr.write(
-          `✖ Failed to test ${dir}\n${stringifyError(err, "  ")}\n`,
+          `\x1b[31m✖\x1b[0m Failed to test ${dir}\n\x1b[30m${stringifyError(err, "  ")}\x1b[0m\n`,
         );
       } else {
-        process.stdout.write(`✔ Tested ${dir}\n`);
+        process.stdout.write(`\x1b[32m✔\x1b[0m Tested ${dir}\n`);
       }
     }
   })
