@@ -11,28 +11,25 @@ export class CompileError extends AggregateError {
   }
 }
 
-export class OutputError extends Error {
-  constructor(buffer: Buffer) {
-    super(buffer.toString());
-    this.name = this.constructor.name;
-    Error.captureStackTrace?.(this, this.constructor);
-  }
-}
-
-export class ProcessError extends AggregateError {
+export class ProcessError extends Error {
   args: readonly string[];
   code: number | null;
+  output: string;
 
-  constructor(errs: unknown[], args: readonly string[], code: number | null) {
+  constructor(args: readonly string[], code: number | null, output: string) {
     let message = "Process failed";
     if (code !== null) message += ` (${code})`;
     message += `: ${args.join(" ")}`;
 
-    super(errs, message);
+    const trimmedOutput = output.trim();
+    if (trimmedOutput !== "") message += `\n${trimmedOutput}`;
+
+    super(message);
 
     this.name = this.constructor.name;
     this.args = args;
     this.code = code;
+    this.output = output;
 
     Error.captureStackTrace?.(this, this.constructor);
   }
