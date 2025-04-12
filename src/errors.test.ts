@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { CompileError, OutputError, ProcessError, RunError } from "./errors.js";
+import { CompileError, ProcessError, RunError } from "./errors.js";
 
 test("create a compile error", { concurrent: true }, () => {
   const err = new CompileError([new Error()], "main.cpp");
@@ -8,25 +8,17 @@ test("create a compile error", { concurrent: true }, () => {
   expect(err.errors).toStrictEqual([new Error()]);
 });
 
-test("create an output error", { concurrent: true }, () => {
-  const err = new OutputError(Buffer.from("a message"));
-  expect(err.name).toBe("OutputError");
-  expect(err.message).toBe("a message");
-});
-
 describe("create process errors", { concurrent: true }, () => {
-  test("with code", () => {
-    const err = new ProcessError([new Error()], ["cmd", "arg0", "arg1"], 9);
+  test("with code and output", () => {
+    const err = new ProcessError(["cmd", "arg0", "arg1"], 9, " an output\n");
     expect(err.name).toBe("ProcessError");
-    expect(err.message).toBe("Process failed (9): cmd arg0 arg1");
-    expect(err.errors).toStrictEqual([new Error()]);
+    expect(err.message).toBe("Process failed (9): cmd arg0 arg1\nan output");
   });
 
-  test("without code", () => {
-    const err = new ProcessError([new Error()], ["cmd", "arg0", "arg1"], null);
+  test("without code and output", () => {
+    const err = new ProcessError(["cmd", "arg0", "arg1"], null, "\n");
     expect(err.name).toBe("ProcessError");
     expect(err.message).toBe("Process failed: cmd arg0 arg1");
-    expect(err.errors).toStrictEqual([new Error()]);
   });
 });
 

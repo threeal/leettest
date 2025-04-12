@@ -1,5 +1,5 @@
 import type { ChildProcessWithoutNullStreams } from "node:child_process";
-import { OutputError, ProcessError } from "../errors.js";
+import { ProcessError } from "../errors.js";
 
 export async function waitProcess(
   proc: ChildProcessWithoutNullStreams,
@@ -14,9 +14,8 @@ export async function waitProcess(
       if (code === 0) {
         resolve();
       } else {
-        const errs =
-          chunks.length > 0 ? [new OutputError(Buffer.concat(chunks))] : [];
-        reject(new ProcessError(errs, proc.spawnargs, code));
+        const output = Buffer.concat(chunks).toString();
+        reject(new ProcessError(proc.spawnargs, code, output));
       }
     });
   });
