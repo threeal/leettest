@@ -2,7 +2,7 @@
 
 import { program } from "commander";
 import { testSolutions } from "./solution.js";
-import { stringifyError } from "./internal/stringify.js";
+import { stringifyError } from "./internal/utils/stringify.js";
 
 program
   .name("leettest")

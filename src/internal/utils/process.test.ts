@@ -1,7 +1,7 @@
 import { spawn } from "node:child_process";
 import { describe, expect, test } from "vitest";
 import { waitProcess } from "./process.js";
-import { ProcessError } from "../errors.js";
+import { ProcessError } from "../../errors.js";
 
 describe("wait child processes", { concurrent: true }, () => {
   test("node --version", async () => {
