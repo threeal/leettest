@@ -2,7 +2,7 @@ import { spawn } from "node:child_process";
 import { mkdir } from "node:fs/promises";
 import path from "node:path";
 import { CompileError, RunError } from "../errors.js";
-import { waitProcess } from "./process.js";
+import { waitProcess } from "./utils/process.js";
 
 export async function testCppSolution(dir: string): Promise<void> {
   const testCppFile = path.join(dir, "test.cpp");

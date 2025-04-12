@@ -3,7 +3,7 @@ import path from "node:path";
 import { afterAll, describe, expect, test } from "vitest";
 import { CompileError, RunError } from "../errors.js";
 import { testCppSolution } from "./solution.js";
-import { createTempFs } from "./temp-fs.js";
+import { createTempFs } from "./utils/temp-fs.js";
 
 describe(
   "test C++ solutions",

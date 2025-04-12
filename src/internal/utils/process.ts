@@ -1,5 +1,5 @@
 import type { ChildProcessWithoutNullStreams } from "node:child_process";
-import { ProcessError } from "../errors.js";
+import { ProcessError } from "../../errors.js";
 
 export async function waitProcess(
   proc: ChildProcessWithoutNullStreams,

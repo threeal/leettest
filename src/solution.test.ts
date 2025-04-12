@@ -2,7 +2,7 @@ import { readFile, rm } from "node:fs/promises";
 import path from "node:path";
 import { afterAll, expect, test, vi } from "vitest";
 import { testCppSolution } from "./internal/solution.js";
-import { createTempFs } from "./internal/temp-fs.js";
+import { createTempFs } from "./internal/utils/temp-fs.js";
 import { type TestResult, testSolutions } from "./solution.js";
 
 vi.mock("./internal/solution.js", () => ({
