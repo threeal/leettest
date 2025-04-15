@@ -10,6 +10,27 @@ describe(
   { concurrent: true, timeout: 30000 },
   async () => {
     const tempDir = await createTempFs({
+      with_config: {
+        success: {
+          "test.cpp": [
+          ],
+          "test.yaml": [
+            "examples:",
+            "  1:",
+            "    inputs:",
+            "      num1: [1, 2, 3]",
+            "      num2: [3, 4, 5]",
+            "    output: true",
+            "",
+            "cases:",
+            "  1:",
+            "    inputs:",
+            "      nums1: [2, 3, 4]",
+            "      nums2: [4, 5, 6]",
+            "    output: false",
+          ],
+        }
+      },
       success: {
         "test.cpp": "int main() { return 0; }",
       },

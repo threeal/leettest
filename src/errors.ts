@@ -35,6 +35,19 @@ export class ProcessError extends Error {
   }
 }
 
+export class ReadError extends AggregateError {
+  file: string;
+
+  constructor(error: unknown[], file: string) {
+    super(error, `Failed to read: ${file}`);
+
+    this.name = this.constructor.name;
+    this.file = file;
+
+    Error.captureStackTrace?.(this, this.constructor);
+  }
+}
+
 export class RunError extends AggregateError {
   file: string;
 

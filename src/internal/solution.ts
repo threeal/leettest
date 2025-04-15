@@ -1,8 +1,9 @@
 import { spawn } from "node:child_process";
 import { mkdir } from "node:fs/promises";
 import path from "node:path";
-import { CompileError, RunError } from "../errors.js";
+import { CompileError, ReadError, RunError } from "../errors.js";
 import { waitProcess } from "./utils/process.js";
+import { readTestConfigFile } from "./config.js";
 
 export async function testCppSolution(dir: string): Promise<void> {
   const testCppFile = path.join(dir, "test.cpp");
@@ -21,6 +22,11 @@ export async function testCppSolution(dir: string): Promise<void> {
   } catch (err) {
     throw new CompileError([err], testCppFile);
   }
+
+  const testConfigFile = path.join(dir, "test.yaml");
+  const testConfig = readTestConfigFile(testConfigFile).catch((err) => {
+    throw new ReadError([err], testConfigFile);
+  });
 
   try {
     const proc = spawn(executableFile);
