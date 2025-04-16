@@ -7,7 +7,7 @@ import { createTempFs } from "./utils/temp-fs.js";
 
 describe(
   "test C++ solutions",
-  { concurrent: true, timeout: 30000 },
+  { concurrent: true, timeout: 300 * 1000 },
   async () => {
     const tempDir = await createTempFs({
       success: {

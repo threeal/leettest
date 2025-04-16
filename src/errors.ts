@@ -11,6 +11,32 @@ export class CompileError extends AggregateError {
   }
 }
 
+export class DownloadError extends AggregateError {
+  url: string;
+
+  constructor(error: unknown[], url: string) {
+    super(error, `Failed to download from: ${url}`);
+
+    this.name = this.constructor.name;
+    this.url = url;
+
+    Error.captureStackTrace?.(this, this.constructor);
+  }
+}
+
+export class HttpResponseError extends Error {
+  code: number | undefined;
+
+  constructor(code: number | undefined) {
+    super(`HTTP responded with status code: ${code}`);
+
+    this.name = this.constructor.name;
+    this.code = code;
+
+    Error.captureStackTrace?.(this, this.constructor);
+  }
+}
+
 export class ProcessError extends Error {
   args: readonly string[];
   code: number | null;
