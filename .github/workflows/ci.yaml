@@ -47,5 +47,7 @@ jobs:
       - name: Install Dependencies
         run: pnpm install
 
+      - run: curl -L -o llvm.tar.xz https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.7/LLVM-19.1.7-macOS-ARM64.tar.xz
+
       - name: Test Library
         run: pnpm test
