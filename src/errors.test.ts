@@ -22,6 +22,13 @@ describe("create process errors", { concurrent: true }, () => {
   });
 });
 
+test("create a read error", { concurrent: true }, () => {
+  const err = new RunError([new Error()], "file.txt");
+  expect(err.name).toBe("ReadError");
+  expect(err.message).toBe("Failed to read: file.txt");
+  expect(err.errors).toStrictEqual([new Error()]);
+});
+
 test("create a run error", { concurrent: true }, () => {
   const err = new RunError([new Error()], "main");
   expect(err.name).toBe("RunError");
