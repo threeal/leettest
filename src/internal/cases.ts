@@ -1,4 +1,5 @@
 import { readFile } from "node:fs/promises";
+import type { Readable, Writable } from "node:stream";
 import * as v from "valibot";
 import yaml from "yaml";
 
@@ -36,4 +37,15 @@ export async function readTestCasesFile(path: string): Promise<TestCase[]> {
     inputs: Object.entries(inputs).map(([name, value]) => ({ name, value })),
     output,
   }));
+}
+
+export async function streamTestCases(
+  stdin: Writable,
+  stdout: Readable,
+  testCases: TestCase[],
+): Promise<string[]> {
+  const output: string[] = [];
+  for (const { inputs, output } of testCases) {
+  }
+  return output;
 }
