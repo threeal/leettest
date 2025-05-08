@@ -8,28 +8,28 @@ describe(
   { concurrent: true, timeout: 30000 },
   async () => {
     test("success", async () => {
-      const tempDir = await createTempFs({
+      const root = await createTempFs({
         "test.cpp": "int main() { return 0; }",
       });
 
-      await testCppSolution(tempDir);
+      await testCppSolution(root.$path);
     });
 
     test("compile error", async () => {
-      const tempDir = await createTempFs({
+      const root = await createTempFs({
         "test.cpp": "int main() {",
       });
 
-      const prom = testCppSolution(tempDir);
+      const prom = testCppSolution(root.$path);
       await expect(prom).rejects.toThrow(CompileError);
     });
 
     test("run error", async () => {
-      const tempDir = await createTempFs({
+      const root = await createTempFs({
         "test.cpp": "int main() { return 1; }",
       });
 
-      const prom = testCppSolution(tempDir);
+      const prom = testCppSolution(root.$path);
       await expect(prom).rejects.toThrow(RunError);
     });
   },

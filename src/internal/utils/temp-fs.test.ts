@@ -3,16 +3,16 @@ import path from "node:path";
 import { afterAll, expect, test } from "vitest";
 import { createTempFs, removeAllTempFs } from "./temp-fs.js";
 
-function expectReadDir(...paths: string[]) {
-  return expect(readdir(path.join(...paths))).resolves;
+function expectReadDir(dir: string) {
+  return expect(readdir(dir)).resolves;
 }
 
-function expectReadFile(...paths: string[]) {
-  return expect(readFile(path.join(...paths), "utf-8")).resolves;
+function expectReadFile(file: string) {
+  return expect(readFile(file, "utf-8")).resolves;
 }
 
 test("create temporary file system", { concurrent: true }, async () => {
-  const tempDir = await createTempFs({
+  const root = await createTempFs({
     dir1: {
       dir1: {
         file1: ["line1", "line2"],
@@ -24,29 +24,46 @@ test("create temporary file system", { concurrent: true }, async () => {
     file1: "",
   });
 
+  expect(root).toStrictEqual({
+    $path: expect.any(String),
+    dir1: {
+      $path: path.join(root.$path, "dir1"),
+      dir1: {
+        $path: path.join(root.dir1.$path, "dir1"),
+        file1: { $path: path.join(root.dir1.dir1.$path, "file1") },
+        file2: { $path: path.join(root.dir1.dir1.$path, "file2") },
+      },
+      file1: { $path: path.join(root.dir1.$path, "file1") },
+    },
+    dir2: { $path: path.join(root.$path, "dir2") },
+    file1: { $path: path.join(root.$path, "file1") },
+  });
+
   await Promise.all([
-    expectReadDir(tempDir).toStrictEqual(["dir1", "dir2", "file1"]),
-    expectReadDir(tempDir, "dir1").toStrictEqual(["dir1", "file1"]),
-    expectReadDir(tempDir, "dir1", "dir1").toStrictEqual(["file1", "file2"]),
-    expectReadFile(tempDir, "dir1", "dir1", "file1").toBe("line1\nline2\n"),
-    expectReadFile(tempDir, "dir1", "dir1", "file2").toBe("line\n"),
-    expectReadFile(tempDir, "dir1", "file1").toBe("line\n"),
-    expectReadDir(tempDir, "dir2").toStrictEqual([]),
-    expectReadFile(tempDir, "file1").toBe("\n"),
+    expectReadDir(root.$path).toStrictEqual(["dir1", "dir2", "file1"]),
+    expectReadDir(root.dir1.$path).toStrictEqual(["dir1", "file1"]),
+    expectReadDir(root.dir1.dir1.$path).toStrictEqual(["file1", "file2"]),
+    expectReadFile(root.dir1.dir1.file1.$path).toBe("line1\nline2\n"),
+    expectReadFile(root.dir1.dir1.file2.$path).toBe("line\n"),
+    expectReadFile(root.dir1.file1.$path).toBe("line\n"),
+    expectReadDir(root.dir2.$path).toStrictEqual([]),
+    expectReadFile(root.file1.$path).toBe("\n"),
   ]);
 });
 
 test("remove all temporary file system", { concurrent: true }, async () => {
-  const tempDirs = await Promise.all([createTempFs({}), createTempFs({})]);
+  const roots = await Promise.all([createTempFs({}), createTempFs({})]);
 
   await Promise.all(
-    tempDirs.map((tempDir) => expect(access(tempDir)).resolves.toBeUndefined()),
+    roots.map((tempFs) =>
+      expect(access(tempFs.$path)).resolves.toBeUndefined(),
+    ),
   );
 
   await removeAllTempFs();
 
   await Promise.all(
-    tempDirs.map((tempDir) => expect(access(tempDir)).rejects.toThrow()),
+    roots.map((tempFs) => expect(access(tempFs.$path)).rejects.toThrow()),
   );
 });
 
