@@ -15,31 +15,25 @@ vi.mocked(testCppSolution).mockImplementation(async (dir) => {
 });
 
 test("test solutions", async () => {
-  const tempDir = await createTempFs({
+  const root = await createTempFs({
     foo: {
-      bar: {
-        "test.cpp": "valid",
-      },
-      baz: {
-        "test.js": "valid",
-      },
+      bar: { "test.cpp": "valid" },
+      baz: { "test.js": "valid" },
       "test.cpp": "invalid",
     },
-    bar: {
-      "test.cpp": "valid",
-    },
+    bar: { "test.cpp": "valid" },
     baz: {},
   });
 
   const results: TestResult[] = [];
-  for await (const result of testSolutions(tempDir)) {
+  for await (const result of testSolutions(root.$path)) {
     results.push(result);
   }
 
   expect(results).toEqual([
-    { dir: path.join(tempDir, "bar"), err: undefined },
-    { dir: path.join(tempDir, "foo"), err: new Error() },
-    { dir: path.join(tempDir, "foo", "bar"), err: undefined },
+    { dir: root.bar.$path, err: undefined },
+    { dir: root.foo.$path, err: new Error() },
+    { dir: root.foo.bar.$path, err: undefined },
   ]);
 });
 
