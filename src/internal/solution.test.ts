@@ -1,7 +1,7 @@
 import { afterAll, describe, expect, test } from "vitest";
 import { CompileError, RunError } from "../errors.js";
 import { testCppSolution } from "./solution.js";
-import { createTempFs, removeAllTempFs } from "./utils/temp-fs.js";
+import { createTempFs, removeAllTempFs } from "../../test/temp-fs.js";
 
 describe(
   "test C++ solutions",
