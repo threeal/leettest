@@ -1,38 +1,38 @@
-import { rm } from "node:fs/promises";
-import path from "node:path";
 import { afterAll, describe, expect, test } from "vitest";
 import { CompileError, RunError } from "../errors.js";
 import { testCppSolution } from "./solution.js";
-import { createTempFs } from "./utils/temp-fs.js";
+import { createTempFs, removeAllTempFs } from "./utils/temp-fs.js";
 
 describe(
   "test C++ solutions",
   { concurrent: true, timeout: 30000 },
   async () => {
-    const tempDir = await createTempFs({
-      success: {
+    test("success", async () => {
+      const tempDir = await createTempFs({
         "test.cpp": "int main() { return 0; }",
-      },
-      compile_error: {
-        "test.cpp": "int main() {",
-      },
-      run_error: {
-        "test.cpp": "int main() { return 1; }",
-      },
+      });
+
+      await testCppSolution(tempDir);
     });
 
-    test("success", () => testCppSolution(path.join(tempDir, "success")));
+    test("compile error", async () => {
+      const tempDir = await createTempFs({
+        "test.cpp": "int main() {",
+      });
 
-    test("compile error", () =>
-      expect(
-        testCppSolution(path.join(tempDir, "compile_error")),
-      ).rejects.toThrow(CompileError));
+      const prom = testCppSolution(tempDir);
+      await expect(prom).rejects.toThrow(CompileError);
+    });
 
-    test("run error", () =>
-      expect(testCppSolution(path.join(tempDir, "run_error"))).rejects.toThrow(
-        RunError,
-      ));
+    test("run error", async () => {
+      const tempDir = await createTempFs({
+        "test.cpp": "int main() { return 1; }",
+      });
 
-    afterAll(() => rm(tempDir, { recursive: true }));
+      const prom = testCppSolution(tempDir);
+      await expect(prom).rejects.toThrow(RunError);
+    });
   },
 );
+
+afterAll(() => removeAllTempFs());

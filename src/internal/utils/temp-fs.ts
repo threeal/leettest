@@ -1,4 +1,4 @@
-import { mkdir, mkdtemp, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 
@@ -6,9 +6,12 @@ export interface FsTree {
   [key: string]: FsTree | string | string[];
 }
 
+let tempDirs: string[] = [];
+
 export async function createTempFs(tree: FsTree): Promise<string> {
   const dir = await mkdtemp(path.join(os.tmpdir(), "temp"));
   await createTempFsRecursively(dir, tree);
+  tempDirs.push(dir);
   return dir;
 }
 
@@ -27,4 +30,11 @@ async function createTempFsRecursively(dir: string, tree: FsTree) {
       }
     }),
   );
+}
+
+export async function removeAllTempFs(): Promise<void> {
+  await Promise.all(
+    tempDirs.map((tempDir) => rm(tempDir, { recursive: true })),
+  );
+  tempDirs = [];
 }

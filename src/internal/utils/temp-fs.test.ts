@@ -1,9 +1,7 @@
-import { rm, readdir, readFile } from "node:fs/promises";
+import { access, readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { afterAll, expect, test } from "vitest";
-import { createTempFs } from "./temp-fs.js";
-
-let tempDir: string | undefined;
+import { createTempFs, removeAllTempFs } from "./temp-fs.js";
 
 function expectReadDir(...paths: string[]) {
   return expect(readdir(path.join(...paths))).resolves;
@@ -13,8 +11,8 @@ function expectReadFile(...paths: string[]) {
   return expect(readFile(path.join(...paths), "utf-8")).resolves;
 }
 
-test("create temporary file system", async () => {
-  tempDir = await createTempFs({
+test("create temporary file system", { concurrent: true }, async () => {
+  const tempDir = await createTempFs({
     dir1: {
       dir1: {
         file1: ["line1", "line2"],
@@ -38,4 +36,18 @@ test("create temporary file system", async () => {
   ]);
 });
 
-afterAll(() => tempDir && rm(tempDir, { recursive: true }));
+test("remove all temporary file system", { concurrent: true }, async () => {
+  const tempDirs = await Promise.all([createTempFs({}), createTempFs({})]);
+
+  await Promise.all(
+    tempDirs.map((tempDir) => expect(access(tempDir)).resolves.toBeUndefined()),
+  );
+
+  await removeAllTempFs();
+
+  await Promise.all(
+    tempDirs.map((tempDir) => expect(access(tempDir)).rejects.toThrow()),
+  );
+});
+
+afterAll(() => removeAllTempFs());
