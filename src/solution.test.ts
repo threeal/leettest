@@ -1,8 +1,8 @@
-import { readFile, rm } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { afterAll, expect, test, vi } from "vitest";
 import { testCppSolution } from "./internal/solution.js";
-import { createTempFs } from "./internal/utils/temp-fs.js";
+import { createTempFs, removeAllTempFs } from "./internal/utils/temp-fs.js";
 import { type TestResult, testSolutions } from "./solution.js";
 
 vi.mock("./internal/solution.js", () => ({
@@ -14,23 +14,23 @@ vi.mocked(testCppSolution).mockImplementation(async (dir) => {
   if (content !== "valid\n") throw new Error();
 });
 
-const tempDir = await createTempFs({
-  foo: {
+test("test solutions", async () => {
+  const tempDir = await createTempFs({
+    foo: {
+      bar: {
+        "test.cpp": "valid",
+      },
+      baz: {
+        "test.js": "valid",
+      },
+      "test.cpp": "invalid",
+    },
     bar: {
       "test.cpp": "valid",
     },
-    baz: {
-      "test.js": "valid",
-    },
-    "test.cpp": "invalid",
-  },
-  bar: {
-    "test.cpp": "valid",
-  },
-  baz: {},
-});
+    baz: {},
+  });
 
-test("test solutions", async () => {
   const results: TestResult[] = [];
   for await (const result of testSolutions(tempDir)) {
     results.push(result);
@@ -43,4 +43,4 @@ test("test solutions", async () => {
   ]);
 });
 
-afterAll(() => rm(tempDir, { recursive: true }));
+afterAll(() => removeAllTempFs());
