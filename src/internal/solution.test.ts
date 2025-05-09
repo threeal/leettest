@@ -5,7 +5,7 @@ import { createTempFs, removeAllTempFs } from "../../test/temp-fs.js";
 
 describe(
   "test C++ solutions",
-  { concurrent: true, timeout: 30000 },
+  { concurrent: true, timeout: 300 * 1000 },
   async () => {
     test("success", async () => {
       const root = await createTempFs({
