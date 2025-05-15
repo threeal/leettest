@@ -1,3 +1,12 @@
+export class AssertionError extends Error {
+  constructor(name: string, actual: string, expected: string) {
+    super(`Failed to assert: ${name}\nActual: ${actual}\nExpected: ${expected}`);
+
+    this.name = this.constructor.name;
+    Error.captureStackTrace?.(this, this.constructor);
+  }
+}
+
 export class CompileError extends AggregateError {
   constructor(error: unknown[], file: string) {
     super(error, `Failed to compile: ${file}`);
@@ -23,9 +32,27 @@ export class ProcessError extends Error {
   }
 }
 
+export class ReadError extends AggregateError {
+  constructor(error: unknown[], file: string) {
+    super(error, `Failed to read: ${file}`);
+
+    this.name = this.constructor.name;
+    Error.captureStackTrace?.(this, this.constructor);
+  }
+}
+
 export class RunError extends AggregateError {
   constructor(error: unknown[], file: string) {
     super(error, `Failed to run: ${file}`);
+
+    this.name = this.constructor.name;
+    Error.captureStackTrace?.(this, this.constructor);
+  }
+}
+
+export class TestError extends AggregateError {
+  constructor(error: unknown[], file: string) {
+    super(error, `Failed to test: ${file}`);
 
     this.name = this.constructor.name;
     Error.captureStackTrace?.(this, this.constructor);
