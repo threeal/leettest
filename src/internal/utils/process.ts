@@ -10,6 +10,10 @@ export async function waitProcess(
     proc.stderr.on("data", (chunk) => chunks.push(chunk));
 
     proc.on("error", reject);
+    proc.stdin.on("error", reject);
+    proc.stdout.on("error", reject);
+    proc.stderr.on("error", reject);
+
     proc.on("close", (code) => {
       if (code === 0) {
         resolve();

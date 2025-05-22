@@ -1,2 +1,10 @@
-export { CompileError, ProcessError, RunError } from "./errors.js";
+export {
+  AssertionError,
+  CompileError,
+  ProcessError,
+  ReadError,
+  RunError,
+  TestError,
+} from "./errors.js";
+
 export { type TestResult, testSolutions } from "./solution.js";
