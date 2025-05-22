@@ -1,8 +1,18 @@
 import { spawn } from "node:child_process";
 import { mkdir } from "node:fs/promises";
 import path from "node:path";
-import { CompileError, RunError } from "../errors.js";
+
+import {
+  AssertionError,
+  CompileError,
+  ReadError,
+  RunError,
+  TestError,
+} from "../errors.js";
+
 import { waitProcess } from "./utils/process.js";
+import { StreamReader } from "./utils/stream.js";
+import { readTestCasesFile } from "./cases.js";
 
 export async function testCppSolution(dir: string): Promise<void> {
   const testCppFile = path.join(dir, "test.cpp");
@@ -22,10 +32,42 @@ export async function testCppSolution(dir: string): Promise<void> {
     throw new CompileError([err], testCppFile);
   }
 
-  try {
-    const proc = spawn(executableFile);
-    await waitProcess(proc);
-  } catch (err) {
-    throw new RunError([err], executableFile);
+  const testCasesFile = path.join(dir, "cases.yaml");
+  const testCases = await readTestCasesFile(testCasesFile).catch((err) => {
+    throw new ReadError([err], testCasesFile);
+  });
+
+  const proc = spawn(executableFile);
+  const assertErrs: AssertionError[] = [];
+  const runResults = await Promise.allSettled([
+    (async () => {
+      proc.stdin.write(`${testCases.length}\n`);
+      const reader = new StreamReader(proc.stdout);
+      for (const { name, inputs, output: expected } of testCases) {
+        for (const { value } of inputs) {
+          proc.stdin.write(`${value}\n`);
+        }
+        const actual = await reader.readLine();
+        if (actual != expected) {
+          assertErrs.push(new AssertionError(name, actual, expected));
+        }
+      }
+    })(),
+    waitProcess(proc),
+  ]);
+
+  const runErrs: unknown[] = [];
+  for (const result of runResults) {
+    if (result.status === "rejected") {
+      runErrs.push(result.reason);
+    }
+  }
+
+  if (runErrs.length > 0) {
+    throw new RunError(runErrs, executableFile);
+  }
+
+  if (assertErrs.length > 0) {
+    throw new TestError(assertErrs, executableFile);
   }
 }
