@@ -1,4 +1,4 @@
-name: Build
+name: CI
 on:
   workflow_dispatch:
   pull_request:
@@ -27,8 +27,21 @@ jobs:
       - name: Check Types
         run: pnpm tsc --noEmit
 
-      - name: Test Library
-        run: pnpm test
-
       - name: Package Library
         run: pnpm pack
+
+  test-library:
+    name: Test Library
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout Project
+        uses: actions/checkout@v4.2.2
+
+      - name: Setup pnpm
+        uses: threeal/setup-pnpm-action@v1.0.0
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Test Library
+        run: pnpm test
