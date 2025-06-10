@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 import { program } from "commander";
-import { testSolutions } from "./solution.js";
 import { stringifyError } from "./internal/utils/stringify.js";
+import { testSolutions } from "./lib.js";
 
 program
   .name("leettest")

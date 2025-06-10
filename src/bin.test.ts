@@ -1,5 +1,5 @@
 import { expect, test, vi } from "vitest";
-import * as solutionModule from "./solution.js";
+import * as solutionModule from "./lib.js";
 
 interface Output {
   type: "stdout" | "stderr";
