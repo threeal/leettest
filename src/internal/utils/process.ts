@@ -6,8 +6,8 @@ export async function waitProcess(
 ): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     const chunks: Uint8Array[] = [];
-    proc.stdout.on("data", (chunk) => chunks.push(chunk));
-    proc.stderr.on("data", (chunk) => chunks.push(chunk));
+    proc.stdout.on("data", (chunk: Buffer) => chunks.push(chunk));
+    proc.stderr.on("data", (chunk: Buffer) => chunks.push(chunk));
 
     proc.on("error", reject);
     proc.stdin.on("error", reject);
