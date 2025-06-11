@@ -5,7 +5,7 @@ export class AssertionError extends Error {
     );
 
     this.name = this.constructor.name;
-    Error.captureStackTrace?.(this, this.constructor);
+    Error.captureStackTrace(this, this.constructor);
   }
 }
 
@@ -14,14 +14,14 @@ export class CompileError extends AggregateError {
     super(error, `Failed to compile: ${file}`);
 
     this.name = this.constructor.name;
-    Error.captureStackTrace?.(this, this.constructor);
+    Error.captureStackTrace(this, this.constructor);
   }
 }
 
 export class ProcessError extends Error {
   constructor(args: readonly string[], code: number | null, output: string) {
     let message = "Process failed";
-    if (code !== null) message += ` (${code})`;
+    if (code !== null) message += ` (${code.toString()})`;
     message += `: ${args.join(" ")}`;
 
     const trimmedOutput = output.trim();
@@ -30,7 +30,7 @@ export class ProcessError extends Error {
     super(message);
 
     this.name = this.constructor.name;
-    Error.captureStackTrace?.(this, this.constructor);
+    Error.captureStackTrace(this, this.constructor);
   }
 }
 
@@ -39,7 +39,7 @@ export class ReadError extends AggregateError {
     super(error, `Failed to read: ${file}`);
 
     this.name = this.constructor.name;
-    Error.captureStackTrace?.(this, this.constructor);
+    Error.captureStackTrace(this, this.constructor);
   }
 }
 
@@ -48,7 +48,7 @@ export class RunError extends AggregateError {
     super(error, `Failed to run: ${file}`);
 
     this.name = this.constructor.name;
-    Error.captureStackTrace?.(this, this.constructor);
+    Error.captureStackTrace(this, this.constructor);
   }
 }
 
@@ -57,6 +57,6 @@ export class TestError extends AggregateError {
     super(error, `Failed to test: ${file}`);
 
     this.name = this.constructor.name;
-    Error.captureStackTrace?.(this, this.constructor);
+    Error.captureStackTrace(this, this.constructor);
   }
 }

@@ -17,9 +17,9 @@ export async function* testSolutions(dir: string): AsyncIterable<TestResult> {
     } else if (file.isFile() && file.name === "test.cpp") {
       results.push({
         dir,
-        prom: new Promise((resolve) =>
-          testCppSolution(dir).then(resolve).catch(resolve),
-        ),
+        prom: new Promise((resolve) => {
+          testCppSolution(dir).then(resolve).catch(resolve);
+        }),
       });
     }
   }

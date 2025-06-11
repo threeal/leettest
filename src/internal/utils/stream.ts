@@ -56,8 +56,8 @@ export class StreamReader {
       return line;
     }
 
-    return new Promise<string>((resolve, reject) =>
-      this.#readResolverQueue.push({ resolve, reject }),
-    );
+    return new Promise<string>((resolve, reject) => {
+      this.#readResolverQueue.push({ resolve, reject });
+    });
   }
 }

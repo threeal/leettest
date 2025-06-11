@@ -3,97 +3,93 @@ import { CompileError, ReadError, RunError, TestError } from "../errors.js";
 import { testCppSolution } from "./solution.js";
 import { createTempFs, removeAllTempFs } from "../../test/temp-fs.js";
 
-describe(
-  "test C++ solutions",
-  { concurrent: true, timeout: 30000 },
-  async () => {
-    const casesYaml: string[] = [
-      "example_1:",
-      "  inputs:",
-      "    str1: foo",
-      "    str2: bar",
-      "  output: foobar",
-      "",
-      "example_2:",
-      "  inputs:",
-      "    str1: foo",
-      "    str2: baz",
-      "  output: foobaz",
-    ];
+describe("test C++ solutions", { concurrent: true, timeout: 30000 }, () => {
+  const casesYaml: string[] = [
+    "example_1:",
+    "  inputs:",
+    "    str1: foo",
+    "    str2: bar",
+    "  output: foobar",
+    "",
+    "example_2:",
+    "  inputs:",
+    "    str1: foo",
+    "    str2: baz",
+    "  output: foobaz",
+  ];
 
-    test("success", async () => {
-      const root = await createTempFs({
-        "test.cpp": [
-          "#include <iostream>",
-          "",
-          "int main() {",
-          "  int n{};",
-          "  std::cin >> n;",
-          "  while (--n >= 0) {",
-          "    std::string s1{}, s2{};",
-          "    std::cin >> s1 >> s2;",
-          "    std::cout << s1 + s2 << std::endl;",
-          "  }",
-          "  return 0;",
-          "}",
-        ],
-        "cases.yaml": casesYaml,
-      });
-
-      await testCppSolution(root.$path);
+  test("success", async () => {
+    const root = await createTempFs({
+      "test.cpp": [
+        "#include <iostream>",
+        "",
+        "int main() {",
+        "  int n{};",
+        "  std::cin >> n;",
+        "  while (--n >= 0) {",
+        "    std::string s1{}, s2{};",
+        "    std::cin >> s1 >> s2;",
+        "    std::cout << s1 + s2 << std::endl;",
+        "  }",
+        "  return 0;",
+        "}",
+      ],
+      "cases.yaml": casesYaml,
     });
 
-    test("compile error", async () => {
-      const root = await createTempFs({
-        "test.cpp": "int main() {",
-      });
+    await testCppSolution(root.$path);
+  });
 
-      const prom = testCppSolution(root.$path);
-      await expect(prom).rejects.toThrow(CompileError);
+  test("compile error", async () => {
+    const root = await createTempFs({
+      "test.cpp": "int main() {",
     });
 
-    test("read error", async () => {
-      const root = await createTempFs({
-        "test.cpp": "int main() { return 1; }",
-      });
+    const prom = testCppSolution(root.$path);
+    await expect(prom).rejects.toThrow(CompileError);
+  });
 
-      const prom = testCppSolution(root.$path);
-      await expect(prom).rejects.toThrow(ReadError);
+  test("read error", async () => {
+    const root = await createTempFs({
+      "test.cpp": "int main() { return 1; }",
     });
 
-    test("run error", async () => {
-      const root = await createTempFs({
-        "test.cpp": "int main() { return 1; }",
-        "cases.yaml": casesYaml,
-      });
+    const prom = testCppSolution(root.$path);
+    await expect(prom).rejects.toThrow(ReadError);
+  });
 
-      const prom = testCppSolution(root.$path);
-      await expect(prom).rejects.toThrow(RunError);
+  test("run error", async () => {
+    const root = await createTempFs({
+      "test.cpp": "int main() { return 1; }",
+      "cases.yaml": casesYaml,
     });
 
-    test("test error", async () => {
-      const root = await createTempFs({
-        "test.cpp": [
-          "#include <iostream>",
-          "",
-          "int main() {",
-          "  int n{};",
-          "  std::cin >> n;",
-          "  while (--n >= 0) {",
-          "    std::string s1{}, s2{};",
-          "    std::cin >> s1 >> s2;",
-          "    std::cout << s1 << std::endl;",
-          "  }",
-          "  return 0;",
-          "}",
-        ],
-        "cases.yaml": casesYaml,
-      });
+    const prom = testCppSolution(root.$path);
+    await expect(prom).rejects.toThrow(RunError);
+  });
 
-      const prom = testCppSolution(root.$path);
-      await expect(prom).rejects.toThrow(TestError);
+  test("test error", async () => {
+    const root = await createTempFs({
+      "test.cpp": [
+        "#include <iostream>",
+        "",
+        "int main() {",
+        "  int n{};",
+        "  std::cin >> n;",
+        "  while (--n >= 0) {",
+        "    std::string s1{}, s2{};",
+        "    std::cin >> s1 >> s2;",
+        "    std::cout << s1 << std::endl;",
+        "  }",
+        "  return 0;",
+        "}",
+      ],
+      "cases.yaml": casesYaml,
     });
-  },
-);
+
+    const prom = testCppSolution(root.$path);
+    await expect(prom).rejects.toThrow(TestError);
+  });
+});
 
 afterAll(() => removeAllTempFs());

@@ -45,7 +45,7 @@ async function createTempFsRecursively<T extends FsContentTree>(
     }),
   );
   entries.push(["$path", parentDir]);
-  return Object.fromEntries(entries);
+  return Object.fromEntries(entries) as FsTree<T>;
 }
 
 export async function removeAllTempFs(): Promise<void> {

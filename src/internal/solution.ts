@@ -33,15 +33,17 @@ export async function testCppSolution(dir: string): Promise<void> {
   }
 
   const testCasesFile = path.join(dir, "cases.yaml");
-  const testCases = await readTestCasesFile(testCasesFile).catch((err) => {
-    throw new ReadError([err], testCasesFile);
-  });
+  const testCases = await readTestCasesFile(testCasesFile).catch(
+    (err: unknown) => {
+      throw new ReadError([err], testCasesFile);
+    },
+  );
 
   const proc = spawn(executableFile);
   const assertErrs: AssertionError[] = [];
   const runResults = await Promise.allSettled([
     (async () => {
-      proc.stdin.write(`${testCases.length}\n`);
+      proc.stdin.write(`${testCases.length.toString()}\n`);
       const reader = new StreamReader(proc.stdout);
       for (const { name, inputs, output: expected } of testCases) {
         for (const { value } of inputs) {

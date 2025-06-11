@@ -9,7 +9,7 @@ program
   .version("0.2.0")
   .description("Compile and test solutions to LeetCode problems")
   .argument("[root]", "The root directory to search for solution files", ".")
-  .action(async (root) => {
+  .action(async (root: string) => {
     for await (const { dir, err } of testSolutions(root)) {
       if (err) {
         process.stderr.write(
