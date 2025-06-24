@@ -20,6 +20,7 @@ test("run executable", async () => {
   });
 
   vi.spyOn(solutionModule, "testSolutions").mockImplementation(
+    // eslint-disable-next-line @typescript-eslint/require-await
     async function* () {
       yield { dir: "foo", err: undefined };
       yield { dir: "bar", err: new Error("something happened") };
