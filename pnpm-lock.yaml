@@ -48,9 +48,6 @@ importers:
       typescript-eslint:
         specifier: ^8.34.1
         version: 8.34.1(eslint@9.28.0(jiti@2.4.2))(typescript@5.8.3)
-      vite-node:
-        specifier: ^3.2.3
-        version: 3.2.3(@types/node@22.15.29)(jiti@2.4.2)(tsx@4.19.3)(yaml@2.8.0)
       vitest:
         specifier: ^3.2.0
         version: 3.2.0(@types/node@22.15.29)(jiti@2.4.2)(tsx@4.19.3)(yaml@2.8.0)
@@ -1223,11 +1220,6 @@ packages:
 
   vite-node@3.2.0:
     resolution: {integrity: sha512-8Fc5Ko5Y4URIJkmMF/iFP1C0/OJyY+VGVe9Nw6WAdZyw4bTO+eVg9mwxWkQp/y8NnAoQY3o9KAvE1ZdA2v+Vmg==}
-    engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
-    hasBin: true
-
-  vite-node@3.2.3:
-    resolution: {integrity: sha512-gc8aAifGuDIpZHrPjuHyP4dpQmYXqWw7D1GmDnWeNWP654UEXzVfQ5IHPSK5HaHkwB/+p1atpYpSdw/2kOv8iQ==}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     hasBin: true
 
@@ -2411,27 +2403,6 @@ snapshots:
       typescript: 5.8.3
 
   vite-node@3.2.0(@types/node@22.15.29)(jiti@2.4.2)(tsx@4.19.3)(yaml@2.8.0):
-    dependencies:
-      cac: 6.7.14
-      debug: 4.4.1
-      es-module-lexer: 1.7.0
-      pathe: 2.0.3
-      vite: 6.3.5(@types/node@22.15.29)(jiti@2.4.2)(tsx@4.19.3)(yaml@2.8.0)
-    transitivePeerDependencies:
-      - '@types/node'
-      - jiti
-      - less
-      - lightningcss
-      - sass
-      - sass-embedded
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
-      - tsx
-      - yaml
-
-  vite-node@3.2.3(@types/node@22.15.29)(jiti@2.4.2)(tsx@4.19.3)(yaml@2.8.0):
     dependencies:
       cac: 6.7.14
       debug: 4.4.1
