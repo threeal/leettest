@@ -7,4 +7,4 @@ export {
   TestError,
 } from "./errors.js";
 
-export { type TestResult, testSolutions } from "./solution.js";
+export { testSolutions, type TestResult } from "./solution.js";

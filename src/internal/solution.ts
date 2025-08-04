@@ -10,9 +10,9 @@ import {
   TestError,
 } from "../errors.js";
 
+import { readTestCasesFile } from "./cases.js";
 import { waitProcess } from "./utils/process.js";
 import { StreamReader } from "./utils/stream.js";
-import { readTestCasesFile } from "./cases.js";
 
 export async function testCppSolution(dir: string): Promise<void> {
   const testCppFile = path.join(dir, "test.cpp");
