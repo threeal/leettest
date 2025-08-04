@@ -1,7 +1,7 @@
 import { afterAll, describe, expect, test } from "vitest";
+import { createTempFs, removeAllTempFs } from "../../test/temp-fs.js";
 import { CompileError, ReadError, RunError, TestError } from "../errors.js";
 import { testCppSolution } from "./solution.js";
-import { createTempFs, removeAllTempFs } from "../../test/temp-fs.js";
 
 describe("test C++ solutions", { concurrent: true, timeout: 30000 }, () => {
   const casesYaml: string[] = [
