@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "commander": "^14.0.2",
-    "valibot": "^1.0.0",
+    "valibot": "^1.2.0",
     "yaml": "^2.8.1"
   },
   "devDependencies": {
