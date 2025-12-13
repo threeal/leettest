@@ -12,7 +12,7 @@ function expectReadFile(file: string) {
 }
 
 test("create temporary file system", { concurrent: true }, async () => {
-  const root = await createTempFs({
+  const { $path, ...root } = await createTempFs({
     dir1: {
       dir1: {
         file1: ["line1", "line2"],
@@ -24,10 +24,10 @@ test("create temporary file system", { concurrent: true }, async () => {
     file1: "",
   });
 
+  expect($path).toBeTypeOf("string");
   expect(root).toStrictEqual({
-    $path: expect.any(String),
     dir1: {
-      $path: path.join(root.$path, "dir1"),
+      $path: path.join($path, "dir1"),
       dir1: {
         $path: path.join(root.dir1.$path, "dir1"),
         file1: { $path: path.join(root.dir1.dir1.$path, "file1") },
@@ -35,12 +35,12 @@ test("create temporary file system", { concurrent: true }, async () => {
       },
       file1: { $path: path.join(root.dir1.$path, "file1") },
     },
-    dir2: { $path: path.join(root.$path, "dir2") },
-    file1: { $path: path.join(root.$path, "file1") },
+    dir2: { $path: path.join($path, "dir2") },
+    file1: { $path: path.join($path, "file1") },
   });
 
   await Promise.all([
-    expectReadDir(root.$path).toStrictEqual(["dir1", "dir2", "file1"]),
+    expectReadDir($path).toStrictEqual(["dir1", "dir2", "file1"]),
     expectReadDir(root.dir1.$path).toStrictEqual(["dir1", "file1"]),
     expectReadDir(root.dir1.dir1.$path).toStrictEqual(["file1", "file2"]),
     expectReadFile(root.dir1.dir1.file1.$path).toBe("line1\nline2\n"),
