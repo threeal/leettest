@@ -46,5 +46,6 @@
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.57.0",
     "vitest": "^4.0.15"
-  }
+  },
+  "packageManager": "pnpm@10.33.4"
 }
