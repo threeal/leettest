@@ -1,10 +1,12 @@
 .*
-!.git*
+!.github/
+!.gitattributes
+!.gitignore
 !.npmrc
-!.prettier*
+!.prettierignore
+!.prettierrc.json
 
 build/
 dist/
 node_modules/
-
 *.tgz
