@@ -39,7 +39,7 @@
     "@types/node": "^25.3.5",
     "@vitest/coverage-v8": "^4.0.15",
     "eslint": "^9.39.3",
-    "jiti": "^2.6.1",
+    "jiti": "^2.7.0",
     "lefthook": "^2.1.4",
     "prettier": "^3.8.1",
     "prettier-plugin-organize-imports": "^4.3.0",
